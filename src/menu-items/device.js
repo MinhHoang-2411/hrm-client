@@ -6,28 +6,29 @@ const icons = { IconBrandChrome, IconHelp };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
-const other = {
-    id: 'sample-docs-roadmap',
+const device = {
+    id: 'device',
+    title: 'Device',
     type: 'group',
     children: [
         {
-            id: 'sample-page',
-            title: 'Sample Page',
+            id: 'list-device',
+            title: 'List Device',
             type: 'item',
             url: '/sample-page',
             icon: icons.IconBrandChrome,
             breadcrumbs: false
         },
         {
-            id: 'documentation',
-            title: 'Documentation',
+            id: 'history-device',
+            title: 'History',
             type: 'item',
-            url: 'https://codedthemes.gitbook.io/berry/',
+            url: '/sample-page',
             icon: icons.IconHelp,
-            external: true,
-            target: true
+            breadcrumbs: false,
+            target: false
         }
     ]
 };
 
-export default other;
+export default device;
