@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // project imports
-import { MENU_OPEN, SET_MENU } from 'store/actions';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 
 // assets
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { actionActions } from 'store/action/actionSlice';
 
 // ==============================|| SIDEBAR MENU LIST ITEMS ||============================== //
 
 const NavItem = ({ item, level }) => {
     const theme = useTheme();
-    const dispatch = useDispatch();
-    const customization = useSelector((state) => state.customization);
+    const dispatch = useAppDispatch();
+    const customization = useAppSelector((state) => state.action);
     const matchesSM = useMediaQuery(theme.breakpoints.down('lg'));
 
     const Icon = item.icon;
@@ -47,8 +47,18 @@ const NavItem = ({ item, level }) => {
     }
 
     const itemHandler = (id) => {
-        dispatch({ type: MENU_OPEN, id });
-        if (matchesSM) dispatch({ type: SET_MENU, opened: false });
+        dispatch(
+            actionActions.openMenu({
+                id
+            })
+        );
+        if (matchesSM) {
+            dispatch(
+                actionActions.setMenu({
+                    opened: false
+                })
+            );
+        }
     };
 
     // active menu item on page load
@@ -58,7 +68,11 @@ const NavItem = ({ item, level }) => {
             .split('/')
             .findIndex((id) => id === item.id);
         if (currentIndex > -1) {
-            dispatch({ type: MENU_OPEN, id: item.id });
+            dispatch(
+                actionActions.openMenu({
+                    id: item.id
+                })
+            );
         }
         // eslint-disable-next-line
     }, []);

@@ -7,5 +7,8 @@ import AuthenticationRoutes from './AuthenticationRoutes';
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-    return useRoutes([MainRoutes, AuthenticationRoutes]);
+    const isLoggedIn = Boolean(localStorage.getItem('access_token'));
+    const switchRoutes = isLoggedIn ? [MainRoutes] : [AuthenticationRoutes];
+    return useRoutes(switchRoutes);
+    //return useRoutes([MainRoutes, AuthenticationRoutes]);
 }

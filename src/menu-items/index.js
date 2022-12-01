@@ -1,12 +1,15 @@
 import dashboard from './dashboard';
-import pages from './pages';
-import utilities from './utilities';
-import other from './other';
+import information from './information';
+import leave from './leave';
+import asset from './asset';
+import project from './project';
+import bar from './bar';
+import charity from './charity';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-    items: [dashboard, pages, utilities, other]
+    items: [dashboard, leave, asset, project, bar, charity]
 };
 
 export default menuItems;

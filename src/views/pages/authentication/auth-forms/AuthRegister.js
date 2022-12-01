@@ -35,6 +35,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useAppSelector } from 'app/hooks';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
@@ -42,7 +43,7 @@ const FirebaseRegister = ({ ...others }) => {
     const theme = useTheme();
     const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const customization = useSelector((state) => state.customization);
+    const customization = useAppSelector((state) => state.action);
     const [showPassword, setShowPassword] = useState(false);
     const [checked, setChecked] = useState(true);
 

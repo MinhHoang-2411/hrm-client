@@ -12,12 +12,13 @@ import NavItem from '../NavItem';
 // assets
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons';
+import { useAppSelector } from 'app/hooks';
 
 // ==============================|| SIDEBAR MENU LIST COLLAPSE ITEMS ||============================== //
 
 const NavCollapse = ({ menu, level }) => {
     const theme = useTheme();
-    const customization = useSelector((state) => state.customization);
+    const customization = useAppSelector((state) => state.action);
 
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(null);

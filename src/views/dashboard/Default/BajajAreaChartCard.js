@@ -11,12 +11,13 @@ import Chart from 'react-apexcharts';
 
 // project imports
 import chartData from './chart-data/bajaj-area-chart';
+import { useAppSelector } from 'app/hooks';
 
 // ===========================|| DASHBOARD DEFAULT - BAJAJ AREA CHART CARD ||=========================== //
 
 const BajajAreaChartCard = () => {
     const theme = useTheme();
-    const customization = useSelector((state) => state.customization);
+    const customization = useAppSelector((state) => state.action);
     const { navType } = customization;
 
     const orangeDark = theme.palette.secondary[800];
