@@ -38,13 +38,17 @@ import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import { useAppSelector } from 'app/hooks';
+import { useAppDispatch } from 'app/hooks';
+import { authActions } from 'store/auth/authSlice';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
     const theme = useTheme();
-    const customization = useSelector((state) => state.customization);
+    const customization = useAppSelector((state) => state.action);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [sdm, setSdm] = useState(true);
     const [value, setValue] = useState('');
@@ -56,7 +60,11 @@ const ProfileSection = () => {
      * */
     const anchorRef = useRef(null);
     const handleLogout = async () => {
-        console.log('Logout');
+        dispatch(
+            authActions.logout({
+                onNavigate: () => navigate('/login')
+            })
+        );
     };
 
     const handleClose = (event) => {
@@ -180,12 +188,10 @@ const ProfileSection = () => {
                                                 'aria-label': 'weight'
                                             }}
                                         />
-                                        <Divider />
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                                         <Box sx={{ p: 2 }}>
-                                            <UpgradePlanCard />
-                                            <Divider />
+                                            {/* <Divider />
                                             <Card
                                                 sx={{
                                                     bgcolor: theme.palette.primary.light,
@@ -228,7 +234,7 @@ const ProfileSection = () => {
                                                     </Grid>
                                                 </CardContent>
                                             </Card>
-                                            <Divider />
+                                            <Divider /> */}
                                             <List
                                                 component="nav"
                                                 sx={{
@@ -291,7 +297,10 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconLogout stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                                                    <ListItemText
+                                                        onClick={handleLogout}
+                                                        primary={<Typography variant="body2">Logout</Typography>}
+                                                    />
                                                 </ListItemButton>
                                             </List>
                                         </Box>

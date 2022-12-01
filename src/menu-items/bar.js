@@ -1,22 +1,22 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconHistoryToggle, IconMenu2 } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome, IconHelp, IconHistoryToggle, IconMenu2 };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const bar = {
     id: 'bar',
-    title: 'Bar',
+    title: 'Chainhaus Bar',
     type: 'group',
     children: [
         {
-            id: 'list-product',
-            title: 'List Product',
+            id: 'menu',
+            title: 'Menu',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconBrandChrome,
+            icon: icons.IconMenu2,
             breadcrumbs: false
         },
         {
@@ -24,7 +24,7 @@ const bar = {
             title: 'Order History',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconHelp,
+            icon: icons.IconHistoryToggle,
             target: false
         }
     ]

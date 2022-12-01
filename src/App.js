@@ -11,11 +11,12 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
+import { useAppSelector } from 'app/hooks';
 
 // ==============================|| APP ||============================== //
 
 const App = () => {
-    const customization = useSelector((state) => state.customization);
+    const customization = useAppSelector((state) => state.action);
 
     return (
         <StyledEngineProvider injectFirst>

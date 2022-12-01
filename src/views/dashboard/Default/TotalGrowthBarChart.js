@@ -17,6 +17,7 @@ import { gridSpacing } from 'store/constant';
 
 // chart data
 import chartData from './chart-data/total-growth-bar-chart';
+import { useAppSelector } from 'app/hooks';
 
 const status = [
     {
@@ -38,7 +39,7 @@ const status = [
 const TotalGrowthBarChart = ({ isLoading }) => {
     const [value, setValue] = useState('today');
     const theme = useTheme();
-    const customization = useSelector((state) => state.customization);
+    const customization = useAppSelector((state) => state.action);
 
     const { navType } = customization;
     const { primary } = theme.palette.text;

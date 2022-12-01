@@ -1,7 +1,7 @@
-import { IconBrandChrome, IconHelp } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconChecklist, IconLayoutList, IconSubtask } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome, IconHelp, IconChecklist, IconLayoutList, IconSubtask };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -12,27 +12,27 @@ const project = {
     children: [
         {
             id: 'list-project',
-            title: 'List Project',
+            title: 'Dashboard',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconBrandChrome,
+            icon: icons.IconLayoutList,
             breadcrumbs: false,
             target: false
         },
         {
             id: 'list-task',
-            title: 'List Task',
+            title: 'Task List',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconHelp,
+            icon: icons.IconChecklist,
             target: false
         },
         {
             id: 'log-work',
-            title: 'Log-work',
+            title: 'Log Work',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconHelp,
+            icon: icons.IconSubtask,
             target: false
         }
     ]

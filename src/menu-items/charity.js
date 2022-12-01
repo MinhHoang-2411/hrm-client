@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconHistoryToggle, IconChartDonut2 } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome, IconHelp, IconHistoryToggle, IconChartDonut2 };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -16,7 +16,7 @@ const charity = {
             title: 'Donate',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconBrandChrome,
+            icon: icons.IconChartDonut2,
             breadcrumbs: false
         },
         {
@@ -24,7 +24,7 @@ const charity = {
             title: 'History',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconHelp,
+            icon: icons.IconHistoryToggle,
             target: false
         }
     ]

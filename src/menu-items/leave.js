@@ -1,35 +1,38 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import { IconTypography, IconPalette, IconShadow, IconWindmill, IconMail, IconHistory, IconHistoryToggle } from '@tabler/icons';
 
 // constant
 const icons = {
     IconTypography,
     IconPalette,
     IconShadow,
-    IconWindmill
+    IconWindmill,
+    IconMail,
+    IconHistory,
+    IconHistoryToggle
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
 
 const paid_leave = {
-    id: 'paid-leave',
-    title: 'Paid Leave',
+    id: 'leave',
+    title: 'Leave',
     type: 'group',
     children: [
         {
-            id: 'create-paid-leave',
-            title: 'Create Paid Leave',
+            id: 'leave-submit',
+            title: 'Submit',
             type: 'item',
             url: '/utils/util-typography',
-            icon: icons.IconTypography,
+            icon: icons.IconMail,
             breadcrumbs: false
         },
         {
-            id: 'paid-leave-history',
+            id: 'leave-history',
             title: 'History',
             type: 'item',
             url: '/utils/util-color',
-            icon: icons.IconPalette,
+            icon: icons.IconHistoryToggle,
             breadcrumbs: false,
             target: false
         }

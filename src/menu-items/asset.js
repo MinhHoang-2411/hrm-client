@@ -1,30 +1,30 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const device = {
-    id: 'device',
-    title: 'Device',
+    id: 'asset',
+    title: 'Asset',
     type: 'group',
     children: [
         {
-            id: 'list-device',
-            title: 'List Device',
+            id: 'list-asset',
+            title: 'Assert List',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconBrandChrome,
+            icon: icons.IconLayoutList,
             breadcrumbs: false
         },
         {
-            id: 'history-device',
+            id: 'history-assset',
             title: 'History',
             type: 'item',
             url: '/sample-page',
-            icon: icons.IconHelp,
+            icon: icons.IconHistoryToggle,
             breadcrumbs: false,
             target: false
         }
