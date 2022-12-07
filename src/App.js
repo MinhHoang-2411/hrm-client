@@ -12,17 +12,14 @@ import themes from 'themes';
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
 import { useAppSelector } from 'app/hooks';
+
+// toast imports
 import { ToastContainer } from 'react-toastify';
-import moment from 'moment';
 
 // ==============================|| APP ||============================== //
 
 const App = () => {
     const customization = useAppSelector((state) => state.action);
-
-    let launchMoment = require('moment');
-    require('moment-timezone');
-    moment.tz.setDefault('America/Los_Angeles');
 
     return (
         <StyledEngineProvider injectFirst>
