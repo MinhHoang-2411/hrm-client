@@ -9,7 +9,7 @@ import { Navigate } from 'react-router-dom';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
 // utilities routing
-const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
+const SubmitLeavePage = Loadable(lazy(() => import('views/leave/submit-leave/SubmitLeavePage')));
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
@@ -37,20 +37,16 @@ const MainRoutes = {
             element: <DashboardDefault />
         },
         {
+            path: '/submit-leave',
+            element: <SubmitLeavePage />
+        },
+
+        {
             path: 'dashboard',
             children: [
                 {
                     path: 'default',
                     element: <DashboardDefault />
-                }
-            ]
-        },
-        {
-            path: 'utils',
-            children: [
-                {
-                    path: 'util-typography',
-                    element: <UtilsTypography />
                 }
             ]
         },

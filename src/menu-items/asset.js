@@ -13,7 +13,7 @@ const device = {
     children: [
         {
             id: 'list-asset',
-            title: 'Assert List',
+            title: 'Asset List',
             type: 'item',
             url: '/sample-page',
             icon: icons.IconLayoutList,

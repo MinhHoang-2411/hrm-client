@@ -23,7 +23,7 @@ const paid_leave = {
             id: 'leave-submit',
             title: 'Submit',
             type: 'item',
-            url: '/utils/util-typography',
+            url: '/submit-leave',
             icon: icons.IconMail,
             breadcrumbs: false
         },
