@@ -9,7 +9,6 @@ import { Navigate } from 'react-router-dom';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
 // utilities routing
-const SubmitLeavePage = Loadable(lazy(() => import('views/leave/submit-leave/SubmitLeavePage')));
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
@@ -17,6 +16,9 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
+
+// leave routing
+const SubmitLeaveForm = Loadable(lazy(() => import('views/leave/SubmitLeaveForm')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -38,7 +40,7 @@ const MainRoutes = {
         },
         {
             path: '/submit-leave',
-            element: <SubmitLeavePage />
+            element: <SubmitLeaveForm />
         },
 
         {

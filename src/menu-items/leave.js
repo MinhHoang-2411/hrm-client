@@ -12,8 +12,6 @@ const icons = {
     IconHistoryToggle
 };
 
-// ==============================|| UTILITIES MENU ITEMS ||============================== //
-
 const paid_leave = {
     id: 'leave',
     title: 'Leave',
