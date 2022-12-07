@@ -1,7 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { getAuth } from 'utils/auth';
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:8080/api/authenticate',
+    baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json'
     }
@@ -10,7 +13,7 @@ const axiosClient = axios.create({
 export default axiosClient;
 
 // Add a request interceptor
-axios.interceptors.request.use(
+axiosClient.interceptors.request.use(
     function (config) {
         // Do something before request is sent
         return config;
@@ -22,7 +25,7 @@ axios.interceptors.request.use(
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+axiosClient.interceptors.response.use(
     function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
@@ -31,6 +34,24 @@ axios.interceptors.response.use(
     function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
+        return Promise.reject(error);
+    }
+);
+
+axiosClient.defaults.headers.Accept = 'application/json';
+// Add a request interceptor
+axiosClient.interceptors.request.use(
+    function (config) {
+        const auth = getAuth();
+        if (auth) {
+            config.headers = {
+                Authorization: `Bearer ${auth}`
+            };
+        }
+        return config;
+    },
+    function (error) {
+        // Do something with request error
         return Promise.reject(error);
     }
 );

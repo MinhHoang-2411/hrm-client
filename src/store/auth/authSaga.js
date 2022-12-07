@@ -6,7 +6,7 @@ function* handleLogin(payload) {
     try {
         //yield delay(1000);
         const response = yield call(login, payload);
-        localStorage.setItem('access_token', JSON.stringify(response.data.id_token));
+        localStorage.setItem('access_token', JSON.stringify(response.id_token));
         yield put(authActions.loginSuccess({ ...payload }));
 
         payload.onNavigate?.();

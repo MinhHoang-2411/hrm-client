@@ -69,7 +69,6 @@ const FirebaseLogin = ({ ...others }) => {
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
-                        console.log(values);
                         setStatus({ success: false });
                         setSubmitting(false);
                         dispatch(
@@ -79,8 +78,6 @@ const FirebaseLogin = ({ ...others }) => {
                                 onNavigate: () => navigate('/')
                             })
                         );
-                        // localStorage.setItem('access_token', JSON.stringify(values));
-                        // navigate('/');
                     } catch (err) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
