@@ -2,7 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     alert: false,
-    loading: false
+    loading: false,
+    reloadList: false,
+    listData: [],
+    pagination: undefined
 };
 
 const leaveSlice = createSlice({
@@ -20,6 +23,28 @@ const leaveSlice = createSlice({
         submitFailed(state, action) {
             state.alert = action.payload;
             state.loading = false;
+        },
+        cancelAlert(state, action) {
+            state.alert = null;
+        },
+        fetchData(state, action) {
+            state.loading = true;
+            state.pagination = {
+                size: action.payload.size,
+                page: action.payload.page
+            };
+        },
+        fetchDataSuccess(state, action) {
+            state.loading = false;
+            state.listData = action.payload.content;
+            state.pagination = {
+                ...state.pagination,
+                totalCount: action?.payload?.totalElements
+            };
+        },
+        fetchDataFalse(state, action) {
+            state.loading = false;
+            console.error(action.payload);
         }
     }
 });

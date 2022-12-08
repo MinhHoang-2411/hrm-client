@@ -6,6 +6,11 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import MainCard from 'ui-component/cards/MainCard';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Stack from '@mui/material/Stack';
+import SendIcon from '@mui/icons-material/Send';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
 import { useTheme } from '@mui/material/styles';
 
 // third party
@@ -100,8 +105,12 @@ const SubmitLeaveForm = ({ ...others }) => {
         }
     };
 
+    const handleGetGeneralInfor = async () => {
+        return await getGeneralInfor();
+    };
+
     useEffect(() => {
-        const information = getGeneralInfor();
+        const information = handleGetGeneralInfor();
         information.then(function (result) {
             setInfor(result);
             setInforLeaveUnUse(result.leaveUnUse + ' days of Annual Leave');
@@ -311,45 +320,35 @@ const SubmitLeaveForm = ({ ...others }) => {
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <Grid container spacing={gridSpacing}>
-                                            <Grid item lg={6} md={6} sm={6} xs={6}>
-                                                <Box display="flex" justifyContent="flex-end">
-                                                    <AnimateButton>
-                                                        <Button
-                                                            disableElevation
-                                                            style={{ width: '25%' }}
-                                                            size="large"
-                                                            type="reset"
-                                                            variant="outlined"
-                                                            onClick={(e) => {
-                                                                resetForm();
-                                                                setDateAndLeaveTimes([]);
-                                                            }}
-                                                            color="secondary"
-                                                        >
-                                                            Reset
-                                                        </Button>
-                                                    </AnimateButton>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item lg={6} md={6} sm={6} xs={6}>
-                                                <Box display="flex" justifyContent="flex-begin">
-                                                    <AnimateButton>
-                                                        <Button
-                                                            disableElevation
-                                                            disabled={isSubmitting}
-                                                            style={{ width: '25%' }}
-                                                            size="large"
-                                                            type="submit"
-                                                            variant="contained"
-                                                            color="secondary"
-                                                        >
-                                                            Submit
-                                                        </Button>
-                                                    </AnimateButton>
-                                                </Box>
-                                            </Grid>
-                                        </Grid>
+                                        <Stack direction="row" spacing={2} style={{ justifyContent: 'center' }}>
+                                            <Button
+                                                disableElevation
+                                                style={{ width: '20%' }}
+                                                size="large"
+                                                type="reset"
+                                                variant="outlined"
+                                                onClick={(e) => {
+                                                    resetForm();
+                                                    setDateAndLeaveTimes([]);
+                                                }}
+                                                color="secondary"
+                                                startIcon={<RestartAltIcon />}
+                                            >
+                                                Reset
+                                            </Button>
+                                            <Button
+                                                disableElevation
+                                                disabled={isSubmitting}
+                                                style={{ width: '20%' }}
+                                                size="large"
+                                                type="submit"
+                                                variant="contained"
+                                                color="secondary"
+                                                startIcon={<SendIcon />}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </Stack>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -360,41 +359,48 @@ const SubmitLeaveForm = ({ ...others }) => {
                                     }}
                                     variant="outlined"
                                 >
-                                    <CardHeader title="Leave Detail" subheader={inforLeaveUnUse} />
-                                    <CardContent>
+                                    <CardHeader sx={{ padding: '24px 24px 10px 24px' }} title="Leave Detail" subheader={inforLeaveUnUse} />
+                                    <CardContent sx={{ padding: '0px 24px' }}>
                                         <ul style={{ paddingLeft: 0 }}>
-                                            {dateAndLeaveTimes.map((item, index) => {
-                                                return (
-                                                    <div key={index}>
-                                                        <li style={{ color: 'black', listStyleType: 'none' }}>
-                                                            <CalendarMonthIcon
-                                                                sx={{
-                                                                    width: 15,
-                                                                    height: 15,
-                                                                    verticalAlign: 'center',
-                                                                    textAlign: 'center'
+                                            {dateAndLeaveTimes?.length > 0 &&
+                                                dateAndLeaveTimes?.map((item, index) => {
+                                                    return (
+                                                        <div key={index}>
+                                                            <li
+                                                                style={{
+                                                                    color: 'black',
+                                                                    listStyleType: 'none',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center'
                                                                 }}
-                                                                fontSize="medium"
-                                                            />
-                                                            <span style={{ marrginLeft: '10px' }}>
-                                                                {dateFormat(item?.leaveDate, 'dd-mm-yyyy')}
-                                                            </span>
-                                                            <Select
-                                                                sx={{ m: 1, width: '45%', marginLeft: '15px' }}
-                                                                size="small"
-                                                                labelId="demo-simple-select-label"
-                                                                value={item.dateType}
-                                                                onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
-                                                                defaultValue="ALL_DAY"
                                                             >
-                                                                <MenuItem value={'ALL_DAY'}>ALL DAY</MenuItem>
-                                                                <MenuItem value={'MORNING'}>MORNING</MenuItem>
-                                                                <MenuItem value={'AFTERNOON'}>AFTERNOON</MenuItem>
-                                                            </Select>
-                                                        </li>
-                                                    </div>
-                                                );
-                                            })}
+                                                                <CalendarMonthIcon
+                                                                    sx={{
+                                                                        width: 25,
+                                                                        height: 25,
+                                                                        marginBottom: '4px'
+                                                                    }}
+                                                                    fontSize="medium"
+                                                                />
+                                                                <span style={{ marginLeft: '10px', fontSize: '16px' }}>
+                                                                    {dateFormat(item?.leaveDate, 'dd-mm-yyyy')}
+                                                                </span>
+                                                                <Select
+                                                                    sx={{ m: 1, width: '45%', marginLeft: '15px' }}
+                                                                    size="small"
+                                                                    labelId="demo-simple-select-label"
+                                                                    value={item.dateType}
+                                                                    onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
+                                                                    defaultValue="ALL_DAY"
+                                                                >
+                                                                    <MenuItem value={'ALL_DAY'}>All day</MenuItem>
+                                                                    <MenuItem value={'MORNING'}>Morning</MenuItem>
+                                                                    <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
+                                                                </Select>
+                                                            </li>
+                                                        </div>
+                                                    );
+                                                })}
                                         </ul>
                                     </CardContent>
                                 </Card>

@@ -19,6 +19,7 @@ const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // leave routing
 const SubmitLeaveForm = Loadable(lazy(() => import('views/leave/SubmitLeaveForm')));
+const LeaveHistoryPage = Loadable(lazy(() => import('views/leave/LeaveHistoryPage')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -41,6 +42,10 @@ const MainRoutes = {
         {
             path: '/submit-leave',
             element: <SubmitLeaveForm />
+        },
+        {
+            path: '/leave/hisory',
+            element: <LeaveHistoryPage />
         },
 
         {

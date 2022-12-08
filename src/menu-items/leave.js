@@ -29,7 +29,7 @@ const paid_leave = {
             id: 'leave-history',
             title: 'History',
             type: 'item',
-            url: '/utils/util-color',
+            url: '/leave/hisory',
             icon: icons.IconHistoryToggle,
             breadcrumbs: false,
             target: false

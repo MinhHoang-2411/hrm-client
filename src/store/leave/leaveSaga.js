@@ -1,21 +1,31 @@
-import { submitLeave } from 'api/leave';
-import { call, fork, put, take } from 'redux-saga/effects';
+import { submitLeave, getAll } from 'api/leave';
+import { all, call, fork, put, takeEvery, takeLatest, take, delay } from 'redux-saga/effects';
 import { leaveActions } from './leaveSlice';
 
-function* handleSubmit(payload) {
+function* handleSubmit(action) {
     try {
-        yield call(submitLeave, payload);
+        yield call(submitLeave, action.payload);
         yield put(leaveActions.submitSuccess('success'));
     } catch (error) {
         yield put(leaveActions.submitFailed('failed'));
+    } finally {
+        yield delay(2000);
+        yield put(leaveActions.cancelAlert(null));
+    }
+}
+
+function* handleFetchData(action) {
+    try {
+        const params = action.payload;
+        const response = yield call(getAll, params);
+        yield put(leaveActions.fetchDataSuccess(response));
+    } catch (error) {
+        yield put(leaveActions.fetchDataFalse('An error occurred, please try again'));
     }
 }
 
 function* watchFlow() {
-    while (true) {
-        const action = yield take(leaveActions.submit.type);
-        yield call(handleSubmit, action.payload);
-    }
+    yield all([takeLatest(leaveActions.fetchData.type, handleFetchData), takeLatest(leaveActions.submit.type, handleSubmit)]);
 }
 
 export function* leaveSaga() {
