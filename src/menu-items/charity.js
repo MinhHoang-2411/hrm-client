@@ -4,7 +4,7 @@ import { IconBrandChrome, IconHelp, IconHistoryToggle, IconChartDonut2 } from '@
 // constant
 const icons = { IconBrandChrome, IconHelp, IconHistoryToggle, IconChartDonut2 };
 
-// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
+// ==============================|| CHARITY MENU ITEMS ||============================== //
 
 const charity = {
     id: 'charity',
@@ -13,19 +13,11 @@ const charity = {
     children: [
         {
             id: 'donate',
-            title: 'Donate',
+            title: 'Donation',
             type: 'item',
-            url: '/sample-page',
+            url: '/charity/donation',
             icon: icons.IconChartDonut2,
             breadcrumbs: false
-        },
-        {
-            id: 'donate-hitory',
-            title: 'History',
-            type: 'item',
-            url: '/sample-page',
-            icon: icons.IconHistoryToggle,
-            target: false
         }
     ]
 };

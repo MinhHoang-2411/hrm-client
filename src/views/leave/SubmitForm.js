@@ -39,7 +39,7 @@ import { leaveActions } from 'store/leave/leaveSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const SubmitLeaveForm = ({ ...others }) => {
+const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
     const alert = useAppSelector((state) => state.leave.alert);
     const theme = useTheme();
@@ -407,4 +407,4 @@ const SubmitLeaveForm = ({ ...others }) => {
     );
 };
 
-export default SubmitLeaveForm;
+export default SubmitForm;

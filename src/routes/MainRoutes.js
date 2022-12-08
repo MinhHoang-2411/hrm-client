@@ -8,17 +8,25 @@ import { Navigate } from 'react-router-dom';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
-// utilities routing
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
-const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
-const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
-
-// sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
-
 // leave routing
-const SubmitLeaveForm = Loadable(lazy(() => import('views/leave/SubmitLeaveForm')));
+const SubmitForm = Loadable(lazy(() => import('views/leave/SubmitForm')));
+const LeaveHistory = Loadable(lazy(() => import('views/leave/History')));
+
+// asset routing
+const AssetList = Loadable(lazy(() => import('views/asset/AssetList')));
+const AssetHistory = Loadable(lazy(() => import('views/asset/History')));
+
+// project routing
+const ProjectDashboard = Loadable(lazy(() => import('views/project/Dashboard')));
+const LogWork = Loadable(lazy(() => import('views/project/LogWork')));
+const TaskList = Loadable(lazy(() => import('views/project/TaskList')));
+
+// bar routing
+const BarMenu = Loadable(lazy(() => import('views/bar/Menu')));
+const OrderHistory = Loadable(lazy(() => import('views/bar/OrderHistory')));
+
+// charity routing
+const Donation = Loadable(lazy(() => import('views/charity/Donation')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -38,59 +46,82 @@ const MainRoutes = {
             path: '/',
             element: <DashboardDefault />
         },
-        {
-            path: '/submit-leave',
-            element: <SubmitLeaveForm />
-        },
 
         {
             path: 'dashboard',
             children: [
                 {
-                    path: 'default',
+                    path: '',
                     element: <DashboardDefault />
                 }
             ]
         },
+
         {
-            path: 'utils',
+            path: 'leave',
             children: [
                 {
-                    path: 'util-color',
-                    element: <UtilsColor />
+                    path: 'submit',
+                    element: <SubmitForm />
+                },
+                {
+                    path: 'history',
+                    element: <LeaveHistory />
+                }
+            ]
+        },
+
+        {
+            path: 'asset',
+            children: [
+                {
+                    path: '',
+                    element: <AssetList />
+                },
+                {
+                    path: 'history',
+                    element: <AssetHistory />
                 }
             ]
         },
         {
-            path: 'utils',
+            path: 'project',
             children: [
                 {
-                    path: 'util-shadow',
-                    element: <UtilsShadow />
+                    path: 'dashboard',
+                    element: <ProjectDashboard />
+                },
+                {
+                    path: 'task-list',
+                    element: <TaskList />
+                },
+                {
+                    path: 'log-work',
+                    element: <LogWork />
                 }
             ]
         },
         {
-            path: 'icons',
+            path: 'bar',
             children: [
                 {
-                    path: 'tabler-icons',
-                    element: <UtilsTablerIcons />
+                    path: 'menu',
+                    element: <BarMenu />
+                },
+                {
+                    path: 'order-history',
+                    element: <OrderHistory />
                 }
             ]
         },
         {
-            path: 'icons',
+            path: 'charity',
             children: [
                 {
-                    path: 'material-icons',
-                    element: <UtilsMaterialIcons />
+                    path: 'donation',
+                    element: <Donation />
                 }
             ]
-        },
-        {
-            path: 'sample-page',
-            element: <SamplePage />
         }
     ]
 };

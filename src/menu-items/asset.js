@@ -4,7 +4,7 @@ import { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle } from '@t
 // constant
 const icons = { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle };
 
-// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
+// ==============================|| ASSET MENU ITEMS ||============================== //
 
 const device = {
     id: 'asset',
@@ -15,7 +15,7 @@ const device = {
             id: 'list-asset',
             title: 'Asset List',
             type: 'item',
-            url: '/sample-page',
+            url: '/asset',
             icon: icons.IconLayoutList,
             breadcrumbs: false
         },
@@ -23,7 +23,7 @@ const device = {
             id: 'history-assset',
             title: 'History',
             type: 'item',
-            url: '/sample-page',
+            url: '/asset/history',
             icon: icons.IconHistoryToggle,
             breadcrumbs: false,
             target: false
