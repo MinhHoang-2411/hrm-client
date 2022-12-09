@@ -3,7 +3,7 @@ import { IconBrandChrome, IconHelp, IconChecklist, IconLayoutList, IconSubtask }
 // constant
 const icons = { IconBrandChrome, IconHelp, IconChecklist, IconLayoutList, IconSubtask };
 
-// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
+// ==============================|| PROJECT MENU ITEMS ||============================== //
 
 const project = {
     id: 'project',
@@ -14,7 +14,7 @@ const project = {
             id: 'list-project',
             title: 'Dashboard',
             type: 'item',
-            url: '/sample-page',
+            url: '/project/dashboard',
             icon: icons.IconLayoutList,
             breadcrumbs: false,
             target: false
@@ -23,16 +23,18 @@ const project = {
             id: 'list-task',
             title: 'Task List',
             type: 'item',
-            url: '/sample-page',
+            url: '/project/task-list',
             icon: icons.IconChecklist,
+            breadcrumbs: false,
             target: false
         },
         {
             id: 'log-work',
             title: 'Log Work',
             type: 'item',
-            url: '/sample-page',
+            url: '/project/log-work',
             icon: icons.IconSubtask,
+            breadcrumbs: false,
             target: false
         }
     ]
