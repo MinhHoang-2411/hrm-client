@@ -4,7 +4,7 @@ import { IconBrandChrome, IconHelp, IconHistoryToggle, IconMenu2 } from '@tabler
 // constant
 const icons = { IconBrandChrome, IconHelp, IconHistoryToggle, IconMenu2 };
 
-// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
+// ==============================|| BAR MENU ITEMS ||============================== //
 
 const bar = {
     id: 'bar',
@@ -15,7 +15,7 @@ const bar = {
             id: 'menu',
             title: 'Menu',
             type: 'item',
-            url: '/sample-page',
+            url: '/bar/menu',
             icon: icons.IconMenu2,
             breadcrumbs: false
         },
@@ -23,9 +23,10 @@ const bar = {
             id: 'order-history',
             title: 'Order History',
             type: 'item',
-            url: '/sample-page',
+            url: '/bar/order-history',
             icon: icons.IconHistoryToggle,
-            target: false
+            target: false,
+            breadcrumbs: false
         }
     ]
 };

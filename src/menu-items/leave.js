@@ -11,6 +11,7 @@ const icons = {
     IconHistory,
     IconHistoryToggle
 };
+// ==============================|| LEAVE MENU ITEMS ||============================== //
 
 const paid_leave = {
     id: 'leave',
@@ -21,7 +22,7 @@ const paid_leave = {
             id: 'leave-submit',
             title: 'Submit',
             type: 'item',
-            url: '/submit-leave',
+            url: '/leave/submit',
             icon: icons.IconMail,
             breadcrumbs: false
         },
@@ -29,7 +30,7 @@ const paid_leave = {
             id: 'leave-history',
             title: 'History',
             type: 'item',
-            url: '/leave/hisory',
+            url: '/leave/history',
             icon: icons.IconHistoryToggle,
             breadcrumbs: false,
             target: false
