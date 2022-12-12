@@ -25,15 +25,27 @@ Date.prototype.toJSON = function () {
     correctedDate.setHours(this.getHours() + timezoneOffsetInHours);
     var iso = correctedDate.toISOString().replace('Z', '');
 
-    return iso + sign + leadingZero + Math.abs(timezoneOffsetInHours).toString() + ':00';
+    return iso + 'Z';
+};
+
+Date.prototype.toJSONFilter = function () {
+    var timezoneOffsetInHours = -(this.getTimezoneOffset() / 60); //UTC minus local time
+    var correctedDate = new Date(this.getFullYear(), this.getMonth(), this.getDate());
+    correctedDate.setHours(this.getHours() + timezoneOffsetInHours);
+
+    var iso = correctedDate.toISOString().replace('Z', '');
+    iso = iso.toString().split('T')[0];
+
+    return iso + 'T00:00:00.000Z';
 };
 
 export function submitLeave(params) {
-    params.startDate = params.startDate.toDate().toJSON().split('T')[0];
-    params.endDate = params.endDate.toDate().toJSON().split('T')[0];
+    params.startDate = params.startDate.toDate().toJSON();
+    params.endDate = params.endDate.toDate().toJSON();
     params.leaveDetailsDTOS = params.leaveDetailsDTOS.map((ite) => ({
-        leaveDate: ite.leaveDate.toDate().toJSON().split('T')[0],
-        dateType: ite.dateType
+        leaveDate: ite.leaveDate.toDate().toJSON(),
+        dateType: ite.dateType,
+        note: ite.note
     }));
     const response = axiosClient.post(SUBMIT_LEAVE_REQUEST_URL, params);
     return response;
@@ -49,6 +61,12 @@ export function getAll(params) {
     return response;
 }
 
-export function convertDate(date) {
-    return date.toJSON().split('T')[0];
+export function convertDateToFilter(date) {
+    return date.toJSONFilter();
+}
+
+export function formatDate(dateResponse) {
+    let date = new Date(dateResponse);
+    let dateFormat = date.getDate() + '/' + parseInt(date.getMonth() + 1) + '/' + date.getFullYear();
+    return dateFormat;
 }

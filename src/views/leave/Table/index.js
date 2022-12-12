@@ -10,6 +10,13 @@ import PropTypes from 'prop-types';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
+// format
+import { formatDate } from 'api/leave';
+import { upperCaseFirstCharacter } from 'utils/string';
+
+// scss
+import '../../../assets/scss/leave.scss';
+
 const headCells = [
     {
         id: 'dropdown',
@@ -48,12 +55,6 @@ const headCells = [
         label: 'Leave Type'
     },
     {
-        id: 'note',
-        align: 'left',
-        disablePadding: false,
-        label: 'Note'
-    },
-    {
         id: 'status',
         align: 'left',
         disablePadding: false,
@@ -77,37 +78,40 @@ export default function TableLeaveHistory({ data }) {
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
                     </TableCell>
-                    <TableCell align="left">{row?.createdDate}</TableCell>
+                    <TableCell align="left">{formatDate(row?.createdDate)}</TableCell>
                     <TableCell align="left">
-                        {row?.startDate} - {row?.endDate}
+                        {formatDate(row?.startDate)} - {formatDate(row?.endDate)}
                     </TableCell>
                     <TableCell align="left">{row?.title}</TableCell>
                     <TableCell align="left">{row?.reason}</TableCell>
-                    <TableCell align="left">{row?.type}</TableCell>
-                    <TableCell align="left">{row?.status}</TableCell>
-                    <TableCell align="left">{row?.status}</TableCell>
+                    <TableCell align="left">{upperCaseFirstCharacter(row?.type)}</TableCell>
+                    <TableCell align="left">{upperCaseFirstCharacter(row?.status)}</TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{ margin: 1 }}>
-                                <Typography variant="h4" gutterBottom component="div">
-                                    Leave Details
-                                </Typography>
+                            <Box sx={{ margin: 2 }}>
                                 <Table size="small" aria-label="purchases">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Date</TableCell>
                                             <TableCell>Date Type</TableCell>
+                                            <TableCell>Note</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {row.leaveDetailsDTOS?.map((historyRow, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell align="left">{historyRow.leaveDate}</TableCell>
+                                        {row?.leaveDetailsDTOS?.map((historyRow, index) => (
+                                            <TableRow
+                                                key={index}
+                                                className={`row-detail-leave ${index == row?.leaveDetailsDTOS?.length - 1 && 'last-row'}`}
+                                            >
+                                                <TableCell align="left">{formatDate(historyRow.leaveDate)}</TableCell>
                                                 <TableCell align="left">
-                                                    {historyRow.dateType === 'ALL_DAY' ? 'ALL DAY' : historyRow.dateType}
+                                                    {historyRow.dateType === 'ALL_DAY'
+                                                        ? 'All day'
+                                                        : upperCaseFirstCharacter(historyRow.dateType)}
                                                 </TableCell>
+                                                <TableCell align="left">{historyRow.note}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

@@ -1,26 +1,22 @@
 // material-ui
-import { Box, Button, Container, FormControl, Grid, MenuItem, TextField } from '@mui/material';
-import Select from '@mui/material/Select';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SendIcon from '@mui/icons-material/Send';
+import { Button, FormControl, Grid, MenuItem, TextField } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import MainCard from 'ui-component/cards/MainCard';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import DeleteIcon from '@mui/icons-material/Delete';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
-import SendIcon from '@mui/icons-material/Send';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import MainCard from 'ui-component/cards/MainCard';
 
 import { useTheme } from '@mui/material/styles';
 
 // third party
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-// project imports
-import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
 
 // date
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -42,7 +38,17 @@ import { leaveActions } from 'store/leave/leaveSlice';
 
 // toast
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+// dialog
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+
+// scss
+import '../../assets/scss/leave.scss';
+
+import * as React from 'react';
 
 const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
@@ -51,6 +57,17 @@ const SubmitForm = ({ ...others }) => {
     const [dateAndLeaveTimes, setDateAndLeaveTimes] = useState([]);
     const [infor, setInfor] = useState({});
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
+    const [currentIndex, setCurrentIndex] = React.useState(null);
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = (idx) => {
+        setOpen(true);
+        setCurrentIndex(idx);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleGetArrayDate = (leaveFrom, leaveTo) => {
         if (leaveFrom && leaveTo) {
@@ -60,7 +77,8 @@ const SubmitForm = ({ ...others }) => {
                 dates?.forEach((date) =>
                     arrDate.push({
                         leaveDate: date,
-                        dateType: 'ALL_DAY'
+                        dateType: 'ALL_DAY',
+                        note: ''
                     })
                 );
             }
@@ -91,6 +109,12 @@ const SubmitForm = ({ ...others }) => {
                 leaveDetailsDTOS: dateAndLeaveTimes
             })
         );
+    };
+
+    const handleSubmitNote = (value) => {
+        const tmpDate = [...dateAndLeaveTimes];
+        tmpDate[currentIndex].note = value.note;
+        setDateAndLeaveTimes(tmpDate);
     };
 
     const showToastMessage = (param) => {
@@ -160,17 +184,9 @@ const SubmitForm = ({ ...others }) => {
                                                         fullWidth
                                                         error={Boolean(touched.email && errors.email)}
                                                         sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
                                                     >
-                                                        <span
-                                                            style={{
-                                                                marginBottom: '5px',
-                                                                fontWeight: 'bold',
-                                                                marginRight: 'auto',
-                                                                marginTop: '5px'
-                                                            }}
-                                                        >
-                                                            Title
-                                                        </span>
+                                                        <span>Title</span>
                                                         <TextField
                                                             id="outlined-adornment-title"
                                                             type="text"
@@ -188,17 +204,9 @@ const SubmitForm = ({ ...others }) => {
                                                     fullWidth
                                                     error={Boolean(touched.password && errors.password)}
                                                     sx={{ ...theme.typography.customInput }}
+                                                    className="title-form"
                                                 >
-                                                    <span
-                                                        style={{
-                                                            marginBottom: '5px',
-                                                            fontWeight: 'bold',
-                                                            marginRight: 'auto',
-                                                            marginTop: '5px'
-                                                        }}
-                                                    >
-                                                        Leave Type
-                                                    </span>
+                                                    <span>Leave Type</span>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -206,8 +214,10 @@ const SubmitForm = ({ ...others }) => {
                                                         value={values.type}
                                                         onChange={handleChange}
                                                     >
-                                                        <MenuItem value={'OFF'}>OFF</MenuItem>
-                                                        <MenuItem value={'REMOTE'}>REMOTE</MenuItem>
+                                                        <MenuItem value={'CASUAL'}>Casual</MenuItem>
+                                                        <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
+                                                        <MenuItem value={'REMOTE'}>Remote</MenuItem>
+                                                        <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
@@ -222,17 +232,9 @@ const SubmitForm = ({ ...others }) => {
                                                         fullWidth
                                                         error={Boolean(touched.password && errors.password)}
                                                         sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
                                                     >
-                                                        <span
-                                                            style={{
-                                                                marginBottom: '5px',
-                                                                fontWeight: 'bold',
-                                                                marginRight: 'auto',
-                                                                marginTop: '5px'
-                                                            }}
-                                                        >
-                                                            From
-                                                        </span>
+                                                        <span>From</span>
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DatePicker
                                                                 value={values.startDate}
@@ -255,17 +257,9 @@ const SubmitForm = ({ ...others }) => {
                                                         fullWidth
                                                         error={Boolean(touched.password && errors.password)}
                                                         sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
                                                     >
-                                                        <span
-                                                            style={{
-                                                                marginBottom: '5px',
-                                                                fontWeight: 'bold',
-                                                                marginRight: 'auto',
-                                                                marginTop: '5px'
-                                                            }}
-                                                        >
-                                                            To
-                                                        </span>
+                                                        <span>To</span>
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DatePicker
                                                                 id="outlined-adornment-leave-to"
@@ -293,17 +287,9 @@ const SubmitForm = ({ ...others }) => {
                                                 fullWidth
                                                 error={Boolean(touched.password && errors.password)}
                                                 sx={{ ...theme.typography.customInput }}
+                                                className="title-form"
                                             >
-                                                <span
-                                                    style={{
-                                                        marginBottom: '5px',
-                                                        fontWeight: 'bold',
-                                                        marginRight: 'auto',
-                                                        marginTop: '5px'
-                                                    }}
-                                                >
-                                                    Reason
-                                                </span>
+                                                <span>Reason</span>
                                                 <TextField
                                                     id="outlined-multiline-static"
                                                     multiline
@@ -383,10 +369,10 @@ const SubmitForm = ({ ...others }) => {
                                                                     fontSize="medium"
                                                                 />
                                                                 <span style={{ marginLeft: '10px', fontSize: '16px' }}>
-                                                                    {dateFormat(item?.leaveDate, 'dd-mm-yyyy')}
+                                                                    {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
                                                                 </span>
                                                                 <Select
-                                                                    sx={{ m: 1, width: '45%', marginLeft: '15px' }}
+                                                                    sx={{ m: 1, width: '40%', marginLeft: '15px' }}
                                                                     size="small"
                                                                     labelId="demo-simple-select-label"
                                                                     value={item.dateType}
@@ -397,6 +383,15 @@ const SubmitForm = ({ ...others }) => {
                                                                     <MenuItem value={'MORNING'}>Morning</MenuItem>
                                                                     <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
                                                                 </Select>
+                                                                <Stack direction="row" spacing={1}>
+                                                                    <IconButton aria-label="delete">
+                                                                        <SpeakerNotesIcon
+                                                                            fontSize="medium"
+                                                                            color={item.note === '' ? '' : 'secondary'}
+                                                                            onClick={(e) => handleClickOpen(index)}
+                                                                        />
+                                                                    </IconButton>
+                                                                </Stack>
                                                             </li>
                                                         </div>
                                                     );
@@ -406,6 +401,75 @@ const SubmitForm = ({ ...others }) => {
                                 </Card>
                             </Grid>
                         </Grid>
+                    </form>
+                )}
+            </Formik>
+            <Formik
+                initialValues={{
+                    note: '',
+                    submit: null
+                }}
+                validator={() => ({})}
+                onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
+                    try {
+                        setStatus({ success: false });
+                        setSubmitting(false);
+                        handleSubmitNote(values);
+                        resetForm();
+                    } catch (err) {
+                        setStatus({ success: false });
+                        setErrors({ submit: err.message });
+                        setSubmitting(false);
+                    }
+                }}
+            >
+                {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm, setFieldValue }) => (
+                    <form noValidate onSubmit={handleSubmit} {...others}>
+                        <Dialog open={open} onClose={handleClose} fullWidth>
+                            <DialogTitle sx={{ fontSize: '24px' }}>Note</DialogTitle>
+                            <DialogContent>
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    fullWidth
+                                    multiline
+                                    type="text"
+                                    name="note"
+                                    value={values.note}
+                                    onChange={handleChange}
+                                    rows={6}
+                                    placeholder="Note"
+                                    inputProps={{ style: { fontSize: '16px' } }}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    disableElevation
+                                    style={{ width: '20%' }}
+                                    size="large"
+                                    type="reset"
+                                    variant="outlined"
+                                    onClick={handleClose}
+                                    color="secondary"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    disableElevation
+                                    style={{ width: '20%' }}
+                                    size="large"
+                                    type="submit"
+                                    variant="contained"
+                                    color="secondary"
+                                    startIcon={<SendIcon />}
+                                    onClick={(e) => {
+                                        handleClose();
+                                        handleSubmit(values);
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </form>
                 )}
             </Formik>

@@ -15,6 +15,7 @@ import { useAppSelector } from 'app/hooks';
 
 // toast imports
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // ==============================|| APP ||============================== //
 
