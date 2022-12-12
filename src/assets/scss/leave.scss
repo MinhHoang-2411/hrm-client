@@ -1,0 +1,20 @@
+
+.row-detail-leave {
+    & td {
+        padding: 10px 16px !important;
+    }
+}
+.last-row {
+    & td {
+        border-bottom: none !important;
+    }
+}
+
+.title-form {
+    span {
+        margin-bottom: 5px;
+        font-weight: bold;
+        margin-right: auto;
+        margin-top: 5px;
+    }
+}

@@ -1,21 +1,22 @@
 // material-ui
-import { Box, Button, Container, FormControl, Grid, MenuItem, TextField } from '@mui/material';
-import Select from '@mui/material/Select';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SendIcon from '@mui/icons-material/Send';
+import { Button, FormControl, Grid, MenuItem, TextField } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 import MainCard from 'ui-component/cards/MainCard';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 import { useTheme } from '@mui/material/styles';
 
 // third party
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-// project imports
-import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
 
 // date
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -28,7 +29,7 @@ import { gridSpacing } from 'store/constant';
 import { getDatesInRange } from 'utils/date-time';
 
 // api leave
-import { getGeneralInfor } from 'api/leave';
+import { getLeaveCount } from 'api/leave';
 import { useEffect, useState } from 'react';
 
 // redux
@@ -37,7 +38,17 @@ import { leaveActions } from 'store/leave/leaveSlice';
 
 // toast
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+// dialog
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+
+// scss
+import '../../assets/scss/leave.scss';
+
+import * as React from 'react';
 
 const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
@@ -46,6 +57,17 @@ const SubmitForm = ({ ...others }) => {
     const [dateAndLeaveTimes, setDateAndLeaveTimes] = useState([]);
     const [infor, setInfor] = useState({});
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
+    const [currentIndex, setCurrentIndex] = React.useState(null);
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = (idx) => {
+        setOpen(true);
+        setCurrentIndex(idx);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleGetArrayDate = (leaveFrom, leaveTo) => {
         if (leaveFrom && leaveTo) {
@@ -55,7 +77,8 @@ const SubmitForm = ({ ...others }) => {
                 dates?.forEach((date) =>
                     arrDate.push({
                         leaveDate: date,
-                        dateType: 'ALL_DAY'
+                        dateType: 'ALL_DAY',
+                        note: ''
                     })
                 );
             }
@@ -88,6 +111,12 @@ const SubmitForm = ({ ...others }) => {
         );
     };
 
+    const handleSubmitNote = (value) => {
+        const tmpDate = [...dateAndLeaveTimes];
+        tmpDate[currentIndex].note = value.note;
+        setDateAndLeaveTimes(tmpDate);
+    };
+
     const showToastMessage = (param) => {
         if (param === 'success') {
             toast.success('Submit Leave successfully', {
@@ -100,8 +129,12 @@ const SubmitForm = ({ ...others }) => {
         }
     };
 
+    const handleGetLeaveCount = async () => {
+        return await getLeaveCount();
+    };
+
     useEffect(() => {
-        const information = getGeneralInfor();
+        const information = handleGetLeaveCount();
         information.then(function (result) {
             setInfor(result);
             setInforLeaveUnUse(result.leaveUnUse + ' days of Annual Leave');
@@ -151,17 +184,9 @@ const SubmitForm = ({ ...others }) => {
                                                         fullWidth
                                                         error={Boolean(touched.email && errors.email)}
                                                         sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
                                                     >
-                                                        <span
-                                                            style={{
-                                                                marginBottom: '5px',
-                                                                fontWeight: 'bold',
-                                                                marginRight: 'auto',
-                                                                marginTop: '5px'
-                                                            }}
-                                                        >
-                                                            Title
-                                                        </span>
+                                                        <span>Title</span>
                                                         <TextField
                                                             id="outlined-adornment-title"
                                                             type="text"
@@ -179,17 +204,9 @@ const SubmitForm = ({ ...others }) => {
                                                     fullWidth
                                                     error={Boolean(touched.password && errors.password)}
                                                     sx={{ ...theme.typography.customInput }}
+                                                    className="title-form"
                                                 >
-                                                    <span
-                                                        style={{
-                                                            marginBottom: '5px',
-                                                            fontWeight: 'bold',
-                                                            marginRight: 'auto',
-                                                            marginTop: '5px'
-                                                        }}
-                                                    >
-                                                        Leave Type
-                                                    </span>
+                                                    <span>Leave Type</span>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -197,8 +214,10 @@ const SubmitForm = ({ ...others }) => {
                                                         value={values.type}
                                                         onChange={handleChange}
                                                     >
-                                                        <MenuItem value={'OFF'}>OFF</MenuItem>
-                                                        <MenuItem value={'REMOTE'}>REMOTE</MenuItem>
+                                                        <MenuItem value={'CASUAL'}>Casual</MenuItem>
+                                                        <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
+                                                        <MenuItem value={'REMOTE'}>Remote</MenuItem>
+                                                        <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
@@ -213,17 +232,9 @@ const SubmitForm = ({ ...others }) => {
                                                         fullWidth
                                                         error={Boolean(touched.password && errors.password)}
                                                         sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
                                                     >
-                                                        <span
-                                                            style={{
-                                                                marginBottom: '5px',
-                                                                fontWeight: 'bold',
-                                                                marginRight: 'auto',
-                                                                marginTop: '5px'
-                                                            }}
-                                                        >
-                                                            From
-                                                        </span>
+                                                        <span>From</span>
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DatePicker
                                                                 value={values.startDate}
@@ -246,17 +257,9 @@ const SubmitForm = ({ ...others }) => {
                                                         fullWidth
                                                         error={Boolean(touched.password && errors.password)}
                                                         sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
                                                     >
-                                                        <span
-                                                            style={{
-                                                                marginBottom: '5px',
-                                                                fontWeight: 'bold',
-                                                                marginRight: 'auto',
-                                                                marginTop: '5px'
-                                                            }}
-                                                        >
-                                                            To
-                                                        </span>
+                                                        <span>To</span>
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DatePicker
                                                                 id="outlined-adornment-leave-to"
@@ -284,17 +287,9 @@ const SubmitForm = ({ ...others }) => {
                                                 fullWidth
                                                 error={Boolean(touched.password && errors.password)}
                                                 sx={{ ...theme.typography.customInput }}
+                                                className="title-form"
                                             >
-                                                <span
-                                                    style={{
-                                                        marginBottom: '5px',
-                                                        fontWeight: 'bold',
-                                                        marginRight: 'auto',
-                                                        marginTop: '5px'
-                                                    }}
-                                                >
-                                                    Reason
-                                                </span>
+                                                <span>Reason</span>
                                                 <TextField
                                                     id="outlined-multiline-static"
                                                     multiline
@@ -311,45 +306,35 @@ const SubmitForm = ({ ...others }) => {
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <Grid container spacing={gridSpacing}>
-                                            <Grid item lg={6} md={6} sm={6} xs={6}>
-                                                <Box display="flex" justifyContent="flex-end">
-                                                    <AnimateButton>
-                                                        <Button
-                                                            disableElevation
-                                                            style={{ width: '25%' }}
-                                                            size="large"
-                                                            type="reset"
-                                                            variant="outlined"
-                                                            onClick={(e) => {
-                                                                resetForm();
-                                                                setDateAndLeaveTimes([]);
-                                                            }}
-                                                            color="secondary"
-                                                        >
-                                                            Reset
-                                                        </Button>
-                                                    </AnimateButton>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item lg={6} md={6} sm={6} xs={6}>
-                                                <Box display="flex" justifyContent="flex-begin">
-                                                    <AnimateButton>
-                                                        <Button
-                                                            disableElevation
-                                                            disabled={isSubmitting}
-                                                            style={{ width: '25%' }}
-                                                            size="large"
-                                                            type="submit"
-                                                            variant="contained"
-                                                            color="secondary"
-                                                        >
-                                                            Submit
-                                                        </Button>
-                                                    </AnimateButton>
-                                                </Box>
-                                            </Grid>
-                                        </Grid>
+                                        <Stack direction="row" spacing={2} style={{ justifyContent: 'center' }}>
+                                            <Button
+                                                disableElevation
+                                                style={{ width: '20%' }}
+                                                size="large"
+                                                type="reset"
+                                                variant="outlined"
+                                                onClick={(e) => {
+                                                    resetForm();
+                                                    setDateAndLeaveTimes([]);
+                                                }}
+                                                color="secondary"
+                                                startIcon={<RestartAltIcon />}
+                                            >
+                                                Reset
+                                            </Button>
+                                            <Button
+                                                disableElevation
+                                                disabled={isSubmitting}
+                                                style={{ width: '20%' }}
+                                                size="large"
+                                                type="submit"
+                                                variant="contained"
+                                                color="secondary"
+                                                startIcon={<SendIcon />}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </Stack>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -360,46 +345,131 @@ const SubmitForm = ({ ...others }) => {
                                     }}
                                     variant="outlined"
                                 >
-                                    <CardHeader title="Leave Detail" subheader={inforLeaveUnUse} />
-                                    <CardContent>
+                                    <CardHeader sx={{ padding: '24px 24px 10px 24px' }} title="Leave Detail" subheader={inforLeaveUnUse} />
+                                    <CardContent sx={{ padding: '0px 24px' }}>
                                         <ul style={{ paddingLeft: 0 }}>
-                                            {dateAndLeaveTimes.map((item, index) => {
-                                                return (
-                                                    <div key={index}>
-                                                        <li style={{ color: 'black', listStyleType: 'none' }}>
-                                                            <CalendarMonthIcon
-                                                                sx={{
-                                                                    width: 15,
-                                                                    height: 15,
-                                                                    verticalAlign: 'center',
-                                                                    textAlign: 'center'
+                                            {dateAndLeaveTimes?.length > 0 &&
+                                                dateAndLeaveTimes?.map((item, index) => {
+                                                    return (
+                                                        <div key={index}>
+                                                            <li
+                                                                style={{
+                                                                    color: 'black',
+                                                                    listStyleType: 'none',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center'
                                                                 }}
-                                                                fontSize="medium"
-                                                            />
-                                                            <span style={{ marrginLeft: '10px' }}>
-                                                                {dateFormat(item?.leaveDate, 'dd-mm-yyyy')}
-                                                            </span>
-                                                            <Select
-                                                                sx={{ m: 1, width: '45%', marginLeft: '15px' }}
-                                                                size="small"
-                                                                labelId="demo-simple-select-label"
-                                                                value={item.dateType}
-                                                                onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
-                                                                defaultValue="ALL_DAY"
                                                             >
-                                                                <MenuItem value={'ALL_DAY'}>ALL DAY</MenuItem>
-                                                                <MenuItem value={'MORNING'}>MORNING</MenuItem>
-                                                                <MenuItem value={'AFTERNOON'}>AFTERNOON</MenuItem>
-                                                            </Select>
-                                                        </li>
-                                                    </div>
-                                                );
-                                            })}
+                                                                <CalendarMonthIcon
+                                                                    sx={{
+                                                                        width: 25,
+                                                                        height: 25,
+                                                                        marginBottom: '4px'
+                                                                    }}
+                                                                    fontSize="medium"
+                                                                />
+                                                                <span style={{ marginLeft: '10px', fontSize: '16px' }}>
+                                                                    {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
+                                                                </span>
+                                                                <Select
+                                                                    sx={{ m: 1, width: '40%', marginLeft: '15px' }}
+                                                                    size="small"
+                                                                    labelId="demo-simple-select-label"
+                                                                    value={item.dateType}
+                                                                    onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
+                                                                    defaultValue="ALL_DAY"
+                                                                >
+                                                                    <MenuItem value={'ALL_DAY'}>All day</MenuItem>
+                                                                    <MenuItem value={'MORNING'}>Morning</MenuItem>
+                                                                    <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
+                                                                </Select>
+                                                                <Stack direction="row" spacing={1}>
+                                                                    <IconButton aria-label="delete">
+                                                                        <SpeakerNotesIcon
+                                                                            fontSize="medium"
+                                                                            color={item.note === '' ? '' : 'secondary'}
+                                                                            onClick={(e) => handleClickOpen(index)}
+                                                                        />
+                                                                    </IconButton>
+                                                                </Stack>
+                                                            </li>
+                                                        </div>
+                                                    );
+                                                })}
                                         </ul>
                                     </CardContent>
                                 </Card>
                             </Grid>
                         </Grid>
+                    </form>
+                )}
+            </Formik>
+            <Formik
+                initialValues={{
+                    note: '',
+                    submit: null
+                }}
+                validator={() => ({})}
+                onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
+                    try {
+                        setStatus({ success: false });
+                        setSubmitting(false);
+                        handleSubmitNote(values);
+                        resetForm();
+                    } catch (err) {
+                        setStatus({ success: false });
+                        setErrors({ submit: err.message });
+                        setSubmitting(false);
+                    }
+                }}
+            >
+                {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm, setFieldValue }) => (
+                    <form noValidate onSubmit={handleSubmit} {...others}>
+                        <Dialog open={open} onClose={handleClose} fullWidth>
+                            <DialogTitle sx={{ fontSize: '24px' }}>Note</DialogTitle>
+                            <DialogContent>
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    fullWidth
+                                    multiline
+                                    type="text"
+                                    name="note"
+                                    value={values.note}
+                                    onChange={handleChange}
+                                    rows={6}
+                                    placeholder="Note"
+                                    inputProps={{ style: { fontSize: '16px' } }}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    disableElevation
+                                    style={{ width: '20%' }}
+                                    size="large"
+                                    type="reset"
+                                    variant="outlined"
+                                    onClick={handleClose}
+                                    color="secondary"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    disableElevation
+                                    style={{ width: '20%' }}
+                                    size="large"
+                                    type="submit"
+                                    variant="contained"
+                                    color="secondary"
+                                    startIcon={<SendIcon />}
+                                    onClick={(e) => {
+                                        handleClose();
+                                        handleSubmit(values);
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </form>
                 )}
             </Formik>
