@@ -17,7 +17,7 @@ import useGetAllList from 'hooks/useGetAllList';
 import { totalPagePagination } from 'utils/pagination';
 
 // custom table
-import TableEmployee from './table/index';
+import TableEmployee from './Table/index';
 
 // filter and search
 import _ from 'lodash';
