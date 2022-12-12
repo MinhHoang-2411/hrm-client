@@ -29,7 +29,7 @@ import { gridSpacing } from 'store/constant';
 import { getDatesInRange } from 'utils/date-time';
 
 // api leave
-import { getGeneralInfor } from 'api/leave';
+import { getLeaveCount } from 'api/leave';
 import { useEffect, useState } from 'react';
 
 // redux
@@ -129,12 +129,12 @@ const SubmitForm = ({ ...others }) => {
         }
     };
 
-    const handleGetGeneralInfor = async () => {
-        return await getGeneralInfor();
+    const handleGetLeaveCount = async () => {
+        return await getLeaveCount();
     };
 
     useEffect(() => {
-        const information = handleGetGeneralInfor();
+        const information = handleGetLeaveCount();
         information.then(function (result) {
             setInfor(result);
             setInforLeaveUnUse(result.leaveUnUse + ' days of Annual Leave');

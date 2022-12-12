@@ -47,7 +47,7 @@ export function submitLeave(params) {
     return response;
 }
 
-export function getGeneralInfor() {
+export function getLeaveCount() {
     const response = axiosClient.get(GET_LEAVE_COUNT_URL);
     return response;
 }
