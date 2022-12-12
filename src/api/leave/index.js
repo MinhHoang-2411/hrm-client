@@ -1,13 +1,13 @@
 import { func } from 'prop-types';
 import axiosClient from '../axiosClient';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const USER_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api`;
 
-export const SUBMIT_LEAVE_REQUEST_URL = `${API_URL}/services/hrmuserservice/api/leaves`;
+export const SUBMIT_LEAVE_REQUEST_URL = `${USER_API_URL}/leaves`;
 
-export const GET_GENERAL_INFORMATION_URL = `${API_URL}/services/hrmuserservice/api/leaves/count`;
+export const GET_GENERAL_INFORMATION_URL = `${USER_API_URL}/leaves/count`;
 
-export const GET_ALL_HISOTRY_LEAVE_URL = `${API_URL}/services/hrmuserservice/api/leaves`;
+export const GET_ALL_HISOTRY_LEAVE_URL = `${USER_API_URL}/leaves`;
 
 Date.prototype.toJSON = function () {
     var timezoneOffsetInHours = -(this.getTimezoneOffset() / 60); //UTC minus local time
