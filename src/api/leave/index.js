@@ -1,11 +1,9 @@
 import { func } from 'prop-types';
 import axiosClient from '../axiosClient';
 
-const USER_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api`;
+const LEAVE_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api/leaves`;
 
-export const LEAVE_URL = `${USER_API_URL}/leaves`;
-
-export const GET_LEAVE_GENERAL_INFORMATION_URL = `${USER_API_URL}/leaves/count`;
+const GET_LEAVE_COUNT_URL = `${LEAVE_API_URL}/count`;
 
 Date.prototype.toJSON = function () {
     var timezoneOffsetInHours = -(this.getTimezoneOffset() / 60); //UTC minus local time
@@ -45,17 +43,17 @@ export function submitLeave(params) {
         dateType: ite.dateType,
         note: ite.note
     }));
-    const response = axiosClient.post(LEAVE_URL, params);
+    const response = axiosClient.post(LEAVE_API_URL, params);
     return response;
 }
 
 export function getGeneralInfor() {
-    const response = axiosClient.get(GET_LEAVE_GENERAL_INFORMATION_URL);
+    const response = axiosClient.get(GET_LEAVE_COUNT_URL);
     return response;
 }
 
 export function getAll(params) {
-    const response = axiosClient.get(LEAVE_URL, { params });
+    const response = axiosClient.get(LEAVE_API_URL, { params });
     return response;
 }
 
