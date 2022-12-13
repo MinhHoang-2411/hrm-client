@@ -2,6 +2,7 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SendIcon from '@mui/icons-material/Send';
+import AddIcon from '@mui/icons-material/Add';
 import { Button, FormControl, Grid, MenuItem, TextField } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
@@ -460,13 +461,13 @@ const SubmitForm = ({ ...others }) => {
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
-                                    startIcon={<SendIcon />}
+                                    startIcon={<AddIcon />}
                                     onClick={(e) => {
                                         handleClose();
                                         handleSubmit(values);
                                     }}
                                 >
-                                    Submit
+                                    Add
                                 </Button>
                             </DialogActions>
                         </Dialog>
