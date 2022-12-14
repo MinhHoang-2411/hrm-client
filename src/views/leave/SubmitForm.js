@@ -3,7 +3,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, FormControl, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, FormControl, Grid, MenuItem, TextField, Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import Card from '@mui/material/Card';
@@ -12,6 +12,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import MainCard from 'ui-component/cards/MainCard';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -51,6 +52,16 @@ import '../../assets/scss/leave.scss';
 
 import * as React from 'react';
 
+const managers = [
+    { id: 1, name: 'Huynh Van Ngoc Duy' },
+    { id: 2, name: 'Hoang Trong Thang' },
+    { id: 3, name: 'Nguyen Don Kim Trung' },
+    { id: 4, name: 'Truong Van Huy' },
+    { id: 5, name: 'Pham Tan Hung' },
+    { id: 6, name: 'Le Van Sang' },
+    { id: 7, name: 'Pham Van Duc' }
+];
+
 const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
     const alert = useAppSelector((state) => state.leave.alert);
@@ -60,6 +71,10 @@ const SubmitForm = ({ ...others }) => {
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
     const [currentIndex, setCurrentIndex] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+
+    const initialValues = {
+        managers_id: { name: '', id: null }
+    };
 
     const handleClickOpen = (idx) => {
         setOpen(true);
@@ -152,6 +167,7 @@ const SubmitForm = ({ ...others }) => {
                     reason: '',
                     startDate: null,
                     endDate: null,
+                    assignTo: undefined,
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -162,9 +178,11 @@ const SubmitForm = ({ ...others }) => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
-                        handleSubmit(values);
-                        resetForm();
-                        setDateAndLeaveTimes([]);
+                        const assignTo = values.assignTo.id;
+                        values['assignTo'] = assignTo;
+                        // handleSubmit(values);
+                        // resetForm();
+                        // setDateAndLeaveTimes([]);
                     } catch (err) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
@@ -227,7 +245,7 @@ const SubmitForm = ({ ...others }) => {
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Grid container spacing={gridSpacing}>
-                                            <Grid item lg={6} md={6} sm={6} xs={12}>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
                                                 <center>
                                                     <FormControl
                                                         fullWidth
@@ -252,7 +270,7 @@ const SubmitForm = ({ ...others }) => {
                                                     </FormControl>
                                                 </center>
                                             </Grid>
-                                            <Grid item lg={6} md={6} sm={6} xs={12}>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
                                                 <center>
                                                     <FormControl
                                                         fullWidth
@@ -276,6 +294,38 @@ const SubmitForm = ({ ...others }) => {
                                                                 inputFormat="DD/MM/YYYY"
                                                             />
                                                         </LocalizationProvider>
+                                                    </FormControl>
+                                                </center>
+                                            </Grid>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
+                                                <center>
+                                                    <FormControl
+                                                        fullWidth
+                                                        error={Boolean(touched.password && errors.password)}
+                                                        sx={{ ...theme.typography.customInput }}
+                                                        className="title-form"
+                                                    >
+                                                        <span>Assign To</span>
+                                                        <Autocomplete
+                                                            disablePortal
+                                                            id="combo-box-demo"
+                                                            name="assignTo"
+                                                            value={values.assignTo}
+                                                            onChange={(e, value) =>
+                                                                setFieldValue(
+                                                                    'assignTo',
+                                                                    value !== null ? value : initialValues.managers_id
+                                                                )
+                                                            }
+                                                            options={managers}
+                                                            getOptionLabel={(option) => option.name}
+                                                            renderOption={(props, option) => (
+                                                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                    {option.name}
+                                                                </Box>
+                                                            )}
+                                                            renderInput={(params) => <TextField fullWidth name="assignTo" {...params} />}
+                                                        />
                                                     </FormControl>
                                                 </center>
                                             </Grid>
