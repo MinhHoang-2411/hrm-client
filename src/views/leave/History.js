@@ -17,7 +17,7 @@ import useGetAllList from 'hooks/useGetAllList';
 import { totalPagePagination } from 'utils/pagination';
 
 // custom table
-import TableEmployee from './table/index';
+import TableEmployee from './Table/index';
 
 // filter and search
 import _ from 'lodash';
@@ -137,9 +137,11 @@ const LeaveHistory = () => {
                                 defaultValue="ALL_STATUS"
                             >
                                 <MenuItem value={'ALL_STATUS'}>All</MenuItem>
-                                <MenuItem value={'ACCEPTED'}>Accepted</MenuItem>
+                                <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
                                 <MenuItem value={'REJECTED'}>Rejected</MenuItem>
                                 <MenuItem value={'WAITING'}>Waiting</MenuItem>
+                                <MenuItem value={'APPROVED'}>Approved</MenuItem>
+                                <MenuItem value={'DELETE'}>Delete</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>

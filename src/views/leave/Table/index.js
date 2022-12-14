@@ -2,7 +2,20 @@ import { useCallback, useState } from 'react';
 import * as React from 'react';
 
 // material-ui
-import { Box, Table, TableHead, TableBody, TableCell, TableContainer, TableRow, Collapse, IconButton, Typography } from '@mui/material';
+import {
+    Box,
+    Table,
+    TableHead,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Collapse,
+    IconButton,
+    Typography,
+    Grid,
+    Card
+} from '@mui/material';
 import { OrderTableHead } from 'ui-component/table/table-head';
 import PropTypes from 'prop-types';
 
@@ -28,13 +41,13 @@ const headCells = [
         id: 'createdDate',
         align: 'left',
         disablePadding: false,
-        label: 'Date Created'
+        label: 'Created'
     },
     {
         id: 'dateLeave',
         align: 'left',
         disablePadding: false,
-        label: 'Date Leave'
+        label: 'Leave Date'
     },
     {
         id: 'title',
@@ -52,7 +65,7 @@ const headCells = [
         id: 'leaveType',
         align: 'left',
         disablePadding: false,
-        label: 'Leave Type'
+        label: 'Type'
     },
     {
         id: 'status',
@@ -61,6 +74,54 @@ const headCells = [
         label: 'Status'
     }
 ];
+
+const boxColors = [
+    {
+        status: 'WAITING',
+        color: 'warning.dark'
+    },
+    {
+        status: 'CONFIRMED',
+        color: 'primary.dark'
+    },
+    {
+        status: 'REJECTED',
+        color: 'orange.dark'
+    },
+    {
+        status: 'DELETE',
+        color: 'grey'
+    },
+    {
+        status: 'APPROVED',
+        color: 'success.dark'
+    }
+];
+
+const ColorBox = ({ bgcolor, title }) => (
+    <>
+        <Card sx={{ borderRadius: '0 !important' }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '75px',
+                    height: '40px',
+                    bgcolor,
+                    color: 'white',
+                    borderRadius: '3px !important'
+                }}
+            >
+                {title && (
+                    <Typography variant="subtitle1" color="inherit">
+                        {title}
+                    </Typography>
+                )}
+            </Box>
+        </Card>
+    </>
+);
 
 export default function TableLeaveHistory({ data }) {
     const [order] = useState('asc');
@@ -85,7 +146,16 @@ export default function TableLeaveHistory({ data }) {
                     <TableCell align="left">{row?.title}</TableCell>
                     <TableCell align="left">{row?.reason}</TableCell>
                     <TableCell align="left">{upperCaseFirstCharacter(row?.type)}</TableCell>
-                    <TableCell align="left">{upperCaseFirstCharacter(row?.status)}</TableCell>
+                    <TableCell align="left">
+                        <ColorBox
+                            bgcolor={
+                                boxColors.filter((item) => item.status === row?.status).length === 0
+                                    ? 'primary.light'
+                                    : boxColors.filter((item) => item.status === row?.status).at(0)?.color
+                            }
+                            title={upperCaseFirstCharacter(row?.status)}
+                        />
+                    </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
