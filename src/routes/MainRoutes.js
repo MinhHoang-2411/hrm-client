@@ -13,20 +13,23 @@ const SubmitForm = Loadable(lazy(() => import('views/leave/SubmitForm')));
 const LeaveHistory = Loadable(lazy(() => import('views/leave/History')));
 
 // asset routing
-const AssetList = Loadable(lazy(() => import('views/asset/AssetList')));
+const RequestAsset = Loadable(lazy(() => import('views/asset/Request')));
 const AssetHistory = Loadable(lazy(() => import('views/asset/History')));
 
 // project routing
 const ProjectDashboard = Loadable(lazy(() => import('views/project/Dashboard')));
-const LogWork = Loadable(lazy(() => import('views/project/LogWork')));
+const ProjectList = Loadable(lazy(() => import('views/project/ProjectList')));
 const TaskList = Loadable(lazy(() => import('views/project/TaskList')));
 
-// bar routing
-const BarMenu = Loadable(lazy(() => import('views/bar/Menu')));
-const OrderHistory = Loadable(lazy(() => import('views/bar/OrderHistory')));
+// utilities routing
+const Bar = Loadable(lazy(() => import('views/utilities/Bar')));
+const Charity = Loadable(lazy(() => import('views/utilities/Charity')));
 
-// charity routing
-const Donation = Loadable(lazy(() => import('views/charity/Donation')));
+// others routing
+const Policies = Loadable(lazy(() => import('views/others/Policies')));
+
+// meeting routing
+const Booking = Loadable(lazy(() => import('views/meeting/Booking')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -72,11 +75,21 @@ const MainRoutes = {
         },
 
         {
+            path: 'meeting',
+            children: [
+                {
+                    path: 'book',
+                    element: <Booking />
+                }
+            ]
+        },
+
+        {
             path: 'asset',
             children: [
                 {
-                    path: '',
-                    element: <AssetList />
+                    path: 'request',
+                    element: <RequestAsset />
                 },
                 {
                     path: 'history',
@@ -92,34 +105,34 @@ const MainRoutes = {
                     element: <ProjectDashboard />
                 },
                 {
-                    path: 'task-list',
+                    path: 'my-projects',
+                    element: <ProjectList />
+                },
+                {
+                    path: 'my-tasks',
                     element: <TaskList />
-                },
-                {
-                    path: 'log-work',
-                    element: <LogWork />
                 }
             ]
         },
         {
-            path: 'bar',
+            path: 'utilities',
             children: [
                 {
-                    path: 'menu',
-                    element: <BarMenu />
+                    path: 'bar',
+                    element: <Bar />
                 },
                 {
-                    path: 'order-history',
-                    element: <OrderHistory />
+                    path: 'charity',
+                    element: <Charity />
                 }
             ]
         },
         {
-            path: 'charity',
+            path: 'others',
             children: [
                 {
-                    path: 'donation',
-                    element: <Donation />
+                    path: 'policies',
+                    element: <Policies />
                 }
             ]
         }

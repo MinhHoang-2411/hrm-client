@@ -20,19 +20,19 @@ const project = {
             target: false
         },
         {
-            id: 'list-task',
-            title: 'Task List',
+            id: 'project-list',
+            title: 'My Projects',
             type: 'item',
-            url: '/project/task-list',
+            url: '/project/my-projects',
             icon: icons.IconChecklist,
             breadcrumbs: false,
             target: false
         },
         {
-            id: 'log-work',
-            title: 'Log Work',
+            id: 'task-list',
+            title: 'My Tasks',
             type: 'item',
-            url: '/project/log-work',
+            url: '/project/my-tasks',
             icon: icons.IconSubtask,
             breadcrumbs: false,
             target: false
