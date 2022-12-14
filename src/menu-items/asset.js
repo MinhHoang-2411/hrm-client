@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle, IconDevicesPc } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle };
+const icons = { IconBrandChrome, IconHelp, IconLayoutList, IconHistoryToggle, IconDevicesPc };
 
 // ==============================|| ASSET MENU ITEMS ||============================== //
 
@@ -12,15 +12,15 @@ const device = {
     type: 'group',
     children: [
         {
-            id: 'list-asset',
-            title: 'Asset List',
+            id: 'request-asset',
+            title: 'Request',
             type: 'item',
-            url: '/asset',
-            icon: icons.IconLayoutList,
+            url: '/asset/request',
+            icon: icons.IconDevicesPc,
             breadcrumbs: false
         },
         {
-            id: 'history-assset',
+            id: 'history-asset',
             title: 'History',
             type: 'item',
             url: '/asset/history',

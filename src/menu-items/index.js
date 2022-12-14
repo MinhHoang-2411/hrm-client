@@ -3,13 +3,14 @@ import information from './information';
 import leave from './leave';
 import asset from './asset';
 import project from './project';
-import bar from './bar';
-import charity from './charity';
+import utilities from './utilities';
+import meeting from './meeting';
+import others from './others';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-    items: [dashboard, leave, asset, project, bar, charity]
+    items: [dashboard, leave, meeting, asset, project, utilities, others]
 };
 
 export default menuItems;
