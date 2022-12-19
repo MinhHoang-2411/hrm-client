@@ -18,7 +18,7 @@ function* handleFetchData(action) {
     try {
         const params = action.payload;
         const response = yield call(getAll, params);
-        yield put(leaveActions.fetchDataSuccess(response));
+        yield put(leaveActions.fetchDataSuccess(response.data));
     } catch (error) {
         yield put(leaveActions.fetchDataFalse('An error occurred, please try again'));
     }

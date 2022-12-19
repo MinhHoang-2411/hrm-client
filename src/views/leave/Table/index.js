@@ -24,7 +24,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // format
-import { formatDate } from 'api/leave';
+import { formatTimeStampToDate } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
@@ -139,9 +139,9 @@ export default function TableLeaveHistory({ data }) {
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
                     </TableCell>
-                    <TableCell align="left">{formatDate(row?.createdDate)}</TableCell>
+                    <TableCell align="left">{formatTimeStampToDate(row?.createdDate)}</TableCell>
                     <TableCell align="left">
-                        {formatDate(row?.startDate)} - {formatDate(row?.endDate)}
+                        {formatTimeStampToDate(row?.startDate)} - {formatTimeStampToDate(row?.endDate)}
                     </TableCell>
                     <TableCell align="left">{row?.title}</TableCell>
                     <TableCell align="left">{row?.reason}</TableCell>
@@ -175,7 +175,7 @@ export default function TableLeaveHistory({ data }) {
                                                 key={index}
                                                 className={`row-detail-leave ${index == row?.leaveDetailsDTOS?.length - 1 && 'last-row'}`}
                                             >
-                                                <TableCell align="left">{formatDate(historyRow.leaveDate)}</TableCell>
+                                                <TableCell align="left">{formatTimeStampToDate(historyRow.leaveDate)}</TableCell>
                                                 <TableCell align="left">
                                                     {historyRow.dateType === 'ALL_DAY'
                                                         ? 'All day'

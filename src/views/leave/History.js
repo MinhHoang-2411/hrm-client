@@ -3,7 +3,7 @@ import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, 
 import MainCard from 'ui-component/cards/MainCard';
 
 // convert date
-import { convertDateToFilter } from 'api/leave';
+import { formatDateMaterialForFilter } from 'utils/format/date';
 
 // react
 import { useCallback, useState } from 'react';
@@ -168,7 +168,7 @@ const LeaveHistory = () => {
                                     value={startDate}
                                     name="startDate"
                                     onChange={(e) => {
-                                        handleFilter('startDate.greaterThanOrEqual', convertDateToFilter(e.toDate()));
+                                        handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
                                     inputFormat="DD/MM/YYYY"
@@ -183,7 +183,7 @@ const LeaveHistory = () => {
                                     value={endDate}
                                     name="endDate"
                                     onChange={(e) => {
-                                        handleFilter('endDate.lessThanOrEqual', convertDateToFilter(e.toDate()));
+                                        handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
                                     inputFormat="DD/MM/YYYY"

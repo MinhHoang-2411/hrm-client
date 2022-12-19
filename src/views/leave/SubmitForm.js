@@ -153,7 +153,7 @@ const SubmitForm = ({ ...others }) => {
         const information = handleGetLeaveCount();
         information.then(function (result) {
             setInfor(result);
-            setInforLeaveUnUse(result.leaveUnUse + ' days of Annual Leave');
+            setInforLeaveUnUse(result.data.leaveUnUse + ' days of Annual Leave');
         });
         showToastMessage(alert);
     }, [alert]);
@@ -180,9 +180,9 @@ const SubmitForm = ({ ...others }) => {
                         setSubmitting(false);
                         const assignTo = values.assignTo.id;
                         values['assignTo'] = assignTo;
-                        // handleSubmit(values);
-                        // resetForm();
-                        // setDateAndLeaveTimes([]);
+                        handleSubmit(values);
+                        resetForm();
+                        setDateAndLeaveTimes([]);
                     } catch (err) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
