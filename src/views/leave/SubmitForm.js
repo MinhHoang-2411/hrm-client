@@ -56,7 +56,6 @@ const SubmitForm = ({ ...others }) => {
     const alert = useAppSelector((state) => state.leave.alert);
     const theme = useTheme();
     const [dateAndLeaveTimes, setDateAndLeaveTimes] = useState([]);
-    const [infor, setInfor] = useState({});
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
     const [currentIndex, setCurrentIndex] = React.useState(null);
     const [open, setOpen] = React.useState(false);
@@ -137,8 +136,7 @@ const SubmitForm = ({ ...others }) => {
     useEffect(() => {
         const information = handleGetLeaveCount();
         information.then(function (result) {
-            setInfor(result);
-            setInforLeaveUnUse(result.leaveUnUse + ' days of Annual Leave');
+            setInforLeaveUnUse(result.data.leaveUnUse + ' days of Annual Leave');
         });
         showToastMessage(alert);
     }, [alert]);
@@ -345,6 +343,7 @@ const SubmitForm = ({ ...others }) => {
                                         height: '85%'
                                     }}
                                     variant="outlined"
+                                    style={{ backgroundColor: '#EDE7F6' }}
                                 >
                                     <CardHeader sx={{ padding: '24px 24px 10px 24px' }} title="Leave Detail" subheader={inforLeaveUnUse} />
                                     <CardContent sx={{ padding: '0px 24px' }}>
