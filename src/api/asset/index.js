@@ -1,5 +1,5 @@
 import axiosClient from '../axiosClient';
-import { toJSON } from 'utils/date-time';
+import { formatDateMaterialToTimeStamp } from 'utils/format/date';
 
 const BASE_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api`;
 
@@ -23,8 +23,8 @@ const assetApi = {
     },
 
     submitRequest(params) {
-        params.issuedDate = params.issuedDate.toDate().toJSON();
-        params.returnedDate = params.returnedDate.toDate().toJSON();
+        params.issuedDate = formatDateMaterialToTimeStamp(params.issuedDate);
+        params.returnedDate = formatDateMaterialToTimeStamp(params.returnedDate);
         return axiosClient.post(ASSET_REQUEST_API_URL, params);
     }
 };
