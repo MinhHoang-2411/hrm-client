@@ -3,7 +3,7 @@ import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, 
 import MainCard from 'ui-component/cards/MainCard';
 
 // convert date
-import { convertDateToFilter } from 'utils/date-time';
+import { formatDateMaterialForFilter } from 'utils/format/date';
 
 // react
 import { useCallback, useState } from 'react';
@@ -159,7 +159,7 @@ const AssetHistory = ({ ...others }) => {
                                     value={issuedDate}
                                     name="startDate"
                                     onChange={(e) => {
-                                        handleFilter('issuedDate.greaterThanOrEqual', convertDateToFilter(e.toDate()));
+                                        handleFilter('issuedDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
                                     renderInput={(params) => <TextField {...params} size="small" />}
                                     inputFormat="DD/MM/YYYY"
@@ -174,7 +174,7 @@ const AssetHistory = ({ ...others }) => {
                                     value={returnedDate}
                                     name="endDate"
                                     onChange={(e) => {
-                                        handleFilter('returnedDate.lessThanOrEqual', convertDateToFilter(e.toDate()));
+                                        handleFilter('returnedDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
                                     renderInput={(params) => <TextField {...params} size="small" />}
                                     inputFormat="DD/MM/YYYY"

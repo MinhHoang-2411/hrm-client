@@ -24,7 +24,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // format
-import { formatDate } from 'utils/date-time';
+import { formatTimeStampToDate } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
@@ -140,9 +140,9 @@ export default function TableAssetRequestHistory({ data }) {
                     <TableCell align="left">{row?.title}</TableCell>
                     <TableCell align="left">{row?.description}</TableCell>
 
-                    <TableCell align="left">{formatDate(row?.issuedDate)}</TableCell>
-                    <TableCell align="left">{formatDate(row?.returnedDate)}</TableCell>
-                    <TableCell align="left">{formatDate(row?.requestDate)}</TableCell>
+                    <TableCell align="left">{formatTimeStampToDate(row?.issuedDate)}</TableCell>
+                    <TableCell align="left">{formatTimeStampToDate(row?.returnedDate)}</TableCell>
+                    <TableCell align="left">{formatTimeStampToDate(row?.requestDate)}</TableCell>
                     <TableCell align="left">{row?.assetModel === null ? '-' : row?.assetModel.modelName}</TableCell>
                     <TableCell align="left">{row?.receivedAsset === null ? '-' : row?.receivedAsset.description}</TableCell>
                     <TableCell align="left">
