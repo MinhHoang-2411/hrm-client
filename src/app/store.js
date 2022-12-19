@@ -4,10 +4,11 @@ import actionReducer from 'store/action/actionSlice';
 import authReducer from 'store/auth/authSlice';
 import leaveReducer from 'store/leave/leaveSlice';
 import rootSaga from './rootSaga';
+import assetRequestReducer from 'store/asset-request/assetRequestSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
-    reducer: { auth: authReducer, action: actionReducer, leave: leaveReducer },
+    reducer: { auth: authReducer, action: actionReducer, leave: leaveReducer, assetRequest: assetRequestReducer },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false
