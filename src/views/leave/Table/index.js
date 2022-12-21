@@ -41,13 +41,19 @@ const headCells = [
         id: 'createdDate',
         align: 'left',
         disablePadding: false,
-        label: 'Created'
+        label: 'Date Submitted'
     },
     {
-        id: 'dateLeave',
+        id: 'from',
         align: 'left',
         disablePadding: false,
-        label: 'Leave Date'
+        label: 'From'
+    },
+    {
+        id: 'to',
+        align: 'left',
+        disablePadding: false,
+        label: 'To'
     },
     {
         id: 'title',
@@ -134,19 +140,30 @@ export default function TableLeaveHistory({ data }) {
         return (
             <React.Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    <TableCell>
+                    <TableCell className="table-cell" align="left">
                         <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
                     </TableCell>
-                    <TableCell align="left">{formatTimeStampToDate(row?.createdDate)}</TableCell>
-                    <TableCell align="left">
-                        {formatTimeStampToDate(row?.startDate)} - {formatTimeStampToDate(row?.endDate)}
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.createdDate)}
                     </TableCell>
-                    <TableCell align="left">{row?.title}</TableCell>
-                    <TableCell align="left">{row?.reason}</TableCell>
-                    <TableCell align="left">{upperCaseFirstCharacter(row?.type)}</TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.startDate)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.endDate)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {row?.title}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {row?.reason}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {upperCaseFirstCharacter(row?.type)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
                         <ColorBox
                             bgcolor={
                                 boxColors.filter((item) => item.status === row?.status).length === 0
@@ -158,7 +175,7 @@ export default function TableLeaveHistory({ data }) {
                     </TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 2 }}>
                                 <Table size="small" aria-label="purchases">

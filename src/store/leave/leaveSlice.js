@@ -5,6 +5,8 @@ const initialState = {
     loading: false,
     reloadList: false,
     listData: [],
+    listHoliday: [],
+    loadingHolidays: false,
     pagination: undefined
 };
 
@@ -44,7 +46,17 @@ const leaveSlice = createSlice({
         },
         fetchDataFalse(state, action) {
             state.loading = false;
-            console.error(action.payload);
+        },
+        // HOLIDAYS
+        getHolidays(state, action) {
+            state.loadingHolidays = true;
+        },
+        getHolidaysSuccess(state, action) {
+            state.loadingHolidays = false;
+            state.listHoliday = action.payload.data;
+        },
+        getHolidayFail(state, action) {
+            state.loadingHolidays = false;
         }
     }
 });

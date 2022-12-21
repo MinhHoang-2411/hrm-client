@@ -3,7 +3,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, FormControl, Grid, MenuItem, TextField, Box } from '@mui/material';
+import { Button, FormControl, Grid, MenuItem, TextField, Box, FormHelperText, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import Card from '@mui/material/Card';
@@ -13,12 +13,15 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import MainCard from 'ui-component/cards/MainCard';
 import Autocomplete from '@mui/material/Autocomplete';
-
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
 // third party
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 
 // date
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -32,7 +35,7 @@ import { getDatesInRange } from 'utils/date-time';
 
 // api leave
 import { getLeaveCount } from 'api/leave';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // redux
 import { useAppDispatch, useAppSelector } from 'app/hooks';
@@ -50,31 +53,42 @@ import DialogTitle from '@mui/material/DialogTitle';
 // scss
 import '../../assets/scss/leave.scss';
 
-import * as React from 'react';
+// validate
+import { SubmitLeaveSchema } from 'utils/validate/submit-leave-schema';
 
+// format
+import { formatTimeStampToDate, formatDateMaterialForFilter } from 'utils/format/date';
+
+import * as React from 'react';
 const managers = [
     { id: 1, name: 'Huynh Van Ngoc Duy' },
-    { id: 2, name: 'Hoang Trong Thang' },
-    { id: 3, name: 'Nguyen Don Kim Trung' },
-    { id: 4, name: 'Truong Van Huy' },
-    { id: 5, name: 'Pham Tan Hung' },
-    { id: 6, name: 'Le Van Sang' },
-    { id: 7, name: 'Pham Van Duc' }
+    { id: 1, name: 'Hoang Trong Thang' },
+    { id: 2, name: 'Nguyen Don Kim Trung' },
+    { id: 2, name: 'Truong Van Huy' },
+    { id: 1, name: 'Pham Tan Hung' },
+    { id: 1, name: 'Le Van Sang' },
+    { id: 2, name: 'Pham Van Duc' }
 ];
+const steps = ['Submit a leave', 'Manager confirms the leave', 'Admin approves the leave'];
 
 const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
     const alert = useAppSelector((state) => state.leave.alert);
     const theme = useTheme();
     const [dateAndLeaveTimes, setDateAndLeaveTimes] = useState([]);
-    const [infor, setInfor] = useState({});
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
     const [currentIndex, setCurrentIndex] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+    const [errorMessageDetail, setErrorMessageDetail] = useState('');
+    const formikRef = useRef();
+    const inputRef = useRef();
 
     const initialValues = {
         managers_id: { name: '', id: null }
     };
+
+    // get data
+    const listHolidays = useAppSelector((state) => state.leave.listHoliday);
 
     const handleClickOpen = (idx) => {
         setOpen(true);
@@ -98,18 +112,27 @@ const SubmitForm = ({ ...others }) => {
                     })
                 );
             }
-            arrDate = weekendFilter(arrDate);
             setDateAndLeaveTimes(arrDate);
         }
     };
 
-    const weekendFilter = (inDates) => {
-        return inDates.filter((item) => checkWeekend(item));
+    const weekendAndHolidayFilter = (inDates) => {
+        return inDates.filter((item) => isWeekend(item) === false && isHoliday(item) === false);
     };
 
-    const checkWeekend = (date) => {
-        if (date.leaveDate.toDate().getDay() == 6 || date.leaveDate.toDate().getDay() == 0) return false;
-        else return true;
+    const isWeekend = (date) => {
+        if (date.leaveDate.toDate().getDay() == 6 || date.leaveDate.toDate().getDay() == 0) return true;
+        else return false;
+    };
+
+    const isHoliday = (date) => {
+        if (
+            listHolidays.some(
+                (item) => formatTimeStampToDate(item.date) === formatTimeStampToDate(formatDateMaterialForFilter(date.leaveDate))
+            )
+        )
+            return true;
+        else return false;
     };
 
     const handleSelectLeaveTime = (time, index) => {
@@ -119,12 +142,22 @@ const SubmitForm = ({ ...others }) => {
     };
 
     const handleSubmit = (value) => {
-        dispatch(
-            leaveActions.submit({
-                ...value,
-                leaveDetailsDTOS: dateAndLeaveTimes
-            })
-        );
+        if (weekendAndHolidayFilter(dateAndLeaveTimes).length === 0) {
+            setErrorMessageDetail('Invalid leave date');
+        } else {
+            const assignTo = value.assignTo.id;
+            value['assignTo'] = assignTo;
+            dispatch(
+                leaveActions.submit({
+                    ...value,
+                    leaveDetailsDTOS: weekendAndHolidayFilter(dateAndLeaveTimes)
+                })
+            );
+            formikRef.current?.resetForm();
+            const input = inputRef.current.children[0].children[0];
+            input.value = '';
+            setDateAndLeaveTimes([]);
+        }
     };
 
     const handleSubmitNote = (value) => {
@@ -152,15 +185,19 @@ const SubmitForm = ({ ...others }) => {
     useEffect(() => {
         const information = handleGetLeaveCount();
         information.then(function (result) {
-            setInfor(result);
-            setInforLeaveUnUse(result.data.leaveUnUse + ' days of Annual Leave');
+            setInforLeaveUnUse((result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse) + ' days of Annual Leave');
         });
         showToastMessage(alert);
     }, [alert]);
 
+    useEffect(() => {
+        dispatch(leaveActions.getHolidays({}));
+    }, []);
+
     return (
         <MainCard title="Leave Request">
             <Formik
+                innerRef={formikRef}
                 initialValues={{
                     title: '',
                     type: '',
@@ -168,21 +205,15 @@ const SubmitForm = ({ ...others }) => {
                     startDate: null,
                     endDate: null,
                     assignTo: undefined,
+                    search: '',
                     submit: null
                 }}
-                validationSchema={Yup.object().shape({
-                    title: Yup.string().min(0).max(255).required('Title is required'),
-                    reason: Yup.string().min(0).max(1000).required('Reason is required')
-                })}
+                validationSchema={SubmitLeaveSchema()}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
-                        const assignTo = values.assignTo.id;
-                        values['assignTo'] = assignTo;
                         handleSubmit(values);
-                        resetForm();
-                        setDateAndLeaveTimes([]);
                     } catch (err) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
@@ -194,14 +225,25 @@ const SubmitForm = ({ ...others }) => {
                     <form noValidate onSubmit={handleSubmit} {...others}>
                         <Grid container spacing={gridSpacing}>
                             <Grid item lg={8} md={8} sm={8} xs={8}>
-                                <Grid container spacing={gridSpacing}>
+                                <Grid container spacing={gridSpacing} sx={{ mt: 1 }}>
+                                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                                        <Box sx={{ width: '100%' }}>
+                                            <Stepper alternativeLabel>
+                                                {steps.map((label) => (
+                                                    <Step key={label}>
+                                                        <StepLabel>{label}</StepLabel>
+                                                    </Step>
+                                                ))}
+                                            </Stepper>
+                                        </Box>
+                                    </Grid>
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Grid container spacing={gridSpacing}>
                                             <Grid item lg={8} md={8} sm={12} xs={12}>
                                                 <center>
                                                     <FormControl
                                                         fullWidth
-                                                        error={Boolean(touched.email && errors.email)}
+                                                        error={Boolean(touched.title && errors.title)}
                                                         sx={{ ...theme.typography.customInput }}
                                                         className="title-form"
                                                     >
@@ -214,6 +256,8 @@ const SubmitForm = ({ ...others }) => {
                                                             value={values.title}
                                                             onChange={handleChange}
                                                             inputProps={{ style: { fontSize: '16px' } }}
+                                                            error={touched.title && Boolean(errors.title)}
+                                                            helperText={touched.title && errors.title}
                                                         />
                                                     </FormControl>
                                                 </center>
@@ -221,7 +265,7 @@ const SubmitForm = ({ ...others }) => {
                                             <Grid item lg={4} md={4} sm={12} xs={12}>
                                                 <FormControl
                                                     fullWidth
-                                                    error={Boolean(touched.password && errors.password)}
+                                                    error={Boolean(touched.type && errors.type)}
                                                     sx={{ ...theme.typography.customInput }}
                                                     className="title-form"
                                                 >
@@ -232,12 +276,16 @@ const SubmitForm = ({ ...others }) => {
                                                         name="type"
                                                         value={values.type}
                                                         onChange={handleChange}
+                                                        error={touched.type && Boolean(errors.type)}
                                                     >
                                                         <MenuItem value={'CASUAL'}>Casual</MenuItem>
                                                         <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
                                                         <MenuItem value={'REMOTE'}>Remote</MenuItem>
                                                         <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                                     </Select>
+                                                    <FormHelperText sx={{ color: '#ff4d4f' }}>
+                                                        {touched?.type && errors?.type}
+                                                    </FormHelperText>
                                                 </FormControl>
                                             </Grid>
                                         </Grid>
@@ -249,7 +297,7 @@ const SubmitForm = ({ ...others }) => {
                                                 <center>
                                                     <FormControl
                                                         fullWidth
-                                                        error={Boolean(touched.password && errors.password)}
+                                                        error={Boolean(touched.startDate && errors.startDate)}
                                                         sx={{ ...theme.typography.customInput }}
                                                         className="title-form"
                                                     >
@@ -261,8 +309,16 @@ const SubmitForm = ({ ...others }) => {
                                                                 onChange={(value) => {
                                                                     setFieldValue('startDate', value);
                                                                     handleGetArrayDate(value, values.endDate);
+                                                                    setErrorMessageDetail('');
                                                                 }}
-                                                                renderInput={(params) => <TextField {...params} />}
+                                                                onChangeRaw={(e) => e.preventDefault()}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        error={touched.startDate && Boolean(errors.startDate)}
+                                                                        helperText={touched.startDate && errors.startDate}
+                                                                    />
+                                                                )}
                                                                 disablePast={true}
                                                                 inputFormat="DD/MM/YYYY"
                                                             />
@@ -274,7 +330,7 @@ const SubmitForm = ({ ...others }) => {
                                                 <center>
                                                     <FormControl
                                                         fullWidth
-                                                        error={Boolean(touched.password && errors.password)}
+                                                        error={Boolean(touched.endDate && errors.endDate)}
                                                         sx={{ ...theme.typography.customInput }}
                                                         className="title-form"
                                                     >
@@ -288,8 +344,15 @@ const SubmitForm = ({ ...others }) => {
                                                                 onChange={(value) => {
                                                                     setFieldValue('endDate', value);
                                                                     handleGetArrayDate(values.startDate, value);
+                                                                    setErrorMessageDetail('');
                                                                 }}
-                                                                renderInput={(params) => <TextField {...params} />}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        error={touched.endDate && Boolean(errors.endDate)}
+                                                                        helperText={touched.endDate && errors.endDate}
+                                                                    />
+                                                                )}
                                                                 disablePast={true}
                                                                 inputFormat="DD/MM/YYYY"
                                                             />
@@ -301,7 +364,7 @@ const SubmitForm = ({ ...others }) => {
                                                 <center>
                                                     <FormControl
                                                         fullWidth
-                                                        error={Boolean(touched.password && errors.password)}
+                                                        error={Boolean(touched.assignTo && errors.assignTo)}
                                                         sx={{ ...theme.typography.customInput }}
                                                         className="title-form"
                                                     >
@@ -324,7 +387,16 @@ const SubmitForm = ({ ...others }) => {
                                                                     {option.name}
                                                                 </Box>
                                                             )}
-                                                            renderInput={(params) => <TextField fullWidth name="assignTo" {...params} />}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    fullWidth
+                                                                    ref={inputRef}
+                                                                    name="assignTo"
+                                                                    {...params}
+                                                                    error={touched.assignTo && Boolean(errors.assignTo)}
+                                                                    helperText={touched.assignTo && errors.assignTo}
+                                                                />
+                                                            )}
                                                         />
                                                     </FormControl>
                                                 </center>
@@ -351,6 +423,8 @@ const SubmitForm = ({ ...others }) => {
                                                     value={values.reason}
                                                     onChange={handleChange}
                                                     inputProps={{ style: { fontSize: '16px' } }}
+                                                    error={touched.reason && Boolean(errors.reason)}
+                                                    helperText={touched.reason && errors.reason}
                                                 />
                                             </FormControl>
                                         </center>
@@ -367,6 +441,8 @@ const SubmitForm = ({ ...others }) => {
                                                 onClick={(e) => {
                                                     resetForm();
                                                     setDateAndLeaveTimes([]);
+                                                    const input = inputRef.current.children[0].children[0];
+                                                    input.value = '';
                                                 }}
                                                 color="secondary"
                                                 startIcon={<RestartAltIcon />}
@@ -392,59 +468,102 @@ const SubmitForm = ({ ...others }) => {
                             <Grid item lg={4} md={4} sm={4} xs={4}>
                                 <Card
                                     sx={{
-                                        height: '85%'
+                                        height: '88%',
+                                        backgroundColor: '#FAFAFA'
                                     }}
                                     variant="outlined"
                                 >
                                     <CardHeader sx={{ padding: '24px 24px 10px 24px' }} title="Leave Detail" subheader={inforLeaveUnUse} />
-                                    <CardContent sx={{ padding: '0px 24px' }}>
+                                    <CardContent
+                                        sx={{ padding: '0px 24px' }}
+                                        style={{
+                                            overflowY: 'auto',
+                                            maxHeight: '450px',
+                                            display: 'flex',
+                                            flexGrow: 1,
+                                            flexDirection: 'column'
+                                        }}
+                                    >
+                                        {dateAndLeaveTimes?.length === 0 && (
+                                            <Box style={{ marginTop: '150px' }}>
+                                                <center>
+                                                    <ErrorOutlineIcon
+                                                        sx={{
+                                                            width: 100,
+                                                            height: 100,
+                                                            marginBottom: '4px',
+                                                            color: '#E0E0E0'
+                                                        }}
+                                                        fontSize="medium"
+                                                    />
+                                                    <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
+                                                </center>
+                                            </Box>
+                                        )}
+
+                                        {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
                                         <ul style={{ paddingLeft: 0 }}>
                                             {dateAndLeaveTimes?.length > 0 &&
                                                 dateAndLeaveTimes?.map((item, index) => {
                                                     return (
-                                                        <div key={index}>
-                                                            <li
-                                                                style={{
-                                                                    color: 'black',
-                                                                    listStyleType: 'none',
-                                                                    display: 'flex',
-                                                                    alignItems: 'center'
-                                                                }}
-                                                            >
-                                                                <CalendarMonthIcon
-                                                                    sx={{
-                                                                        width: 25,
-                                                                        height: 25,
-                                                                        marginBottom: '4px'
+                                                        <>
+                                                            <div key={index}>
+                                                                <li
+                                                                    style={{
+                                                                        color: 'black',
+                                                                        listStyleType: 'none',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center'
                                                                     }}
-                                                                    fontSize="medium"
-                                                                />
-                                                                <span style={{ marginLeft: '10px', fontSize: '16px' }}>
-                                                                    {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
-                                                                </span>
-                                                                <Select
-                                                                    sx={{ m: 1, width: '40%', marginLeft: '15px' }}
-                                                                    size="small"
-                                                                    labelId="demo-simple-select-label"
-                                                                    value={item.dateType}
-                                                                    onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
-                                                                    defaultValue="ALL_DAY"
                                                                 >
-                                                                    <MenuItem value={'ALL_DAY'}>All day</MenuItem>
-                                                                    <MenuItem value={'MORNING'}>Morning</MenuItem>
-                                                                    <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
-                                                                </Select>
-                                                                <Stack direction="row" spacing={1}>
-                                                                    <IconButton aria-label="delete">
-                                                                        <SpeakerNotesIcon
-                                                                            fontSize="medium"
-                                                                            color={item.note === '' ? '' : 'secondary'}
-                                                                            onClick={(e) => handleClickOpen(index)}
-                                                                        />
-                                                                    </IconButton>
-                                                                </Stack>
-                                                            </li>
-                                                        </div>
+                                                                    <CalendarMonthIcon
+                                                                        sx={{
+                                                                            width: 25,
+                                                                            height: 25,
+                                                                            marginBottom: '4px'
+                                                                        }}
+                                                                        fontSize="medium"
+                                                                    />
+                                                                    <span style={{ marginLeft: '10px', fontSize: '16px' }}>
+                                                                        {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
+                                                                    </span>
+                                                                    {isHoliday(item) === false && isWeekend(item) === false && (
+                                                                        <>
+                                                                            <Select
+                                                                                sx={{ m: 1, width: '40%', marginLeft: '15px' }}
+                                                                                size="small"
+                                                                                labelId="demo-simple-select-label"
+                                                                                value={item.dateType}
+                                                                                onChange={(e) =>
+                                                                                    handleSelectLeaveTime(e.target.value, index)
+                                                                                }
+                                                                                defaultValue="ALL_DAY"
+                                                                            >
+                                                                                <MenuItem value={'ALL_DAY'}>All day</MenuItem>
+                                                                                <MenuItem value={'MORNING'}>Morning</MenuItem>
+                                                                                <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
+                                                                            </Select>
+                                                                            <Stack direction="row" spacing={1}>
+                                                                                <IconButton aria-label="delete">
+                                                                                    <SpeakerNotesIcon
+                                                                                        fontSize="medium"
+                                                                                        color={item.note === '' ? '' : 'secondary'}
+                                                                                        onClick={(e) => handleClickOpen(index)}
+                                                                                    />
+                                                                                </IconButton>
+                                                                            </Stack>
+                                                                        </>
+                                                                    )}
+                                                                    {(isHoliday(item) === true || isWeekend(item) === true) && (
+                                                                        <Box sx={{ m: 1, width: '50%', marginLeft: '15px' }} size="small">
+                                                                            <Typography className="non-working-day-title">
+                                                                                Non-working day
+                                                                            </Typography>
+                                                                        </Box>
+                                                                    )}
+                                                                </li>
+                                                            </div>
+                                                        </>
                                                     );
                                                 })}
                                         </ul>

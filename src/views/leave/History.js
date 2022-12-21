@@ -141,7 +141,7 @@ const LeaveHistory = () => {
                                 <MenuItem value={'REJECTED'}>Rejected</MenuItem>
                                 <MenuItem value={'WAITING'}>Waiting</MenuItem>
                                 <MenuItem value={'APPROVED'}>Approved</MenuItem>
-                                <MenuItem value={'DELETE'}>Delete</MenuItem>
+                                <MenuItem value={'CANCEL'}>Cancel</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
