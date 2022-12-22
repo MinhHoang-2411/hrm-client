@@ -84,11 +84,11 @@ const headCells = [
 
 const boxColors = [
     {
-        status: 'REQUESTED',
+        status: 'PENDING',
         color: 'warning.dark'
     },
     {
-        status: 'RETURNED',
+        status: 'PROCESSING',
         color: 'primary.dark'
     },
     {
@@ -96,7 +96,11 @@ const boxColors = [
         color: 'orange.dark'
     },
     {
-        status: 'APPROVED',
+        status: 'CANCELED',
+        color: 'grey'
+    },
+    {
+        status: 'RECEIVED',
         color: 'success.dark'
     }
 ];

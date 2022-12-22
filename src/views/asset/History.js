@@ -121,6 +121,7 @@ const AssetHistory = ({ ...others }) => {
                                 placeholder="Title, Description"
                                 value={search}
                                 onChange={(e) => handleSearch(e.target.value)}
+                                color="secondary"
                             />
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
@@ -133,6 +134,7 @@ const AssetHistory = ({ ...others }) => {
                                 label="Status"
                                 size="small"
                                 defaultValue="ALL_STATUS"
+                                color="secondary"
                             >
                                 <MenuItem size="small" value={'ALL_STATUS'}>
                                     All
@@ -161,7 +163,7 @@ const AssetHistory = ({ ...others }) => {
                                     onChange={(e) => {
                                         handleFilter('issuedDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <TextField {...params} size="small" />}
+                                    renderInput={(params) => <TextField color="secondary" {...params} size="small" />}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
                                 />
@@ -176,7 +178,7 @@ const AssetHistory = ({ ...others }) => {
                                     onChange={(e) => {
                                         handleFilter('returnedDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <TextField {...params} size="small" />}
+                                    renderInput={(params) => <TextField color="secondary" {...params} size="small" />}
                                     inputFormat="DD/MM/YYYY"
                                 />
                             </LocalizationProvider>
