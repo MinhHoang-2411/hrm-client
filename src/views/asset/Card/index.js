@@ -82,16 +82,20 @@ const headCells = [
 
 const boxColors = [
     {
-        status: 'BORROWED',
+        status: 'UNAVAILABLE',
         color: 'warning.dark'
     },
     {
-        status: 'BROKEN',
+        status: 'DAMAGED',
         color: 'orange.dark'
     },
     {
-        status: 'FREE',
+        status: 'AVAILABLE',
         color: 'success.dark'
+    },
+    {
+        status: 'LOST',
+        color: 'grey'
     }
 ];
 
@@ -180,11 +184,11 @@ export default function CardList({ data = [], ...others }) {
                                                     {item?.description}
                                                 </Typography>
                                                 <Typography>
-                                                    Available: {item?.assets.filter((ite) => ite.status === 'FREE').length}
+                                                    Available: {item?.assets.filter((ite) => ite.status === 'AVAILABLE').length}
                                                 </Typography>
                                                 <Typography>
                                                     Unavailable:{' '}
-                                                    {item?.assets.length - item?.assets.filter((ite) => ite.status === 'FREE').length}
+                                                    {item?.assets.length - item?.assets.filter((ite) => ite.status === 'AVAILABLE').length}
                                                 </Typography>
                                             </CardContent>
                                             <CardActions className="card-action">
@@ -208,7 +212,7 @@ export default function CardList({ data = [], ...others }) {
                                                     variant="contained"
                                                     color="secondary"
                                                     onClick={(e) => handleClickOpenForm(item.id)}
-                                                    disabled={item?.assets.filter((ite) => ite.status === 'FREE').length === 0}
+                                                    disabled={item?.assets.filter((ite) => ite.status === 'AVAILABLE').length === 0}
                                                     startIcon={<ArrowCircleUpIcon />}
                                                 >
                                                     Request
@@ -383,6 +387,7 @@ export default function CardList({ data = [], ...others }) {
                                         onChange={handleChange}
                                         error={touched.title && Boolean(errors.title)}
                                         helperText={touched.title && errors.title}
+                                        color="secondary"
                                     />
                                 </FormControl>
                                 <FormControl
@@ -401,6 +406,7 @@ export default function CardList({ data = [], ...others }) {
                                         onChange={handleChange}
                                         error={touched.description && Boolean(errors.description)}
                                         helperText={touched.description && errors.description}
+                                        color="secondary"
                                     />
                                 </FormControl>
                                 <Grid container spacing={3}>
@@ -422,6 +428,7 @@ export default function CardList({ data = [], ...others }) {
                                                     renderInput={(params) => (
                                                         <TextField
                                                             {...params}
+                                                            color="secondary"
                                                             error={touched.issuedDate && Boolean(errors.issuedDate)}
                                                             helperText={touched.issuedDate && errors.issuedDate}
                                                         />
@@ -452,6 +459,7 @@ export default function CardList({ data = [], ...others }) {
                                                     renderInput={(params) => (
                                                         <TextField
                                                             {...params}
+                                                            color="secondary"
                                                             error={touched.returnedDate && Boolean(errors.returnedDate)}
                                                             helperText={touched.returnedDate && errors.returnedDate}
                                                         />
