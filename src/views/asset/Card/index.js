@@ -159,8 +159,7 @@ export default function CardList({ data = [], ...others }) {
         dispatch(
             assetActions.submit({
                 ...value,
-                assetModel: assetModel,
-                status: 'REQUESTED'
+                assetModel: assetModel
             })
         );
     };
@@ -232,46 +231,6 @@ export default function CardList({ data = [], ...others }) {
                         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
                             <DialogTitle sx={{ fontSize: '24px' }}>Asset Model Detail</DialogTitle>
                             <DialogContent dividers="paper">
-                                {/* <DialogContentText className="dialog-content">Name: {modelDetail.modelName}</DialogContentText>
-                                <DialogContentText className="dialog-content">Description: {modelDetail.description}</DialogContentText>
-                                <DialogContentText className="dialog-content">List asset:</DialogContentText>
-                                <DialogContentText style={{ display: 'flex' }}>
-                                    {modelDetail.assets?.length > 0 && (
-                                        <Table aria-labelledby="tableTitle">
-                                            <OrderTableHead headCells={headCells} order={order} orderBy={orderBy} />
-                                            <TableBody>
-                                                {modelDetail.assets?.length > 0 &&
-                                                    modelDetail.assets?.map((item, index) => {
-                                                        return (
-                                                            <TableRow key={index}>
-                                                                <TableCell>
-                                                                    <Avatar>
-                                                                        <DevicesIcon />
-                                                                    </Avatar>
-                                                                </TableCell>
-                                                                <TableCell>{item?.description}</TableCell>
-                                                                <TableCell>{item?.serialNumber}</TableCell>
-                                                                <TableCell>{item?.note}</TableCell>
-                                                                <TableCell>
-                                                                    <ColorBox
-                                                                        bgcolor={
-                                                                            boxColors.filter((it) => it.status === item?.status).length ===
-                                                                            0
-                                                                                ? 'primary.light'
-                                                                                : boxColors.filter((it) => it.status === item?.status).at(0)
-                                                                                      ?.color
-                                                                        }
-                                                                        title={upperCaseFirstCharacter(item?.status)}
-                                                                    />
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        );
-                                                    })}
-                                            </TableBody>
-                                        </Table>
-                                    )}
-                                    {modelDetail.assets.length === 0 && <span className="empty-message">No data available</span>}
-                                </DialogContentText> */}
                                 <Card>
                                     <CardMedia component="img" alt="green iguana" height="300" image={modelDetail.imageUrl} />
                                     <CardContent>

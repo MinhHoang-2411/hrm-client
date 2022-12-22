@@ -33,7 +33,7 @@ const RequestAsset = ({ ...others }) => {
     const [categoryFilter, setCategoryFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [params, setParams] = useState({
-        size: 9,
+        size: 8,
         page: 0,
         sort: '',
         sort_field: 'id',
@@ -128,6 +128,7 @@ const RequestAsset = ({ ...others }) => {
                             placeholder="Name, Description"
                             value={search}
                             onChange={(e) => handleSearch(e.target.value)}
+                            color="secondary"
                         />
                     </FormControl>
                     <FormControl sx={{ width: { xs: 200, md: 200 }, ml: 2 }}>
@@ -142,6 +143,7 @@ const RequestAsset = ({ ...others }) => {
                             onChange={(e) => handleFilter('assetCategoryId.equals', e.target.value)}
                             label="Status"
                             defaultValue="ALL_STATUS"
+                            color="secondary"
                         >
                             <MenuItem size="small" value={'ALL_CATEGORY'}>
                                 All
@@ -168,6 +170,7 @@ const RequestAsset = ({ ...others }) => {
                             label="Status"
                             defaultValue="ALL_CATEGORY"
                             onChange={(e) => handleFilter('status', e.target.value)}
+                            color="secondary"
                         >
                             <MenuItem size="small" value={'ALL_STATUS'}>
                                 All

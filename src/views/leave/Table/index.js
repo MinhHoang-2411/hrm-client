@@ -24,7 +24,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // format
-import { formatDate } from 'api/leave';
+import { formatTimeStampToDate } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
@@ -35,43 +35,64 @@ const headCells = [
         id: 'dropdown',
         align: 'left',
         disablePadding: true,
-        label: ''
+        label: '',
+        width: '10px'
     },
     {
         id: 'createdDate',
         align: 'left',
         disablePadding: false,
-        label: 'Created'
+        label: 'Date Submitted',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
-        id: 'dateLeave',
+        id: 'from',
         align: 'left',
         disablePadding: false,
-        label: 'Leave Date'
+        label: 'From',
+        fontSize: '15px',
+        paddingLeft: '10px'
+    },
+    {
+        id: 'to',
+        align: 'left',
+        disablePadding: false,
+        label: 'To',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'title',
         align: 'left',
         disablePadding: false,
-        label: 'Title'
+        label: 'Title',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'reason',
         align: 'left',
         disablePadding: false,
-        label: 'Reason'
+        label: 'Reason',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'leaveType',
         align: 'left',
         disablePadding: false,
-        label: 'Type'
+        label: 'Type',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'status',
         align: 'left',
         disablePadding: false,
-        label: 'Status'
+        label: 'Status',
+        fontSize: '15px',
+        paddingLeft: '10px'
     }
 ];
 
@@ -89,7 +110,7 @@ const boxColors = [
         color: 'orange.dark'
     },
     {
-        status: 'DELETE',
+        status: 'CANCEL',
         color: 'grey'
     },
     {
@@ -134,19 +155,30 @@ export default function TableLeaveHistory({ data }) {
         return (
             <React.Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    <TableCell>
+                    <TableCell className="table-cell" align="left">
                         <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
                     </TableCell>
-                    <TableCell align="left">{formatDate(row?.createdDate)}</TableCell>
-                    <TableCell align="left">
-                        {formatDate(row?.startDate)} - {formatDate(row?.endDate)}
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.createdDate)}
                     </TableCell>
-                    <TableCell align="left">{row?.title}</TableCell>
-                    <TableCell align="left">{row?.reason}</TableCell>
-                    <TableCell align="left">{upperCaseFirstCharacter(row?.type)}</TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.startDate)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.endDate)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {row?.title}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {row?.reason}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {upperCaseFirstCharacter(row?.type)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
                         <ColorBox
                             bgcolor={
                                 boxColors.filter((item) => item.status === row?.status).length === 0
@@ -158,14 +190,14 @@ export default function TableLeaveHistory({ data }) {
                     </TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 2 }}>
                                 <Table size="small" aria-label="purchases">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Date</TableCell>
-                                            <TableCell>Date Type</TableCell>
+                                            <TableCell></TableCell>
                                             <TableCell>Note</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -175,7 +207,7 @@ export default function TableLeaveHistory({ data }) {
                                                 key={index}
                                                 className={`row-detail-leave ${index == row?.leaveDetailsDTOS?.length - 1 && 'last-row'}`}
                                             >
-                                                <TableCell align="left">{formatDate(historyRow.leaveDate)}</TableCell>
+                                                <TableCell align="left">{formatTimeStampToDate(historyRow.leaveDate)}</TableCell>
                                                 <TableCell align="left">
                                                     {historyRow.dateType === 'ALL_DAY'
                                                         ? 'All day'
