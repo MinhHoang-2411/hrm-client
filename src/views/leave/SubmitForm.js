@@ -59,9 +59,6 @@ import { SubmitLeaveSchema } from 'utils/validate/submit-leave-schema';
 // format
 import { formatTimeStampToDate, formatDateMaterialForFilter } from 'utils/format/date';
 
-// custom component
-import { CssTextField, CssSelect, CssAutoComplete } from 'utils/custom-component/index';
-
 import * as React from 'react';
 const managers = [
     { id: 1, name: 'Huynh Van Ngoc Duy' },
@@ -252,7 +249,7 @@ const SubmitForm = ({ ...others }) => {
                                                         className="title-form"
                                                     >
                                                         <span>Title</span>
-                                                        <CssTextField
+                                                        <TextField
                                                             id="outlined-adornment-title"
                                                             type="text"
                                                             name="title"
@@ -263,6 +260,7 @@ const SubmitForm = ({ ...others }) => {
                                                             className="form-input"
                                                             error={touched.title && Boolean(errors.title)}
                                                             helperText={touched.title && errors.title}
+                                                            color="secondary"
                                                         />
                                                     </FormControl>
                                                 </center>
@@ -275,7 +273,7 @@ const SubmitForm = ({ ...others }) => {
                                                     className="title-form"
                                                 >
                                                     <span>Leave Type</span>
-                                                    <CssSelect
+                                                    <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
                                                         name="type"
@@ -283,12 +281,13 @@ const SubmitForm = ({ ...others }) => {
                                                         onChange={handleChange}
                                                         error={touched.type && Boolean(errors.type)}
                                                         className="form-input"
+                                                        color="secondary"
                                                     >
                                                         <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                                         <MenuItem value={'CASUAL'}>Casual</MenuItem>
                                                         <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
                                                         <MenuItem value={'REMOTE'}>Remote</MenuItem>
-                                                    </CssSelect>
+                                                    </Select>
                                                     <FormHelperText sx={{ color: '#ff4d4f' }}>
                                                         {touched?.type && errors?.type}
                                                     </FormHelperText>
@@ -319,10 +318,11 @@ const SubmitForm = ({ ...others }) => {
                                                                 }}
                                                                 onChangeRaw={(e) => e.preventDefault()}
                                                                 renderInput={(params) => (
-                                                                    <CssTextField
+                                                                    <TextField
                                                                         {...params}
                                                                         error={touched.startDate && Boolean(errors.startDate)}
                                                                         helperText={touched.startDate && errors.startDate}
+                                                                        color="secondary"
                                                                     />
                                                                 )}
                                                                 disablePast={true}
@@ -354,10 +354,11 @@ const SubmitForm = ({ ...others }) => {
                                                                     setErrorMessageDetail('');
                                                                 }}
                                                                 renderInput={(params) => (
-                                                                    <CssTextField
+                                                                    <TextField
                                                                         {...params}
                                                                         error={touched.endDate && Boolean(errors.endDate)}
                                                                         helperText={touched.endDate && errors.endDate}
+                                                                        color="secondary"
                                                                     />
                                                                 )}
                                                                 disablePast={true}
@@ -377,7 +378,7 @@ const SubmitForm = ({ ...others }) => {
                                                         className="title-form"
                                                     >
                                                         <span>Assign To</span>
-                                                        <CssAutoComplete
+                                                        <Autocomplete
                                                             disablePortal
                                                             id="combo-box-demo"
                                                             name="assignTo"
@@ -396,13 +397,14 @@ const SubmitForm = ({ ...others }) => {
                                                                 </Box>
                                                             )}
                                                             renderInput={(params) => (
-                                                                <CssTextField
+                                                                <TextField
                                                                     fullWidth
                                                                     ref={inputRef}
                                                                     name="assignTo"
                                                                     {...params}
                                                                     error={touched.assignTo && Boolean(errors.assignTo)}
                                                                     helperText={touched.assignTo && errors.assignTo}
+                                                                    color="secondary"
                                                                 />
                                                             )}
                                                             className="form-input"
@@ -422,7 +424,7 @@ const SubmitForm = ({ ...others }) => {
                                                 className="title-form"
                                             >
                                                 <span>Reason</span>
-                                                <CssTextField
+                                                <TextField
                                                     id="outlined-multiline-static"
                                                     multiline
                                                     name="reason"
@@ -434,6 +436,7 @@ const SubmitForm = ({ ...others }) => {
                                                     inputProps={{ style: { fontSize: '16px' } }}
                                                     error={touched.reason && Boolean(errors.reason)}
                                                     helperText={touched.reason && errors.reason}
+                                                    color="secondary"
                                                 />
                                             </FormControl>
                                         </center>
@@ -538,7 +541,7 @@ const SubmitForm = ({ ...others }) => {
                                                                     </span>
                                                                     {isHoliday(item) === false && isWeekend(item) === false && (
                                                                         <>
-                                                                            <CssSelect
+                                                                            <Select
                                                                                 sx={{ m: 1, width: '40%', marginLeft: '15px' }}
                                                                                 size="small"
                                                                                 labelId="demo-simple-select-label"
@@ -547,11 +550,12 @@ const SubmitForm = ({ ...others }) => {
                                                                                     handleSelectLeaveTime(e.target.value, index)
                                                                                 }
                                                                                 defaultValue="ALL_DAY"
+                                                                                color="secondary"
                                                                             >
                                                                                 <MenuItem value={'ALL_DAY'}>All day</MenuItem>
                                                                                 <MenuItem value={'MORNING'}>Morning</MenuItem>
                                                                                 <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
-                                                                            </CssSelect>
+                                                                            </Select>
                                                                             <Stack direction="row" spacing={1}>
                                                                                 <IconButton aria-label="delete">
                                                                                     <SpeakerNotesIcon
@@ -607,7 +611,7 @@ const SubmitForm = ({ ...others }) => {
                         <Dialog open={open} onClose={handleClose} fullWidth>
                             <DialogTitle sx={{ fontSize: '24px' }}>Note</DialogTitle>
                             <DialogContent>
-                                <CssTextField
+                                <TextField
                                     id="outlined-multiline-static"
                                     fullWidth
                                     multiline
@@ -618,6 +622,7 @@ const SubmitForm = ({ ...others }) => {
                                     rows={6}
                                     placeholder="Note"
                                     inputProps={{ style: { fontSize: '16px' } }}
+                                    color="secondary"
                                 />
                             </DialogContent>
                             <DialogActions>

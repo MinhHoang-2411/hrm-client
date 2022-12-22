@@ -27,9 +27,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-// custom component
-import { CssTextField, CssSelect } from 'utils/custom-component/index';
-
 const BoxPagination = styled(Box)(({ theme }) => ({
     padding: '20px 0px',
     display: 'flex',
@@ -132,13 +129,14 @@ const LeaveHistory = () => {
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
                             <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                            <CssSelect
+                            <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={params.status}
                                 onChange={(e) => handleFilter('status.equals', e.target.value)}
                                 label="Status"
                                 defaultValue="ALL_STATUS"
+                                color="secondary"
                             >
                                 <MenuItem value={'ALL_STATUS'}>All</MenuItem>
                                 <MenuItem value={'APPROVED'}>Approved</MenuItem>
@@ -146,24 +144,25 @@ const LeaveHistory = () => {
                                 <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
                                 <MenuItem value={'REJECTED'}>Rejected</MenuItem>
                                 <MenuItem value={'WAITING'}>Waiting</MenuItem>
-                            </CssSelect>
+                            </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
                             <InputLabel id="demo-simple-select-label">Leave Type</InputLabel>
-                            <CssSelect
+                            <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={params.status}
                                 onChange={(e) => handleFilter('type.in', e.target.value)}
                                 label="Leave Type"
                                 defaultValue="ALL_TYPE"
+                                color="secondary"
                             >
                                 <MenuItem value={'ALL_TYPE'}>All</MenuItem>
                                 <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                 <MenuItem value={'CASUAL'}>Casual</MenuItem>
                                 <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
                                 <MenuItem value={'REMOTE'}>Remote</MenuItem>
-                            </CssSelect>
+                            </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -174,7 +173,7 @@ const LeaveHistory = () => {
                                     onChange={(e) => {
                                         handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <CssTextField {...params} />}
+                                    renderInput={(params) => <TextField color="secondary" {...params} />}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
                                 />
@@ -189,7 +188,7 @@ const LeaveHistory = () => {
                                     onChange={(e) => {
                                         handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <CssTextField {...params} />}
+                                    renderInput={(params) => <TextField color="secondary" {...params} />}
                                     inputFormat="DD/MM/YYYY"
                                 />
                             </LocalizationProvider>
