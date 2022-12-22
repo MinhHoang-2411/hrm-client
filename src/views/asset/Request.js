@@ -60,7 +60,6 @@ const RequestAsset = ({ ...others }) => {
                 const state = { ...preState };
                 state[key] = value;
                 if (value === 'ALL_CATEGORY') delete state['assetCategoryId.equals'];
-                // if (value === 'ALL_TYPE') delete state['type.in'];
                 if (key === 'assetCategoryId.equals') setCategoryFilter(value);
                 if (key === 'status') setStatusFilter(value);
                 return state;
