@@ -3,7 +3,7 @@ import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, 
 import MainCard from 'ui-component/cards/MainCard';
 
 // convert date
-import { convertDateToFilter } from 'api/leave';
+import { formatDateMaterialForFilter } from 'utils/format/date';
 
 // react
 import { useCallback, useState } from 'react';
@@ -111,6 +111,7 @@ const LeaveHistory = () => {
                     >
                         <FormControl sx={{ width: { xs: '100%', md: 200 } }}>
                             <OutlinedInput
+                                color="secondary"
                                 id="header-search"
                                 startAdornment={
                                     <InputAdornment position="start" sx={{ mr: -0.5 }}>
@@ -135,13 +136,14 @@ const LeaveHistory = () => {
                                 onChange={(e) => handleFilter('status.equals', e.target.value)}
                                 label="Status"
                                 defaultValue="ALL_STATUS"
+                                color="secondary"
                             >
                                 <MenuItem value={'ALL_STATUS'}>All</MenuItem>
+                                <MenuItem value={'APPROVED'}>Approved</MenuItem>
+                                <MenuItem value={'CANCEL'}>Cancel</MenuItem>
                                 <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
                                 <MenuItem value={'REJECTED'}>Rejected</MenuItem>
                                 <MenuItem value={'WAITING'}>Waiting</MenuItem>
-                                <MenuItem value={'APPROVED'}>Approved</MenuItem>
-                                <MenuItem value={'DELETE'}>Delete</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
@@ -153,12 +155,13 @@ const LeaveHistory = () => {
                                 onChange={(e) => handleFilter('type.in', e.target.value)}
                                 label="Leave Type"
                                 defaultValue="ALL_TYPE"
+                                color="secondary"
                             >
                                 <MenuItem value={'ALL_TYPE'}>All</MenuItem>
+                                <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                 <MenuItem value={'CASUAL'}>Casual</MenuItem>
                                 <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
                                 <MenuItem value={'REMOTE'}>Remote</MenuItem>
-                                <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
@@ -168,9 +171,9 @@ const LeaveHistory = () => {
                                     value={startDate}
                                     name="startDate"
                                     onChange={(e) => {
-                                        handleFilter('startDate.greaterThanOrEqual', convertDateToFilter(e.toDate()));
+                                        handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    renderInput={(params) => <TextField color="secondary" {...params} />}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
                                 />
@@ -183,9 +186,9 @@ const LeaveHistory = () => {
                                     value={endDate}
                                     name="endDate"
                                     onChange={(e) => {
-                                        handleFilter('endDate.lessThanOrEqual', convertDateToFilter(e.toDate()));
+                                        handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    renderInput={(params) => <TextField color="secondary" {...params} />}
                                     inputFormat="DD/MM/YYYY"
                                 />
                             </LocalizationProvider>
