@@ -72,8 +72,10 @@ const AssetHistory = ({ ...others }) => {
                     const newState = { ...prevState };
                     if (value && value.trim() !== '') {
                         newState['title.contains'] = value.trim();
+                        newState['description.contains'] = value.trim();
                     } else {
                         delete newState['title.contains'];
+                        delete newState['description.contains'];
                     }
                     return { ...newState, page: 0 };
                 }),
