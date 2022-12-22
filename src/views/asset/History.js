@@ -141,17 +141,20 @@ const AssetHistory = ({ ...others }) => {
                                 <MenuItem size="small" value={'ALL_STATUS'}>
                                     All
                                 </MenuItem>
+                                <MenuItem size="small" value={'CANCELED'}>
+                                    Canceled
+                                </MenuItem>
+                                <MenuItem size="small" value={'PENDING'}>
+                                    Pending
+                                </MenuItem>
+                                <MenuItem size="small" value={'PROCESSING'}>
+                                    Processing
+                                </MenuItem>
+                                <MenuItem size="small" value={'RECEIVED'}>
+                                    Received
+                                </MenuItem>
                                 <MenuItem size="small" value={'REJECTED'}>
                                     Rejected
-                                </MenuItem>
-                                <MenuItem size="small" value={'REQUESTED'}>
-                                    Requested
-                                </MenuItem>
-                                <MenuItem size="small" value={'APPROVED'}>
-                                    Approved
-                                </MenuItem>
-                                <MenuItem size="small" value={'RETURNED'}>
-                                    Returned
                                 </MenuItem>
                             </Select>
                         </FormControl>
@@ -168,6 +171,7 @@ const AssetHistory = ({ ...others }) => {
                                     renderInput={(params) => <TextField color="secondary" {...params} size="small" />}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
+                                    color="secondary"
                                 />
                             </LocalizationProvider>
                         </FormControl>
@@ -182,6 +186,7 @@ const AssetHistory = ({ ...others }) => {
                                     }}
                                     renderInput={(params) => <TextField color="secondary" {...params} size="small" />}
                                     inputFormat="DD/MM/YYYY"
+                                    color="secondary"
                                 />
                             </LocalizationProvider>
                         </FormControl>
