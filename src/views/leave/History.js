@@ -27,6 +27,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+// custom component
+import { CssTextField, CssSelect } from 'utils/custom-component/index';
+
 const BoxPagination = styled(Box)(({ theme }) => ({
     padding: '20px 0px',
     display: 'flex',
@@ -111,6 +114,7 @@ const LeaveHistory = () => {
                     >
                         <FormControl sx={{ width: { xs: '100%', md: 200 } }}>
                             <OutlinedInput
+                                color="secondary"
                                 id="header-search"
                                 startAdornment={
                                     <InputAdornment position="start" sx={{ mr: -0.5 }}>
@@ -128,7 +132,7 @@ const LeaveHistory = () => {
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
                             <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                            <Select
+                            <CssSelect
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={params.status}
@@ -137,16 +141,16 @@ const LeaveHistory = () => {
                                 defaultValue="ALL_STATUS"
                             >
                                 <MenuItem value={'ALL_STATUS'}>All</MenuItem>
+                                <MenuItem value={'APPROVED'}>Approved</MenuItem>
+                                <MenuItem value={'CANCEL'}>Cancel</MenuItem>
                                 <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
                                 <MenuItem value={'REJECTED'}>Rejected</MenuItem>
                                 <MenuItem value={'WAITING'}>Waiting</MenuItem>
-                                <MenuItem value={'APPROVED'}>Approved</MenuItem>
-                                <MenuItem value={'CANCEL'}>Cancel</MenuItem>
-                            </Select>
+                            </CssSelect>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
                             <InputLabel id="demo-simple-select-label">Leave Type</InputLabel>
-                            <Select
+                            <CssSelect
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={params.status}
@@ -155,11 +159,11 @@ const LeaveHistory = () => {
                                 defaultValue="ALL_TYPE"
                             >
                                 <MenuItem value={'ALL_TYPE'}>All</MenuItem>
+                                <MenuItem value={'ANNUAL'}>Annual</MenuItem>
                                 <MenuItem value={'CASUAL'}>Casual</MenuItem>
                                 <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
                                 <MenuItem value={'REMOTE'}>Remote</MenuItem>
-                                <MenuItem value={'ANNUAL'}>Annual</MenuItem>
-                            </Select>
+                            </CssSelect>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -170,7 +174,7 @@ const LeaveHistory = () => {
                                     onChange={(e) => {
                                         handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    renderInput={(params) => <CssTextField {...params} />}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
                                 />
@@ -185,7 +189,7 @@ const LeaveHistory = () => {
                                     onChange={(e) => {
                                         handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
                                     }}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    renderInput={(params) => <CssTextField {...params} />}
                                     inputFormat="DD/MM/YYYY"
                                 />
                             </LocalizationProvider>

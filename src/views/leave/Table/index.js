@@ -35,49 +35,64 @@ const headCells = [
         id: 'dropdown',
         align: 'left',
         disablePadding: true,
-        label: ''
+        label: '',
+        width: '10px'
     },
     {
         id: 'createdDate',
         align: 'left',
         disablePadding: false,
-        label: 'Date Submitted'
+        label: 'Date Submitted',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'from',
         align: 'left',
         disablePadding: false,
-        label: 'From'
+        label: 'From',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'to',
         align: 'left',
         disablePadding: false,
-        label: 'To'
+        label: 'To',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'title',
         align: 'left',
         disablePadding: false,
-        label: 'Title'
+        label: 'Title',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'reason',
         align: 'left',
         disablePadding: false,
-        label: 'Reason'
+        label: 'Reason',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'leaveType',
         align: 'left',
         disablePadding: false,
-        label: 'Type'
+        label: 'Type',
+        fontSize: '15px',
+        paddingLeft: '10px'
     },
     {
         id: 'status',
         align: 'left',
         disablePadding: false,
-        label: 'Status'
+        label: 'Status',
+        fontSize: '15px',
+        paddingLeft: '10px'
     }
 ];
 
@@ -95,7 +110,7 @@ const boxColors = [
         color: 'orange.dark'
     },
     {
-        status: 'DELETE',
+        status: 'CANCEL',
         color: 'grey'
     },
     {
@@ -182,7 +197,7 @@ export default function TableLeaveHistory({ data }) {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Date</TableCell>
-                                            <TableCell>Date Type</TableCell>
+                                            <TableCell></TableCell>
                                             <TableCell>Note</TableCell>
                                         </TableRow>
                                     </TableHead>
