@@ -40,6 +40,7 @@ import { useEffect, useState, useRef } from 'react';
 // redux
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { leaveActions } from 'store/leave/leaveSlice';
+import { employeeActions } from 'store/employee/employeeSlice';
 
 // toast
 import { toast } from 'react-toastify';
@@ -60,15 +61,6 @@ import { SubmitLeaveSchema } from 'utils/validate/submit-leave-schema';
 import { formatTimeStampToDate, formatDateMaterialForFilter } from 'utils/format/date';
 
 import * as React from 'react';
-const managers = [
-    { id: 1, name: 'Huynh Van Ngoc Duy' },
-    { id: 1, name: 'Hoang Trong Thang' },
-    { id: 2, name: 'Nguyen Don Kim Trung' },
-    { id: 2, name: 'Truong Van Huy' },
-    { id: 1, name: 'Pham Tan Hung' },
-    { id: 1, name: 'Le Van Sang' },
-    { id: 2, name: 'Pham Van Duc' }
-];
 
 const steps = ['Submit a leave', 'Manager confirms the leave', 'Admin approves the leave'];
 
@@ -85,11 +77,12 @@ const SubmitForm = ({ ...others }) => {
     const inputRef = useRef();
 
     const initialValues = {
-        managers_id: { name: '', id: null }
+        managers_id: { id: null, user: { firstName: '', lastName: '' } }
     };
 
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
+    const listManager = useAppSelector((state) => state.employee.listData);
 
     const handleClickOpen = (idx) => {
         setOpen(true);
@@ -186,13 +179,19 @@ const SubmitForm = ({ ...others }) => {
     useEffect(() => {
         const information = handleGetLeaveCount();
         information.then(function (result) {
-            setInforLeaveUnUse((result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse) + ' days of Annual Leave');
+            let leaveUnUse = result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse;
+            if (leaveUnUse === 0 || leaveUnUse === 1) {
+                setInforLeaveUnUse(leaveUnUse + ' day of Annual Leave');
+            } else {
+                setInforLeaveUnUse(leaveUnUse + ' days of Annual Leave');
+            }
         });
         showToastMessage(alert);
     }, [alert]);
 
     useEffect(() => {
         dispatch(leaveActions.getHolidays({}));
+        dispatch(employeeActions.fetchData({ 'position.in': 'MANAGER' }));
     }, []);
 
     return (
@@ -205,7 +204,7 @@ const SubmitForm = ({ ...others }) => {
                     reason: '',
                     startDate: null,
                     endDate: null,
-                    assignTo: undefined,
+                    assignTo: null,
                     search: '',
                     submit: null
                 }}
@@ -391,11 +390,12 @@ const SubmitForm = ({ ...others }) => {
                                                         onChange={(e, value) =>
                                                             setFieldValue('assignTo', value !== null ? value : initialValues.managers_id)
                                                         }
-                                                        options={managers}
-                                                        getOptionLabel={(option) => option.name}
+                                                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                        options={listManager}
+                                                        getOptionLabel={(option) => option.user?.firstName + ' ' + option.user?.lastName}
                                                         renderOption={(props, option) => (
                                                             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                                                {option.name}
+                                                                {option.user?.firstName} {option.user?.lastName}
                                                             </Box>
                                                         )}
                                                         renderInput={(params) => (
