@@ -11,13 +11,19 @@
 }
 
 .title-form {
-    span {
-        margin-bottom: 5px;
-        font-weight: bold;
-        margin-right: auto;
-        margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-right: auto;
+    margin-top: 5px;
+
+    .require {
+        color: red;
+        margin-left: 5px;
     }
 }
+
+
+
 
 .table-cell {
     padding: 10px !important;

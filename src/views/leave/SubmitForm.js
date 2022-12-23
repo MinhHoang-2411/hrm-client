@@ -241,38 +241,41 @@ const SubmitForm = ({ ...others }) => {
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Grid container spacing={gridSpacing}>
                                             <Grid item lg={8} md={8} sm={12} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.title && errors.title)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.title && errors.title)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <Box className="title-form">
                                                         <span>Title</span>
-                                                        <TextField
-                                                            id="outlined-adornment-title"
-                                                            type="text"
-                                                            name="title"
-                                                            placeholder="Title"
-                                                            value={values.title}
-                                                            onChange={handleChange}
-                                                            inputProps={{ style: { fontSize: '16px' } }}
-                                                            className="form-input"
-                                                            error={touched.title && Boolean(errors.title)}
-                                                            helperText={touched.title && errors.title}
-                                                            color="secondary"
-                                                        />
-                                                    </FormControl>
-                                                </center>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+
+                                                    <TextField
+                                                        id="outlined-adornment-title"
+                                                        type="text"
+                                                        name="title"
+                                                        placeholder="Title"
+                                                        value={values.title}
+                                                        onChange={handleChange}
+                                                        inputProps={{ style: { fontSize: '16px' } }}
+                                                        className="form-input"
+                                                        error={touched.title && Boolean(errors.title)}
+                                                        helperText={touched.title && errors.title}
+                                                        color="secondary"
+                                                    />
+                                                </FormControl>
                                             </Grid>
                                             <Grid item lg={4} md={4} sm={12} xs={12}>
                                                 <FormControl
                                                     fullWidth
                                                     error={Boolean(touched.type && errors.type)}
                                                     sx={{ ...theme.typography.customInput }}
-                                                    className="title-form"
                                                 >
-                                                    <span>Leave Type</span>
+                                                    <Box className="title-form">
+                                                        <span>Leave Type</span>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -299,147 +302,146 @@ const SubmitForm = ({ ...others }) => {
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Grid container spacing={gridSpacing}>
                                             <Grid item lg={4} md={4} sm={4} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.startDate && errors.startDate)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.startDate && errors.startDate)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <Box className="title-form">
                                                         <span>From</span>
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DatePicker
-                                                                value={values.startDate}
-                                                                name="startDate"
-                                                                onChange={(value) => {
-                                                                    setFieldValue('startDate', value);
-                                                                    handleGetArrayDate(value, values.endDate);
-                                                                    setErrorMessageDetail('');
-                                                                }}
-                                                                onChangeRaw={(e) => e.preventDefault()}
-                                                                renderInput={(params) => (
-                                                                    <TextField
-                                                                        {...params}
-                                                                        error={touched.startDate && Boolean(errors.startDate)}
-                                                                        helperText={touched.startDate && errors.startDate}
-                                                                        color="secondary"
-                                                                    />
-                                                                )}
-                                                                disablePast={true}
-                                                                inputFormat="DD/MM/YYYY"
-                                                                className="form-input"
-                                                            />
-                                                        </LocalizationProvider>
-                                                    </FormControl>
-                                                </center>
-                                            </Grid>
-                                            <Grid item lg={4} md={4} sm={4} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.endDate && errors.endDate)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
-                                                        <span>To</span>
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DatePicker
-                                                                id="outlined-adornment-leave-to"
-                                                                type="date"
-                                                                name="endDate"
-                                                                value={values.endDate}
-                                                                onChange={(value) => {
-                                                                    setFieldValue('endDate', value);
-                                                                    handleGetArrayDate(values.startDate, value);
-                                                                    setErrorMessageDetail('');
-                                                                }}
-                                                                renderInput={(params) => (
-                                                                    <TextField
-                                                                        {...params}
-                                                                        error={touched.endDate && Boolean(errors.endDate)}
-                                                                        helperText={touched.endDate && errors.endDate}
-                                                                        color="secondary"
-                                                                    />
-                                                                )}
-                                                                disablePast={true}
-                                                                inputFormat="DD/MM/YYYY"
-                                                                className="form-input"
-                                                            />
-                                                        </LocalizationProvider>
-                                                    </FormControl>
-                                                </center>
-                                            </Grid>
-                                            <Grid item lg={4} md={4} sm={4} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.assignTo && errors.assignTo)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
-                                                        <span>Assign To</span>
-                                                        <Autocomplete
-                                                            disablePortal
-                                                            id="combo-box-demo"
-                                                            name="assignTo"
-                                                            value={values.assignTo}
-                                                            onChange={(e, value) =>
-                                                                setFieldValue(
-                                                                    'assignTo',
-                                                                    value !== null ? value : initialValues.managers_id
-                                                                )
-                                                            }
-                                                            options={managers}
-                                                            getOptionLabel={(option) => option.name}
-                                                            renderOption={(props, option) => (
-                                                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                                                    {option.name}
-                                                                </Box>
-                                                            )}
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DatePicker
+                                                            value={values.startDate}
+                                                            name="startDate"
+                                                            onChange={(value) => {
+                                                                setFieldValue('startDate', value);
+                                                                handleGetArrayDate(value, values.endDate);
+                                                                setErrorMessageDetail('');
+                                                            }}
+                                                            onChangeRaw={(e) => e.preventDefault()}
                                                             renderInput={(params) => (
                                                                 <TextField
-                                                                    fullWidth
-                                                                    ref={inputRef}
-                                                                    name="assignTo"
                                                                     {...params}
-                                                                    error={touched.assignTo && Boolean(errors.assignTo)}
-                                                                    helperText={touched.assignTo && errors.assignTo}
+                                                                    error={touched.startDate && Boolean(errors.startDate)}
+                                                                    helperText={touched.startDate && errors.startDate}
                                                                     color="secondary"
                                                                 />
                                                             )}
+                                                            disablePast={true}
+                                                            inputFormat="DD/MM/YYYY"
                                                             className="form-input"
                                                         />
-                                                    </FormControl>
-                                                </center>
+                                                    </LocalizationProvider>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.endDate && errors.endDate)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <Box className="title-form">
+                                                        <span>To</span>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DatePicker
+                                                            id="outlined-adornment-leave-to"
+                                                            type="date"
+                                                            name="endDate"
+                                                            value={values.endDate}
+                                                            onChange={(value) => {
+                                                                setFieldValue('endDate', value);
+                                                                handleGetArrayDate(values.startDate, value);
+                                                                setErrorMessageDetail('');
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    error={touched.endDate && Boolean(errors.endDate)}
+                                                                    helperText={touched.endDate && errors.endDate}
+                                                                    color="secondary"
+                                                                />
+                                                            )}
+                                                            disablePast={true}
+                                                            inputFormat="DD/MM/YYYY"
+                                                            className="form-input"
+                                                        />
+                                                    </LocalizationProvider>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.assignTo && errors.assignTo)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                    className="title-form"
+                                                >
+                                                    <Box className="title-form">
+                                                        <span>Assign To</span>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        name="assignTo"
+                                                        value={values.assignTo}
+                                                        onChange={(e, value) =>
+                                                            setFieldValue('assignTo', value !== null ? value : initialValues.managers_id)
+                                                        }
+                                                        options={managers}
+                                                        getOptionLabel={(option) => option.name}
+                                                        renderOption={(props, option) => (
+                                                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                {option.name}
+                                                            </Box>
+                                                        )}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                fullWidth
+                                                                ref={inputRef}
+                                                                name="assignTo"
+                                                                {...params}
+                                                                error={touched.assignTo && Boolean(errors.assignTo)}
+                                                                helperText={touched.assignTo && errors.assignTo}
+                                                                color="secondary"
+                                                            />
+                                                        )}
+                                                        className="form-input"
+                                                    />
+                                                </FormControl>
                                             </Grid>
                                         </Grid>
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <center>
-                                            <FormControl
-                                                fullWidth
-                                                error={Boolean(touched.password && errors.password)}
-                                                sx={{ ...theme.typography.customInput }}
-                                                className="title-form"
-                                            >
+                                        <FormControl
+                                            fullWidth
+                                            error={Boolean(touched.password && errors.password)}
+                                            sx={{ ...theme.typography.customInput }}
+                                            className="title-form"
+                                        >
+                                            <Box className="title-form">
                                                 <span>Reason</span>
-                                                <TextField
-                                                    id="outlined-multiline-static"
-                                                    multiline
-                                                    name="reason"
-                                                    type="text"
-                                                    rows={6}
-                                                    placeholder="Reason"
-                                                    value={values.reason}
-                                                    onChange={handleChange}
-                                                    inputProps={{ style: { fontSize: '16px' } }}
-                                                    error={touched.reason && Boolean(errors.reason)}
-                                                    helperText={touched.reason && errors.reason}
-                                                    color="secondary"
-                                                />
-                                            </FormControl>
-                                        </center>
+                                                <span className="require">(*)</span>
+                                            </Box>
+                                            <TextField
+                                                id="outlined-multiline-static"
+                                                multiline
+                                                name="reason"
+                                                type="text"
+                                                rows={6}
+                                                placeholder="Reason"
+                                                value={values.reason}
+                                                onChange={handleChange}
+                                                inputProps={{ style: { fontSize: '16px' } }}
+                                                error={touched.reason && Boolean(errors.reason)}
+                                                helperText={touched.reason && errors.reason}
+                                                color="secondary"
+                                            />
+                                        </FormControl>
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
