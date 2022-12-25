@@ -18,6 +18,9 @@ export const SubmitLeaveSchema = (type) => {
             .required('Please select Start Date'),
         endDate: Yup.date().min(date, 'Please choose valid time').nullable('Please select End Date').required('Please select End Date'),
         assignTo: Yup.object().required('Please enter Asign To').nullable(),
-        reason: Yup.string().max(255, 'Please enter no more than 255 characters').required('Please enter Reason')
+        reason: Yup.string()
+            .min(10, 'Please enter more than 10 characters')
+            .max(255, 'Please enter no more than 255 characters')
+            .required('Please enter Reason')
     });
 };

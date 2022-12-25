@@ -19,6 +19,7 @@ import { useTheme } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import CheckIcon from '@mui/icons-material/Check';
 
 // third party
 import { Formik } from 'formik';
@@ -72,13 +73,10 @@ const SubmitForm = ({ ...others }) => {
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
     const [currentIndex, setCurrentIndex] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+    const [openModelConfirm, setOpenModelConfirm] = useState(false);
     const [errorMessageDetail, setErrorMessageDetail] = useState('');
     const formikRef = useRef();
     const inputRef = useRef();
-
-    const initialValues = {
-        managers_id: { id: null, user: { firstName: '', lastName: '' } }
-    };
 
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
@@ -91,6 +89,11 @@ const SubmitForm = ({ ...others }) => {
 
     const handleClose = () => {
         setOpen(false);
+        setOpenModelConfirm(false);
+    };
+
+    const handleClickModelConfirm = () => {
+        setOpenModelConfirm(true);
     };
 
     const handleGetArrayDate = (leaveFrom, leaveTo) => {
@@ -387,9 +390,7 @@ const SubmitForm = ({ ...others }) => {
                                                         id="combo-box-demo"
                                                         name="assignTo"
                                                         value={values.assignTo}
-                                                        onChange={(e, value) =>
-                                                            setFieldValue('assignTo', value !== null ? value : initialValues.managers_id)
-                                                        }
+                                                        onChange={(e, value) => setFieldValue('assignTo', value)}
                                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                                         options={listManager}
                                                         getOptionLabel={(option) => option.user?.firstName + ' ' + option.user?.lastName}
@@ -468,16 +469,55 @@ const SubmitForm = ({ ...others }) => {
                                                 disabled={isSubmitting}
                                                 style={{ width: '20%' }}
                                                 size="large"
-                                                type="submit"
+                                                type="button"
                                                 variant="contained"
                                                 color="secondary"
                                                 startIcon={<SendIcon />}
+                                                onClick={(e) => handleClickModelConfirm()}
                                             >
                                                 Submit
                                             </Button>
                                         </Stack>
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                            <Grid>
+                                <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
+                                    <DialogTitle sx={{ fontSize: '24px' }}>Confirm</DialogTitle>
+                                    <DialogContent>
+                                        <Box>
+                                            <span style={{ fontSize: '15px' }}>Are you sure to submit this leave?</span>
+                                        </Box>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button
+                                            disableElevation
+                                            style={{ width: '20%' }}
+                                            size="large"
+                                            type="reset"
+                                            variant="outlined"
+                                            onClick={handleClose}
+                                            color="secondary"
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            disableElevation
+                                            style={{ width: '20%' }}
+                                            size="large"
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            startIcon={<CheckIcon />}
+                                            onClick={(e) => {
+                                                handleClose();
+                                                handleSubmit(values);
+                                            }}
+                                        >
+                                            Confirm
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
                             </Grid>
                             <Grid item lg={4} md={4} sm={4} xs={4}>
                                 <Card
@@ -517,7 +557,8 @@ const SubmitForm = ({ ...others }) => {
 
                                         {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
                                         <ul style={{ paddingLeft: 0 }}>
-                                            {dateAndLeaveTimes?.length > 0 &&
+                                            {values.type !== 'MATERNITY' &&
+                                                dateAndLeaveTimes?.length > 0 &&
                                                 dateAndLeaveTimes?.map((item, index) => {
                                                     return (
                                                         <>
