@@ -7,6 +7,7 @@ const initialState = {
     listData: [],
     listHoliday: [],
     loadingHolidays: false,
+    loadingEdit: false,
     pagination: undefined
 };
 
@@ -57,6 +58,18 @@ const leaveSlice = createSlice({
         },
         getHolidayFail(state, action) {
             state.loadingHolidays = false;
+        },
+
+        // EDIT
+        editLeave(state, action) {
+            state.loadingEdit = true;
+        },
+        editLeaveSuccess(state, action) {
+            state.loadingEdit = false;
+            state.reloadList = !state.reloadList;
+        },
+        editLeaveFail(state, action) {
+            state.loadingEdit = false;
         }
     }
 });

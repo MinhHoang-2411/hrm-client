@@ -19,8 +19,8 @@ export const SubmitLeaveSchema = (type) => {
         endDate: Yup.date().min(date, 'Please choose valid time').nullable('Please select End Date').required('Please select End Date'),
         assignTo: Yup.object().required('Please enter Asign To').nullable(),
         reason: Yup.string()
-            .min(10, 'Please enter more than 10 characters')
-            .max(255, 'Please enter no more than 255 characters')
+            .min(10, 'Please enter between 10- 255 characters')
+            .max(255, 'Please enter between 10- 255 characters')
             .required('Please enter Reason')
     });
 };

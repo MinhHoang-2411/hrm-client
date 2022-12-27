@@ -33,3 +33,7 @@ export function getAll(params) {
 export function getAllHoliday(params) {
     return axiosClient.get(HOLIDAY_API_URL, { params });
 }
+
+export function updateLeave(params) {
+    return axiosClient.patch(LEAVE_API_URL + `/${params?.id}`, params);
+}

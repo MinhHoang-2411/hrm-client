@@ -6,7 +6,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import { formatDateMaterialForFilter } from 'utils/format/date';
 
 // react
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 // redux
 import { leaveActions } from 'store/leave/leaveSlice';
@@ -26,6 +26,12 @@ import styled from '@emotion/styled';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+// format
+import { upperCaseFirstCharacter } from 'utils/string';
+
+// constants
+import { LEAVE_STATUS, LEAVE_TYPE } from 'constants/index';
 
 const BoxPagination = styled(Box)(({ theme }) => ({
     padding: '20px 0px',
@@ -128,7 +134,9 @@ const LeaveHistory = () => {
                             />
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
-                            <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                            <InputLabel color="secondary" id="demo-simple-select-label">
+                                Status
+                            </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
@@ -138,16 +146,18 @@ const LeaveHistory = () => {
                                 defaultValue="ALL_STATUS"
                                 color="secondary"
                             >
-                                <MenuItem value={'ALL_STATUS'}>All</MenuItem>
-                                <MenuItem value={'APPROVED'}>Approved</MenuItem>
-                                <MenuItem value={'CANCEL'}>Cancel</MenuItem>
-                                <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
-                                <MenuItem value={'REJECTED'}>Rejected</MenuItem>
-                                <MenuItem value={'WAITING'}>Waiting</MenuItem>
+                                <MenuItem value="ALL_STATUS">All</MenuItem>
+                                {LEAVE_STATUS?.map((item, index) => (
+                                    <MenuItem key={index} value={item}>
+                                        {upperCaseFirstCharacter(item)}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
-                            <InputLabel id="demo-simple-select-label">Leave Type</InputLabel>
+                            <InputLabel color="secondary" id="demo-simple-select-label">
+                                Leave Type
+                            </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
@@ -158,10 +168,11 @@ const LeaveHistory = () => {
                                 color="secondary"
                             >
                                 <MenuItem value={'ALL_TYPE'}>All</MenuItem>
-                                <MenuItem value={'ANNUAL'}>Annual</MenuItem>
-                                <MenuItem value={'CASUAL'}>Casual</MenuItem>
-                                <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
-                                <MenuItem value={'REMOTE'}>Remote</MenuItem>
+                                {LEAVE_TYPE?.map((item, index) => (
+                                    <MenuItem key={index} value={item}>
+                                        {upperCaseFirstCharacter(item)}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">

@@ -60,8 +60,12 @@ import { SubmitLeaveSchema } from 'utils/validate/submit-leave-schema';
 
 // format
 import { formatTimeStampToDate, formatDateMaterialForFilter } from 'utils/format/date';
+import { upperCaseFirstCharacter } from 'utils/string';
 
 import * as React from 'react';
+
+// constant
+import { LEAVE_TYPE } from 'constants/index';
 
 const steps = ['Submit a leave', 'Manager confirms the leave', 'Admin approves the leave'];
 
@@ -75,6 +79,7 @@ const SubmitForm = ({ ...others }) => {
     const [open, setOpen] = React.useState(false);
     const [openModelConfirm, setOpenModelConfirm] = useState(false);
     const [errorMessageDetail, setErrorMessageDetail] = useState('');
+    const [leaveUnUser, setLeaveUnUse] = useState();
     const formikRef = useRef();
     const inputRef = useRef();
 
@@ -183,6 +188,7 @@ const SubmitForm = ({ ...others }) => {
         const information = handleGetLeaveCount();
         information.then(function (result) {
             let leaveUnUse = result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse;
+            setLeaveUnUse(leaveUnUse);
             if (leaveUnUse === 0 || leaveUnUse === 1) {
                 setInforLeaveUnUse(leaveUnUse + ' day of Annual Leave');
             } else {
@@ -194,7 +200,7 @@ const SubmitForm = ({ ...others }) => {
 
     useEffect(() => {
         dispatch(leaveActions.getHolidays({}));
-        dispatch(employeeActions.fetchData({ 'position.in': 'MANAGER' }));
+        dispatch(employeeActions.fetchData({}));
     }, []);
 
     return (
@@ -288,10 +294,11 @@ const SubmitForm = ({ ...others }) => {
                                                         className="form-input"
                                                         color="secondary"
                                                     >
-                                                        <MenuItem value={'ANNUAL'}>Annual</MenuItem>
-                                                        <MenuItem value={'CASUAL'}>Casual</MenuItem>
-                                                        <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
-                                                        <MenuItem value={'REMOTE'}>Remote</MenuItem>
+                                                        {LEAVE_TYPE?.map((item, index) => (
+                                                            <MenuItem key={index} value={item}>
+                                                                {upperCaseFirstCharacter(item)}
+                                                            </MenuItem>
+                                                        ))}
                                                     </Select>
                                                     <FormHelperText sx={{ color: '#ff4d4f' }}>
                                                         {touched?.type && errors?.type}
@@ -485,9 +492,17 @@ const SubmitForm = ({ ...others }) => {
                                 <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
                                     <DialogTitle sx={{ fontSize: '24px' }}>Confirm</DialogTitle>
                                     <DialogContent>
-                                        <Box>
-                                            <span style={{ fontSize: '15px' }}>Are you sure to submit this leave?</span>
-                                        </Box>
+                                        {leaveUnUser === 0 ? (
+                                            <Box>
+                                                <span style={{ fontSize: '15px' }}>
+                                                    You have used up your leave for this year. Would you like to submit your leave?
+                                                </span>
+                                            </Box>
+                                        ) : (
+                                            <Box>
+                                                <span style={{ fontSize: '15px' }}>Would you like to submit your leave?</span>
+                                            </Box>
+                                        )}
                                     </DialogContent>
                                     <DialogActions>
                                         <Button
