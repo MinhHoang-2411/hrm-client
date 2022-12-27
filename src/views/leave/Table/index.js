@@ -209,10 +209,18 @@ export default function TableLeaveHistory({ data }) {
                     <TableCell align="left" className="table-cell">
                         {formatTimeStampToDate(row?.endDate)}
                     </TableCell>
-                    <TableCell align="left" className="table-cell">
+                    <TableCell
+                        align="left"
+                        className="table-cell"
+                        style={{ minWidth: 150, maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
                         {row?.title}
                     </TableCell>
-                    <TableCell align="left" className="table-cell">
+                    <TableCell
+                        align="left"
+                        className="table-cell"
+                        style={{ minWidth: 200, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
                         {row?.reason}
                     </TableCell>
                     <TableCell align="left" className="table-cell">

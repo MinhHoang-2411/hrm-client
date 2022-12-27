@@ -102,12 +102,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         <Grid container spacing={2} columns={12}>
                             <Grid item xs={4}></Grid>
                             <Grid item xs={4}>
-                                <Chip
-                                    sx={{ fontWeight: 'bold' }}
-                                    variant="outlined"
-                                    label={upperCaseFirstCharacter(leaveDetail?.type)}
-                                    color="primary"
-                                />
+                                <ColorBox bgcolor={'#90CAF9'} title={upperCaseFirstCharacter(leaveDetail?.type)} />
                             </Grid>
                             <Grid item xs={4}>
                                 <ColorBox
@@ -128,24 +123,30 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                             </Grid>
                         </Grid>
                     </Box>
+
+                    <Box sx={{ display: 'flex', marginBottom: '10px' }}>
+                        <Grid>
+                            <Grid item xs={12}>
+                                <span style={{ fontWeight: 'bold' }}>Reason:</span> {leaveDetail?.reason}
+                            </Grid>
+                        </Grid>
+                    </Box>
                     <Box sx={{ display: 'flex', marginBottom: '10px', alignItems: 'center' }}>
                         <Grid container spacing={2} columns={12}>
                             <Grid item xs={4}>
                                 <span style={{ fontWeight: 'bold' }}>Date Submitted:</span>{' '}
                                 {formatTomeStampToDateTime(leaveDetail?.createdDate)}
                             </Grid>
+                        </Grid>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', marginBottom: '10px', alignItems: 'center' }}>
+                        <Grid container spacing={2} columns={12}>
                             <Grid item xs={4}>
                                 <span style={{ fontWeight: 'bold' }}>From:</span> {formatTimeStampToDate(leaveDetail?.startDate)}
                             </Grid>
                             <Grid item xs={4}>
                                 <span style={{ fontWeight: 'bold' }}>To:</span> {formatTimeStampToDate(leaveDetail?.endDate)}
-                            </Grid>
-                        </Grid>
-                    </Box>
-                    <Box sx={{ display: 'flex', marginBottom: '10px' }}>
-                        <Grid>
-                            <Grid item xs={12}>
-                                <span style={{ fontWeight: 'bold' }}>Reason:</span> {leaveDetail?.reason}
                             </Grid>
                         </Grid>
                     </Box>
