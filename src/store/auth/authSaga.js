@@ -9,7 +9,7 @@ function* handleLogin(payload) {
         localStorage.setItem('access_token', JSON.stringify(response.data.id_token));
         const responseEmployee = yield call(getCurrentEmployeeLogin, payload);
         localStorage.setItem('role', JSON.stringify(responseEmployee.data.position));
-        localStorage.setItem('currentEmployeeId', responseEmployee.data.id);
+        localStorage.setItem('current_employee_id', responseEmployee.data.id);
 
         yield put(authActions.loginSuccess({ ...payload }));
 

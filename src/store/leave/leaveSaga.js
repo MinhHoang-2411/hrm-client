@@ -39,8 +39,8 @@ function* handleGetAllHoliday(action) {
 function* handleGetListWaiting(action) {
     try {
         const params = action.payload;
-        const assignTo = localStorage.getItem('currentEmployeeId');
-        params['assignTo.equals'] = 7;
+        const assignTo = localStorage.getItem('current_employee_id');
+        params['assignTo.equals'] = assignTo;
         params['status.equals'] = 'WAITING';
         const response = yield call(getAll, params);
 

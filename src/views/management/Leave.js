@@ -99,7 +99,10 @@ const ManagementLeave = () => {
     const [search, setSearch] = useState('');
     const [searchListWaiting, setSearchListWaiting] = useState('');
     const { listData: listLeave } = useGetAllList(paramsAll, leaveActions, 'leave');
-    const listOtherLeave = listLeave?.filter((item) => item?.status !== 'WAITING');
+    const listOtherLeave = listLeave?.filter(
+        (item) =>
+            (item?.status === 'CONFIRMED' || item?.status === 'REJECTED') && item?.assignTo === +localStorage.getItem('current_employee_id')
+    );
     const listLeaveWaiting = useAppSelector((state) => state.leave.listDataWaiting);
     const reloadList = useAppSelector((state) => state.leave.reloadList);
     const isLeaveWaiting = (status) => status == 'WAITING';
@@ -214,11 +217,11 @@ const ManagementLeave = () => {
         (data) =>
             Array.isArray(data) &&
             data?.map((row, index) => (
-                <Card className="card" key={index} sx={{ fontSize: '15px', marginBottom: '15px' }}>
+                <Card className="card" key={index} sx={{ fontSize: '15px', marginBottom: '15px', marginTop: '5px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', padding: '10px 30px' }}>
                         <Box sx={styleTitle}>
-                            <span style={{ color: '#1890ff', marginRight: '10px', fontSize: '20px' }}>{index + 1}</span>
-                            {row?.title}
+                            <span style={{ color: '#1890ff', marginRight: '5px', fontSize: '20px' }}>{index + 1}</span>
+                            {row?.createdBy}
                         </Box>
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
@@ -235,6 +238,13 @@ const ManagementLeave = () => {
                                 </Grid>
                                 <Grid item xs={4}>
                                     {showStatusLeave(row?.status)}
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
+                            <Grid container spacing={2} columns={12}>
+                                <Grid item xs={12}>
+                                    <span style={{ fontWeight: 'bold' }}>Title:</span> {row?.title}
                                 </Grid>
                             </Grid>
                         </Box>
@@ -318,7 +328,16 @@ const ManagementLeave = () => {
                                         <h3 style={styleLabel}>
                                             Waiting leave <span style={styleCount}>{listLeaveWaiting?.length || 0}</span>
                                         </h3>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginBottom: '15px',
+                                                width: '99%',
+                                                marginLeft: 'auto',
+                                                marginRight: 'auto'
+                                            }}
+                                        >
                                             <InputSearch
                                                 width={250}
                                                 search={searchListWaiting}
@@ -359,7 +378,11 @@ const ManagementLeave = () => {
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            paddingRight: '5px'
+                                            paddingRight: '5px',
+                                            marginBottom: '15px',
+                                            width: '99%',
+                                            marginLeft: 'auto',
+                                            marginRight: 'auto'
                                         }}
                                     >
                                         <h3 style={styleLabel}>
@@ -416,7 +439,7 @@ const ManagementLeave = () => {
                                             </FormControl>
                                         </Box>
                                     </Box>
-                                    <Box sx={{ overflowX: 'auto', height: '90vh' }}>
+                                    <Box sx={{ overflowX: 'auto', height: '90vh', marginTop: '5px' }}>
                                         {listOtherLeave?.length ? renderList(listOtherLeave) : <div></div>}
                                     </Box>
                                 </Box>

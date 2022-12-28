@@ -8,7 +8,7 @@ export function InputSearch({ search, handleSearch, placeholder = 'Search...', w
                 size="small"
                 id="header-search"
                 startAdornment={
-                    <InputAdornment position="start" sx={{ mr: -0.5 }}>
+                    <InputAdornment position="start" sx={{ mr: 0.5 }}>
                         <SearchOutlined />
                     </InputAdornment>
                 }
