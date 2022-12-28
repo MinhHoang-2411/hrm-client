@@ -200,7 +200,7 @@ const SubmitForm = ({ ...others }) => {
 
     useEffect(() => {
         dispatch(leaveActions.getHolidays({}));
-        dispatch(employeeActions.fetchData({}));
+        dispatch(employeeActions.fetchData({ 'position.in': 'MANAGER' }));
     }, []);
 
     return (
@@ -237,7 +237,7 @@ const SubmitForm = ({ ...others }) => {
                                 <Grid container spacing={gridSpacing} sx={{ mt: 1 }}>
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Box sx={{ width: '100%' }}>
-                                            <Stepper alternativeLabel sx={{ width: '100%' }}>
+                                            <Stepper sx={{ width: '100%' }}>
                                                 {steps.map((label) => (
                                                     <Step key={label}>
                                                         <StepLabel>{label}</StepLabel>

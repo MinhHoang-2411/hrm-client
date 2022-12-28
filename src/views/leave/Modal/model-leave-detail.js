@@ -148,10 +148,22 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                                     tabIndex={-1}
                                                     key={index}
                                                 >
-                                                    <TableCell className="table-cell-modal" align="left">
+                                                    <TableCell
+                                                        className="table-cell-modal"
+                                                        align="left"
+                                                        style={{
+                                                            width: 200
+                                                        }}
+                                                    >
                                                         {formatTimeStampToDate(item?.leaveDate)}
                                                     </TableCell>
-                                                    <TableCell className="table-cell-modal" align="left">
+                                                    <TableCell
+                                                        className="table-cell-modal"
+                                                        align="left"
+                                                        style={{
+                                                            width: 200
+                                                        }}
+                                                    >
                                                         {upperCaseFirstCharacter(item?.dateType)}
                                                     </TableCell>
                                                     <TableCell
