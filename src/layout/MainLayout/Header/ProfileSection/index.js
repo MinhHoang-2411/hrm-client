@@ -33,6 +33,9 @@ import { IconLogout, IconSettings, IconUser } from '@tabler/icons';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { authActions } from 'store/auth/authSlice';
 
+// format
+import { upperCaseFirstCharacter } from 'utils/string';
+
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
@@ -153,12 +156,14 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography variant="h4">Good Morning,</Typography>
+                                                <Typography variant="h4">Welcome,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Johne Doe
+                                                    {localStorage.getItem('full_name')}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">Project Admin</Typography>
+                                            <Typography variant="subtitle2">
+                                                {upperCaseFirstCharacter(localStorage.getItem('role'))}
+                                            </Typography>
                                         </Stack>
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
@@ -182,7 +187,7 @@ const ProfileSection = () => {
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 0}
-                                                    onClick={(event) => handleListItemClick(event, 0, '/user/account-profile/profile1')}
+                                                    onClick={(event) => handleListItemClick(event, 0, '/user/setting')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconSettings stroke={1.5} size="1.3rem" />
@@ -192,7 +197,7 @@ const ProfileSection = () => {
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 1}
-                                                    onClick={(event) => handleListItemClick(event, 1, '/user/social-profile/posts')}
+                                                    onClick={(event) => handleListItemClick(event, 1, '/user/profile')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconUser stroke={1.5} size="1.3rem" />

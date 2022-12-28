@@ -1,4 +1,4 @@
-// material-ui
+/// material-ui
 import MainCard from 'ui-component/cards/MainCard';
 import { Box, CardContent, Grid, Paper, Typography } from '@mui/material';
 import underContruction1 from 'assets/images/under-contruction/under-contruction-1.svg';
@@ -8,9 +8,9 @@ import underContruction3 from 'assets/images/under-contruction/under-contruction
 // scss
 import '../../assets/scss/contruction.scss';
 
-const Policies = ({ ...others }) => {
+const Profile = ({ ...others }) => {
     return (
-        <MainCard title="Policies">
+        <MainCard title="Profile">
             <div>
                 <Paper>
                     <CardContent>
@@ -42,4 +42,4 @@ const Policies = ({ ...others }) => {
     );
 };
 
-export default Policies;
+export default Profile;

@@ -31,6 +31,10 @@ const Policies = Loadable(lazy(() => import('views/others/Policies')));
 // meeting routing
 const Booking = Loadable(lazy(() => import('views/meeting/Booking')));
 
+// personal
+const Profile = Loadable(lazy(() => import('views/personal/Profile')));
+const Setting = Loadable(lazy(() => import('views/personal/Setting')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -133,6 +137,19 @@ const MainRoutes = {
                 {
                     path: 'policies',
                     element: <Policies />
+                }
+            ]
+        },
+        {
+            path: 'user',
+            children: [
+                {
+                    path: 'setting',
+                    element: <Setting />
+                },
+                {
+                    path: 'profile',
+                    element: <Profile />
                 }
             ]
         }
