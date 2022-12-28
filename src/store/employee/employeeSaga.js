@@ -12,21 +12,8 @@ function* handleFetchData(action) {
     }
 }
 
-function* handleGetEmployeeLogin(action) {
-    try {
-        const params = action.payload;
-        const response = yield call(employeeApi.getCurrentEMployeeLogin, params);
-        yield put(employeeActions.getEmployeeLoginSuccess(response));
-    } catch (error) {
-        yield put(employeeActions.getEmployeeLoginFail('An error occurred, please try again'));
-    }
-}
-
 function* watchFlow() {
-    yield all([
-        takeLatest(employeeActions.fetchData.type, handleFetchData),
-        takeLatest(employeeActions.getEmployeeLogin.type, handleGetEmployeeLogin)
-    ]);
+    yield all([takeLatest(employeeActions.fetchData.type, handleFetchData)]);
 }
 
 export function* employeeSaga() {

@@ -30,17 +30,6 @@ const employeeSlice = createSlice({
         },
         fetchDataFalse(state, action) {
             state.loading = false;
-        },
-        // CURRENT EMPLOYEE LOGIN
-        getEmployeeLogin(state, action) {
-            state.loadingEmployeeLogin = true;
-        },
-        getEmployeeLoginSuccess(state, action) {
-            state.loadingEmployeeLogin = false;
-            state.employee = action.payload.data;
-        },
-        getEmployeeLoginFail(state, action) {
-            state.loadingEmployeeLogin = false;
         }
     }
 });
