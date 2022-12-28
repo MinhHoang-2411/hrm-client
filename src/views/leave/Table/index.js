@@ -15,7 +15,8 @@ import {
     Typography,
     Grid,
     Card,
-    Stack
+    Stack,
+    Chip
 } from '@mui/material';
 import { OrderTableHead } from 'ui-component/table/table-head';
 import PropTypes from 'prop-types';
@@ -24,9 +25,10 @@ import Modal from '@mui/material/Modal';
 // icon
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // format
-import { formatTimeStampToDate, formatTomeStampToDateTime } from 'utils/format/date';
+import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
@@ -113,53 +115,32 @@ const headCells = [
     }
 ];
 
-const boxColors = [
-    {
-        status: 'WAITING',
-        color: 'warning.dark'
-    },
-    {
-        status: 'CONFIRMED',
-        color: 'primary.dark'
-    },
-    {
-        status: 'REJECTED',
-        color: 'orange.dark'
-    },
-    {
-        status: 'CANCELED',
-        color: 'grey'
-    },
-    {
-        status: 'APPROVED',
-        color: 'success.dark'
+const showStatusLeave = (status) => {
+    let color = '';
+    switch (status) {
+        case 'CONFIRMED':
+            color = '#1E88E5';
+            break;
+        case 'APPROVED':
+            color = '#00C853';
+            break;
+        case 'REJECTED':
+            color = '#D84315';
+            break;
+        case 'CANCELED':
+            color = '#9E9E9E';
+            break;
+        case 'WAITING':
+            color = '#FFC107';
+            break;
     }
-];
-
-const ColorBox = ({ bgcolor, title }) => (
-    <>
-        <Card sx={{ borderRadius: '0 !important' }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '75px',
-                    height: '40px',
-                    bgcolor,
-                    color: 'white',
-                    borderRadius: '3px !important'
-                }}
-            >
-                {title && (
-                    <Typography variant="subtitle1" color="inherit">
-                        {title}
-                    </Typography>
-                )}
-            </Box>
-        </Card>
-    </>
-);
+    return (
+        <Chip
+            label={upperCaseFirstCharacter(status)}
+            sx={{ fontWeight: 'bold', backgroundColor: color, color: '#ffff', borderRadius: '4px', width: '86px' }}
+        />
+    );
+};
 
 export default function TableLeaveHistory({ data }) {
     const [order] = useState('asc');
@@ -201,7 +182,7 @@ export default function TableLeaveHistory({ data }) {
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                     <TableCell align="left" className="table-cell"></TableCell>
                     <TableCell align="left" className="table-cell">
-                        {formatTomeStampToDateTime(row?.createdDate)}
+                        {formatTimeStampToDateTime(row?.createdDate)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
                         {formatTimeStampToDate(row?.startDate)}
@@ -227,14 +208,7 @@ export default function TableLeaveHistory({ data }) {
                         {upperCaseFirstCharacter(row?.type)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
-                        <ColorBox
-                            bgcolor={
-                                boxColors.filter((item) => item.status === row?.status).length === 0
-                                    ? 'primary.light'
-                                    : boxColors.filter((item) => item.status === row?.status).at(0)?.color
-                            }
-                            title={upperCaseFirstCharacter(row?.status)}
-                        />
+                        {showStatusLeave(row?.status)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
                         <Box>
@@ -260,7 +234,7 @@ export default function TableLeaveHistory({ data }) {
                                     disabled={row?.status === 'WAITING' ? false : true}
                                     color="error"
                                 >
-                                    <CancelIcon fontSize="medium" />
+                                    <DeleteIcon fontSize="medium" />
                                 </IconButton>
                             </Stack>
                         </Box>

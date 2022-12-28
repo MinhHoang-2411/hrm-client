@@ -1,5 +1,4 @@
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider } from '@mui/material';
 
 // redux
 import { useAppDispatch } from 'app/hooks';
@@ -16,33 +15,17 @@ export default function ModelCancelLeave({ leaveCancel, handleClose }) {
 
     return (
         <>
-            <Box
-                sx={{
-                    padding: '5px 20px 20px 20px',
-                    display: 'flex-column'
-                }}
-            >
-                <h2>Cancel Leave</h2>
-                <Box style={{ fontSize: '15px' }}>Would you like to cancel your leave?</Box>
-                <Box>
+            <Card>
+                <CardHeader title="Cancel Leave"></CardHeader>
+                <Divider light />
+                <CardContent>
+                    <Box style={{ fontSize: '15px' }}>Would you like to cancel your leave?</Box>
+                </CardContent>
+                <Divider light />
+                <CardActions sx={{ justifyContent: 'end' }}>
                     <Button
                         disableElevation
-                        style={{ width: '15%', float: 'right', margin: '10px 0 10px 0' }}
-                        size="large"
-                        type="submit"
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<CheckCircleOutlineIcon />}
-                        onClick={(e) => {
-                            handleClose();
-                            handleUpdate();
-                        }}
-                    >
-                        Agree
-                    </Button>
-                    <Button
-                        disableElevation
-                        style={{ width: '15%', float: 'right', margin: '10px 10px 10px 0' }}
+                        style={{ width: '15%', float: 'right' }}
                         size="large"
                         variant="outlined"
                         onClick={handleClose}
@@ -50,8 +33,22 @@ export default function ModelCancelLeave({ leaveCancel, handleClose }) {
                     >
                         Cancel
                     </Button>
-                </Box>
-            </Box>
+                    <Button
+                        disableElevation
+                        style={{ width: '15%', float: 'right' }}
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        onClick={(e) => {
+                            handleClose();
+                            handleUpdate();
+                        }}
+                    >
+                        Agree
+                    </Button>
+                </CardActions>
+            </Card>
         </>
     );
 }
