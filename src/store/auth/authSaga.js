@@ -1,12 +1,16 @@
 import { call, delay, fork, put, take } from 'redux-saga/effects';
 import { authActions } from './authSlice';
-import { login } from 'api/login';
+import { login, getCurrentEmployeeLogin } from 'api/login';
 
 function* handleLogin(payload) {
     try {
         //yield delay(1000);
         const response = yield call(login, payload);
         localStorage.setItem('access_token', JSON.stringify(response.data.id_token));
+        const responseEmployee = yield call(getCurrentEmployeeLogin, payload);
+        localStorage.setItem('role', JSON.stringify(responseEmployee.data.position));
+        localStorage.setItem('currentEmployeeId', responseEmployee.data.id);
+
         yield put(authActions.loginSuccess({ ...payload }));
 
         payload.onNavigate?.();
@@ -18,7 +22,9 @@ function* handleLogin(payload) {
 
 function* handleLogout(payload) {
     yield delay(500);
+    localStorage.removeItem('currentEmployeeId');
     localStorage.removeItem('access_token');
+    localStorage.removeItem('role');
 
     payload.onNavigate?.();
 }

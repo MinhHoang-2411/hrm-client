@@ -4,6 +4,7 @@ import { lazy } from 'react';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import { Navigate } from 'react-router-dom';
+import { hasPermission } from 'utils/permission';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -30,6 +31,9 @@ const Policies = Loadable(lazy(() => import('views/others/Policies')));
 
 // meeting routing
 const Booking = Loadable(lazy(() => import('views/meeting/Booking')));
+
+// management routing
+const ManagementLeave = Loadable(lazy(() => import('views/management/Leave')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -133,6 +137,16 @@ const MainRoutes = {
                 {
                     path: 'policies',
                     element: <Policies />
+                }
+            ]
+        },
+        {
+            path: 'management',
+            children: [
+                {
+                    path: 'leave',
+                    //element: hasPermission('MANAGER') ? <ManagementLeave /> : <Navigate to="/" />
+                    element: <ManagementLeave />
                 }
             ]
         }

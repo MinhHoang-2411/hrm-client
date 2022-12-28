@@ -5,6 +5,7 @@ export default function useGetAllList(params, action, nameState) {
     const dispatch = useAppDispatch();
     const listData = useAppSelector((state) => state[nameState].listData);
     const pagination = useAppSelector((state) => state[nameState].pagination);
+    const reloadList = useAppSelector((state) => state[nameState].reloadList);
 
     const fetchData = useCallback(
         (params) => {
@@ -14,12 +15,12 @@ export default function useGetAllList(params, action, nameState) {
                 console.error({ error });
             }
         },
-        [params]
+        [params, reloadList]
     );
 
     useEffect(() => {
         fetchData(params);
-    }, [params]);
+    }, [params, reloadList]);
 
     return { listData, pagination };
 }

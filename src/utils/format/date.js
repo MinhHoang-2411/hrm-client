@@ -9,6 +9,15 @@ function formatTimeStampToDate(date) {
     }
 }
 
+function formatTomeStampToDateTime(date) {
+    if (!date) return '';
+    try {
+        return moment(date).format('DD/MM/YYYY HH:mm');
+    } catch (error) {
+        return date;
+    }
+}
+
 function formatDateMaterial(date) {
     // timeStamp -> time of mui
     if (!date) return '';
@@ -39,4 +48,4 @@ function formatDateMaterialForFilter(date) {
     }
 }
 
-export { formatDateMaterial, formatDateMaterialToTimeStamp, formatTimeStampToDate, formatDateMaterialForFilter };
+export { formatDateMaterial, formatDateMaterialToTimeStamp, formatTimeStampToDate, formatDateMaterialForFilter, formatTomeStampToDateTime };

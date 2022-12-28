@@ -3,11 +3,16 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     alert: false,
     loading: false,
+    loadingWaiting: false,
     reloadList: false,
     listData: [],
+    reloadListWaiting: false,
     listHoliday: [],
     loadingHolidays: false,
-    pagination: undefined
+    loadingEdit: false,
+    listDataWaiting: [],
+    pagination: undefined,
+    paginationWaiting: undefined
 };
 
 const leaveSlice = createSlice({
@@ -57,6 +62,38 @@ const leaveSlice = createSlice({
         },
         getHolidayFail(state, action) {
             state.loadingHolidays = false;
+        },
+        // LEAVE WAITING
+        getListWaiting(state, action) {
+            state.loadingWaiting = true;
+            state.paginationWaiting = {
+                size: action.payload.size,
+                page: action.payload.page
+            };
+        },
+        getListWaitingSuccess(state, action) {
+            state.loadingWaiting = false;
+            state.listDataWaiting = action.payload.content;
+            state.paginationWaiting = {
+                ...state.pagination,
+                totalCount: action?.payload?.totalElements
+            };
+        },
+        getListWaitingFalse(state, action) {
+            state.loadingWaiting = false;
+            console.error(action.payload);
+        },
+
+        // EDIT
+        editLeave(state, action) {
+            state.loadingEdit = true;
+        },
+        editLeaveSuccess(state, action) {
+            state.loadingEdit = false;
+            state.reloadList = !state.reloadList;
+        },
+        editLeaveFail(state, action) {
+            state.loadingEdit = false;
         }
     }
 });
