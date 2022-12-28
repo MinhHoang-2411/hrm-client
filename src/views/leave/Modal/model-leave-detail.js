@@ -152,7 +152,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                                         className="table-cell-modal"
                                                         align="left"
                                                         style={{
-                                                            width: 200
+                                                            width: 250
                                                         }}
                                                     >
                                                         {formatTimeStampToDate(item?.leaveDate)}
@@ -161,7 +161,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                                         className="table-cell-modal"
                                                         align="left"
                                                         style={{
-                                                            width: 200
+                                                            width: 250
                                                         }}
                                                     >
                                                         {upperCaseFirstCharacter(item?.dateType)}
@@ -170,7 +170,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                                         className="table-cell-modal"
                                                         align="left"
                                                         style={{
-                                                            maxWidth: 200
+                                                            maxWidth: 250
                                                         }}
                                                     >
                                                         {item?.note}
