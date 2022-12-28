@@ -23,6 +23,7 @@ import CheckIcon from '@mui/icons-material/Check';
 
 // third party
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 // date
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -166,6 +167,7 @@ const SubmitForm = ({ ...others }) => {
         const tmpDate = [...dateAndLeaveTimes];
         tmpDate[currentIndex].note = value.note;
         setDateAndLeaveTimes(tmpDate);
+        handleClose();
     };
 
     const showToastMessage = (param) => {
@@ -650,7 +652,12 @@ const SubmitForm = ({ ...others }) => {
                     note: '',
                     submit: null
                 }}
-                validator={() => ({})}
+                validationSchema={Yup.object().shape({
+                    note: Yup.string()
+                        .min(10, 'Please enter between 10 and 255 characters')
+                        .max(255, 'Please enter between 10 and 255 characters')
+                        .required('Please enter Note')
+                })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
                     try {
                         setStatus({ success: false });
@@ -681,6 +688,8 @@ const SubmitForm = ({ ...others }) => {
                                     placeholder="Note"
                                     inputProps={{ style: { fontSize: '16px' } }}
                                     color="secondary"
+                                    error={touched.note && Boolean(errors.note)}
+                                    helperText={touched.note && errors.note}
                                 />
                             </DialogContent>
                             <DialogActions>
@@ -690,7 +699,10 @@ const SubmitForm = ({ ...others }) => {
                                     size="large"
                                     type="reset"
                                     variant="outlined"
-                                    onClick={handleClose}
+                                    onClick={(e) => {
+                                        resetForm();
+                                        handleClose();
+                                    }}
                                     color="secondary"
                                 >
                                     Cancel
@@ -704,7 +716,6 @@ const SubmitForm = ({ ...others }) => {
                                     color="secondary"
                                     startIcon={<AddIcon />}
                                     onClick={(e) => {
-                                        handleClose();
                                         handleSubmit(values);
                                     }}
                                 >

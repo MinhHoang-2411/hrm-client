@@ -9,18 +9,21 @@ export const SubmitLeaveSchema = (type) => {
         title: Yup.string()
             .min(10, 'Please enter between 10 and 50 characters')
             .max(50, 'Please enter between 10 and 50 characters')
-            .required('Please enter Title.')
+            .required('Please enter Title')
             .matches(regexIgnoreSpecialCharacter, 'Title cannot contain special characters'),
         type: Yup.string().nullable('Please select Leave Type').required('Please select Leave Type'),
         startDate: Yup.date()
             .min(date, 'Please choose valid time')
             .nullable('Please select Start Date')
             .required('Please select Start Date'),
-        endDate: Yup.date().min(date, 'Please choose valid time').nullable('Please select End Date').required('Please select End Date'),
-        assignTo: Yup.object().required('Please enter Asign To').nullable(),
+        endDate: Yup.date()
+            .min(Yup.ref('startDate'), 'Please choose valid time')
+            .nullable('Please select End Date')
+            .required('Please select End Date'),
+        assignTo: Yup.object().required('Please enter Assign To').nullable(),
         reason: Yup.string()
-            .min(10, 'Please enter between 10- 255 characters')
-            .max(255, 'Please enter between 10- 255 characters')
+            .min(10, 'Please enter between 10 - 255 characters')
+            .max(255, 'Please enter between 10 - 255 characters')
             .required('Please enter Reason')
     });
 };
