@@ -7,6 +7,7 @@ import assetReducer from 'store/asset/assetSlice';
 import alertReducer from 'store/alert/alertSlice';
 import rootSaga from './rootSaga';
 import assetRequestReducer from 'store/asset-request/assetRequestSlice';
+import employeeReducer from 'store/employee/employeeSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
@@ -16,7 +17,8 @@ export const store = configureStore({
         leave: leaveReducer,
         asset: assetReducer,
         alert: alertReducer,
-        assetRequest: assetRequestReducer
+        assetRequest: assetRequestReducer,
+        employee: employeeReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

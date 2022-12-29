@@ -1,3 +1,4 @@
+import { datePickerValueManager } from '@mui/x-date-pickers/DatePicker/shared';
 import moment from 'moment';
 
 function formatTimeStampToDate(date) {
@@ -5,6 +6,15 @@ function formatTimeStampToDate(date) {
     try {
         return moment(date).format('DD/MM/YYYY');
     } catch (e) {
+        return date;
+    }
+}
+
+function formatTimeStampToDateTime(date) {
+    if (!date) return '';
+    try {
+        return moment(date).format('DD/MM/YYYY HH:mm');
+    } catch (error) {
         return date;
     }
 }
@@ -39,4 +49,4 @@ function formatDateMaterialForFilter(date) {
     }
 }
 
-export { formatDateMaterial, formatDateMaterialToTimeStamp, formatTimeStampToDate, formatDateMaterialForFilter };
+export { formatDateMaterial, formatDateMaterialToTimeStamp, formatTimeStampToDate, formatDateMaterialForFilter, formatTimeStampToDateTime };

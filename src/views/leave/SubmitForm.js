@@ -19,9 +19,11 @@ import { useTheme } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import CheckIcon from '@mui/icons-material/Check';
 
 // third party
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 // date
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -40,6 +42,7 @@ import { useEffect, useState, useRef } from 'react';
 // redux
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { leaveActions } from 'store/leave/leaveSlice';
+import { employeeActions } from 'store/employee/employeeSlice';
 
 // toast
 import { toast } from 'react-toastify';
@@ -58,17 +61,12 @@ import { SubmitLeaveSchema } from 'utils/validate/submit-leave-schema';
 
 // format
 import { formatTimeStampToDate, formatDateMaterialForFilter } from 'utils/format/date';
+import { upperCaseFirstCharacter } from 'utils/string';
 
 import * as React from 'react';
-const managers = [
-    { id: 1, name: 'Huynh Van Ngoc Duy' },
-    { id: 1, name: 'Hoang Trong Thang' },
-    { id: 2, name: 'Nguyen Don Kim Trung' },
-    { id: 2, name: 'Truong Van Huy' },
-    { id: 1, name: 'Pham Tan Hung' },
-    { id: 1, name: 'Le Van Sang' },
-    { id: 2, name: 'Pham Van Duc' }
-];
+
+// constant
+import { LEAVE_TYPE } from 'constants/index';
 
 const steps = ['Submit a leave', 'Manager confirms the leave', 'Admin approves the leave'];
 
@@ -80,16 +78,15 @@ const SubmitForm = ({ ...others }) => {
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
     const [currentIndex, setCurrentIndex] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+    const [openModelConfirm, setOpenModelConfirm] = useState(false);
     const [errorMessageDetail, setErrorMessageDetail] = useState('');
+    const [leaveUnUser, setLeaveUnUse] = useState();
     const formikRef = useRef();
     const inputRef = useRef();
 
-    const initialValues = {
-        managers_id: { name: '', id: null }
-    };
-
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
+    const listManager = useAppSelector((state) => state.employee.listData);
 
     const handleClickOpen = (idx) => {
         setOpen(true);
@@ -98,6 +95,11 @@ const SubmitForm = ({ ...others }) => {
 
     const handleClose = () => {
         setOpen(false);
+        setOpenModelConfirm(false);
+    };
+
+    const handleClickModelConfirm = () => {
+        setOpenModelConfirm(true);
     };
 
     const handleGetArrayDate = (leaveFrom, leaveTo) => {
@@ -165,6 +167,7 @@ const SubmitForm = ({ ...others }) => {
         const tmpDate = [...dateAndLeaveTimes];
         tmpDate[currentIndex].note = value.note;
         setDateAndLeaveTimes(tmpDate);
+        handleClose();
     };
 
     const showToastMessage = (param) => {
@@ -186,13 +189,20 @@ const SubmitForm = ({ ...others }) => {
     useEffect(() => {
         const information = handleGetLeaveCount();
         information.then(function (result) {
-            setInforLeaveUnUse((result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse) + ' days of Annual Leave');
+            let leaveUnUse = result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse;
+            setLeaveUnUse(leaveUnUse);
+            if (leaveUnUse === 0 || leaveUnUse === 1) {
+                setInforLeaveUnUse(leaveUnUse + ' day of Annual Leave');
+            } else {
+                setInforLeaveUnUse(leaveUnUse + ' days of Annual Leave');
+            }
         });
         showToastMessage(alert);
     }, [alert]);
 
     useEffect(() => {
         dispatch(leaveActions.getHolidays({}));
+        dispatch(employeeActions.fetchData({ 'position.in': 'MANAGER' }));
     }, []);
 
     return (
@@ -205,7 +215,7 @@ const SubmitForm = ({ ...others }) => {
                     reason: '',
                     startDate: null,
                     endDate: null,
-                    assignTo: undefined,
+                    assignTo: null,
                     search: '',
                     submit: null
                 }}
@@ -229,7 +239,7 @@ const SubmitForm = ({ ...others }) => {
                                 <Grid container spacing={gridSpacing} sx={{ mt: 1 }}>
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Box sx={{ width: '100%' }}>
-                                            <Stepper alternativeLabel sx={{ width: '100%' }}>
+                                            <Stepper sx={{ width: '100%' }}>
                                                 {steps.map((label) => (
                                                     <Step key={label}>
                                                         <StepLabel>{label}</StepLabel>
@@ -241,38 +251,41 @@ const SubmitForm = ({ ...others }) => {
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Grid container spacing={gridSpacing}>
                                             <Grid item lg={8} md={8} sm={12} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.title && errors.title)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.title && errors.title)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <Box className="title-form">
                                                         <span>Title</span>
-                                                        <TextField
-                                                            id="outlined-adornment-title"
-                                                            type="text"
-                                                            name="title"
-                                                            placeholder="Title"
-                                                            value={values.title}
-                                                            onChange={handleChange}
-                                                            inputProps={{ style: { fontSize: '16px' } }}
-                                                            className="form-input"
-                                                            error={touched.title && Boolean(errors.title)}
-                                                            helperText={touched.title && errors.title}
-                                                            color="secondary"
-                                                        />
-                                                    </FormControl>
-                                                </center>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+
+                                                    <TextField
+                                                        id="outlined-adornment-title"
+                                                        type="text"
+                                                        name="title"
+                                                        placeholder="Title"
+                                                        value={values.title}
+                                                        onChange={handleChange}
+                                                        inputProps={{ style: { fontSize: '16px' } }}
+                                                        className="form-input"
+                                                        error={touched.title && Boolean(errors.title)}
+                                                        helperText={touched.title && errors.title}
+                                                        color="secondary"
+                                                    />
+                                                </FormControl>
                                             </Grid>
                                             <Grid item lg={4} md={4} sm={12} xs={12}>
                                                 <FormControl
                                                     fullWidth
                                                     error={Boolean(touched.type && errors.type)}
                                                     sx={{ ...theme.typography.customInput }}
-                                                    className="title-form"
                                                 >
-                                                    <span>Leave Type</span>
+                                                    <Box className="title-form">
+                                                        <span>Leave Type</span>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -283,10 +296,11 @@ const SubmitForm = ({ ...others }) => {
                                                         className="form-input"
                                                         color="secondary"
                                                     >
-                                                        <MenuItem value={'ANNUAL'}>Annual</MenuItem>
-                                                        <MenuItem value={'CASUAL'}>Casual</MenuItem>
-                                                        <MenuItem value={'MATERNITY'}>Maternity</MenuItem>
-                                                        <MenuItem value={'REMOTE'}>Remote</MenuItem>
+                                                        {LEAVE_TYPE?.map((item, index) => (
+                                                            <MenuItem key={index} value={item}>
+                                                                {upperCaseFirstCharacter(item)}
+                                                            </MenuItem>
+                                                        ))}
                                                     </Select>
                                                     <FormHelperText sx={{ color: '#ff4d4f' }}>
                                                         {touched?.type && errors?.type}
@@ -299,147 +313,145 @@ const SubmitForm = ({ ...others }) => {
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Grid container spacing={gridSpacing}>
                                             <Grid item lg={4} md={4} sm={4} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.startDate && errors.startDate)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.startDate && errors.startDate)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <Box className="title-form">
                                                         <span>From</span>
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DatePicker
-                                                                value={values.startDate}
-                                                                name="startDate"
-                                                                onChange={(value) => {
-                                                                    setFieldValue('startDate', value);
-                                                                    handleGetArrayDate(value, values.endDate);
-                                                                    setErrorMessageDetail('');
-                                                                }}
-                                                                onChangeRaw={(e) => e.preventDefault()}
-                                                                renderInput={(params) => (
-                                                                    <TextField
-                                                                        {...params}
-                                                                        error={touched.startDate && Boolean(errors.startDate)}
-                                                                        helperText={touched.startDate && errors.startDate}
-                                                                        color="secondary"
-                                                                    />
-                                                                )}
-                                                                disablePast={true}
-                                                                inputFormat="DD/MM/YYYY"
-                                                                className="form-input"
-                                                            />
-                                                        </LocalizationProvider>
-                                                    </FormControl>
-                                                </center>
-                                            </Grid>
-                                            <Grid item lg={4} md={4} sm={4} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.endDate && errors.endDate)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
-                                                        <span>To</span>
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DatePicker
-                                                                id="outlined-adornment-leave-to"
-                                                                type="date"
-                                                                name="endDate"
-                                                                value={values.endDate}
-                                                                onChange={(value) => {
-                                                                    setFieldValue('endDate', value);
-                                                                    handleGetArrayDate(values.startDate, value);
-                                                                    setErrorMessageDetail('');
-                                                                }}
-                                                                renderInput={(params) => (
-                                                                    <TextField
-                                                                        {...params}
-                                                                        error={touched.endDate && Boolean(errors.endDate)}
-                                                                        helperText={touched.endDate && errors.endDate}
-                                                                        color="secondary"
-                                                                    />
-                                                                )}
-                                                                disablePast={true}
-                                                                inputFormat="DD/MM/YYYY"
-                                                                className="form-input"
-                                                            />
-                                                        </LocalizationProvider>
-                                                    </FormControl>
-                                                </center>
-                                            </Grid>
-                                            <Grid item lg={4} md={4} sm={4} xs={12}>
-                                                <center>
-                                                    <FormControl
-                                                        fullWidth
-                                                        error={Boolean(touched.assignTo && errors.assignTo)}
-                                                        sx={{ ...theme.typography.customInput }}
-                                                        className="title-form"
-                                                    >
-                                                        <span>Assign To</span>
-                                                        <Autocomplete
-                                                            disablePortal
-                                                            id="combo-box-demo"
-                                                            name="assignTo"
-                                                            value={values.assignTo}
-                                                            onChange={(e, value) =>
-                                                                setFieldValue(
-                                                                    'assignTo',
-                                                                    value !== null ? value : initialValues.managers_id
-                                                                )
-                                                            }
-                                                            options={managers}
-                                                            getOptionLabel={(option) => option.name}
-                                                            renderOption={(props, option) => (
-                                                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                                                    {option.name}
-                                                                </Box>
-                                                            )}
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DatePicker
+                                                            value={values.startDate}
+                                                            name="startDate"
+                                                            onChange={(value) => {
+                                                                setFieldValue('startDate', value);
+                                                                handleGetArrayDate(value, values.endDate);
+                                                                setErrorMessageDetail('');
+                                                            }}
+                                                            onChangeRaw={(e) => e.preventDefault()}
                                                             renderInput={(params) => (
                                                                 <TextField
-                                                                    fullWidth
-                                                                    ref={inputRef}
-                                                                    name="assignTo"
                                                                     {...params}
-                                                                    error={touched.assignTo && Boolean(errors.assignTo)}
-                                                                    helperText={touched.assignTo && errors.assignTo}
+                                                                    error={touched.startDate && Boolean(errors.startDate)}
+                                                                    helperText={touched.startDate && errors.startDate}
                                                                     color="secondary"
                                                                 />
                                                             )}
+                                                            disablePast={true}
+                                                            inputFormat="DD/MM/YYYY"
                                                             className="form-input"
                                                         />
-                                                    </FormControl>
-                                                </center>
+                                                    </LocalizationProvider>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.endDate && errors.endDate)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <Box className="title-form">
+                                                        <span>To</span>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DatePicker
+                                                            id="outlined-adornment-leave-to"
+                                                            type="date"
+                                                            name="endDate"
+                                                            value={values.endDate}
+                                                            onChange={(value) => {
+                                                                setFieldValue('endDate', value);
+                                                                handleGetArrayDate(values.startDate, value);
+                                                                setErrorMessageDetail('');
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    error={touched.endDate && Boolean(errors.endDate)}
+                                                                    helperText={touched.endDate && errors.endDate}
+                                                                    color="secondary"
+                                                                />
+                                                            )}
+                                                            disablePast={true}
+                                                            inputFormat="DD/MM/YYYY"
+                                                            className="form-input"
+                                                        />
+                                                    </LocalizationProvider>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item lg={4} md={4} sm={4} xs={12}>
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(touched.assignTo && errors.assignTo)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                    className="title-form"
+                                                >
+                                                    <Box className="title-form">
+                                                        <span>Assign To</span>
+                                                        <span className="require">(*)</span>
+                                                    </Box>
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        name="assignTo"
+                                                        value={values.assignTo}
+                                                        onChange={(e, value) => setFieldValue('assignTo', value)}
+                                                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                        options={listManager}
+                                                        getOptionLabel={(option) => option.user?.firstName + ' ' + option.user?.lastName}
+                                                        renderOption={(props, option) => (
+                                                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                {option.user?.firstName} {option.user?.lastName}
+                                                            </Box>
+                                                        )}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                fullWidth
+                                                                ref={inputRef}
+                                                                name="assignTo"
+                                                                {...params}
+                                                                error={touched.assignTo && Boolean(errors.assignTo)}
+                                                                helperText={touched.assignTo && errors.assignTo}
+                                                                color="secondary"
+                                                            />
+                                                        )}
+                                                        className="form-input"
+                                                    />
+                                                </FormControl>
                                             </Grid>
                                         </Grid>
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <center>
-                                            <FormControl
-                                                fullWidth
-                                                error={Boolean(touched.password && errors.password)}
-                                                sx={{ ...theme.typography.customInput }}
-                                                className="title-form"
-                                            >
+                                        <FormControl
+                                            fullWidth
+                                            error={Boolean(touched.password && errors.password)}
+                                            sx={{ ...theme.typography.customInput }}
+                                            className="title-form"
+                                        >
+                                            <Box className="title-form">
                                                 <span>Reason</span>
-                                                <TextField
-                                                    id="outlined-multiline-static"
-                                                    multiline
-                                                    name="reason"
-                                                    type="text"
-                                                    rows={6}
-                                                    placeholder="Reason"
-                                                    value={values.reason}
-                                                    onChange={handleChange}
-                                                    inputProps={{ style: { fontSize: '16px' } }}
-                                                    error={touched.reason && Boolean(errors.reason)}
-                                                    helperText={touched.reason && errors.reason}
-                                                    color="secondary"
-                                                />
-                                            </FormControl>
-                                        </center>
+                                                <span className="require">(*)</span>
+                                            </Box>
+                                            <TextField
+                                                id="outlined-multiline-static"
+                                                multiline
+                                                name="reason"
+                                                type="text"
+                                                rows={6}
+                                                placeholder="Reason"
+                                                value={values.reason}
+                                                onChange={handleChange}
+                                                inputProps={{ style: { fontSize: '16px' } }}
+                                                error={touched.reason && Boolean(errors.reason)}
+                                                helperText={touched.reason && errors.reason}
+                                                color="secondary"
+                                            />
+                                        </FormControl>
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -466,16 +478,63 @@ const SubmitForm = ({ ...others }) => {
                                                 disabled={isSubmitting}
                                                 style={{ width: '20%' }}
                                                 size="large"
-                                                type="submit"
+                                                type="button"
                                                 variant="contained"
                                                 color="secondary"
                                                 startIcon={<SendIcon />}
+                                                onClick={(e) => handleClickModelConfirm()}
                                             >
                                                 Submit
                                             </Button>
                                         </Stack>
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                            <Grid>
+                                <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
+                                    <DialogTitle sx={{ fontSize: '24px' }}>Confirm</DialogTitle>
+                                    <DialogContent>
+                                        {leaveUnUser === 0 ? (
+                                            <Box>
+                                                <span style={{ fontSize: '15px' }}>
+                                                    You have used up your leave for this year. Would you like to submit your leave?
+                                                </span>
+                                            </Box>
+                                        ) : (
+                                            <Box>
+                                                <span style={{ fontSize: '15px' }}>Would you like to submit your leave?</span>
+                                            </Box>
+                                        )}
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button
+                                            disableElevation
+                                            style={{ width: '20%' }}
+                                            size="large"
+                                            type="reset"
+                                            variant="outlined"
+                                            onClick={handleClose}
+                                            color="secondary"
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            disableElevation
+                                            style={{ width: '20%' }}
+                                            size="large"
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            startIcon={<CheckIcon />}
+                                            onClick={(e) => {
+                                                handleClose();
+                                                handleSubmit(values);
+                                            }}
+                                        >
+                                            Confirm
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
                             </Grid>
                             <Grid item lg={4} md={4} sm={4} xs={4}>
                                 <Card
@@ -515,7 +574,8 @@ const SubmitForm = ({ ...others }) => {
 
                                         {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
                                         <ul style={{ paddingLeft: 0 }}>
-                                            {dateAndLeaveTimes?.length > 0 &&
+                                            {values.type !== 'MATERNITY' &&
+                                                dateAndLeaveTimes?.length > 0 &&
                                                 dateAndLeaveTimes?.map((item, index) => {
                                                     return (
                                                         <>
@@ -592,7 +652,12 @@ const SubmitForm = ({ ...others }) => {
                     note: '',
                     submit: null
                 }}
-                validator={() => ({})}
+                validationSchema={Yup.object().shape({
+                    note: Yup.string()
+                        .min(10, 'Please enter between 10 and 255 characters')
+                        .max(255, 'Please enter between 10 and 255 characters')
+                        .required('Please enter Note')
+                })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
                     try {
                         setStatus({ success: false });
@@ -623,6 +688,8 @@ const SubmitForm = ({ ...others }) => {
                                     placeholder="Note"
                                     inputProps={{ style: { fontSize: '16px' } }}
                                     color="secondary"
+                                    error={touched.note && Boolean(errors.note)}
+                                    helperText={touched.note && errors.note}
                                 />
                             </DialogContent>
                             <DialogActions>
@@ -632,7 +699,10 @@ const SubmitForm = ({ ...others }) => {
                                     size="large"
                                     type="reset"
                                     variant="outlined"
-                                    onClick={handleClose}
+                                    onClick={(e) => {
+                                        resetForm();
+                                        handleClose();
+                                    }}
                                     color="secondary"
                                 >
                                     Cancel
@@ -646,7 +716,6 @@ const SubmitForm = ({ ...others }) => {
                                     color="secondary"
                                     startIcon={<AddIcon />}
                                     onClick={(e) => {
-                                        handleClose();
                                         handleSubmit(values);
                                     }}
                                 >

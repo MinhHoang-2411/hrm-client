@@ -174,7 +174,12 @@ export default function CardList({ data = [], ...others }) {
                                 return (
                                     <Grid item lg={3} md={3} sm={4} xs={4} key={index}>
                                         <Card className="card">
-                                            <CardMedia component="img" style={{ height: '160px' }} image={item.imageUrl} alt="Asset" />
+                                            <CardMedia
+                                                component="img"
+                                                style={{ height: '160px' }}
+                                                image="https://macstores.vn/tin-tuc/wp-content/uploads/2020/03/macbook-air-2020-1.jpg"
+                                                alt="Asset"
+                                            />
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="div">
                                                     {item?.modelName}
@@ -232,7 +237,12 @@ export default function CardList({ data = [], ...others }) {
                             <DialogTitle sx={{ fontSize: '24px' }}>Asset Model Detail</DialogTitle>
                             <DialogContent dividers="paper">
                                 <Card>
-                                    <CardMedia component="img" alt="green iguana" height="300" image={modelDetail.imageUrl} />
+                                    <CardMedia
+                                        component="img"
+                                        alt="green iguana"
+                                        height="300"
+                                        image="https://macstores.vn/tin-tuc/wp-content/uploads/2020/03/macbook-air-2020-1.jpg"
+                                    />
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
                                             Name: {modelDetail.modelName}

@@ -68,7 +68,7 @@ const assetSlice = createSlice({
         filterModel(state, action) {
             const listAssetModelAvailable = [];
             state.listData.forEach((model) => {
-                if (model.assets.some((element) => element.status === 'FREE')) {
+                if (model.assets.some((element) => element.status === 'AVAILABLE')) {
                     listAssetModelAvailable.push(model);
                 }
             });

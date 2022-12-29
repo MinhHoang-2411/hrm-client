@@ -1,6 +1,7 @@
-import { submitLeave, getAll, getAllHoliday } from 'api/leave';
+import { submitLeave, getAll, getAllHoliday, updateLeave } from 'api/leave';
 import { all, call, fork, put, takeEvery, takeLatest, take, delay } from 'redux-saga/effects';
 import { leaveActions } from './leaveSlice';
+import { alertActions } from '../alert/alertSlice';
 
 function* handleSubmit(action) {
     try {
@@ -35,11 +36,35 @@ function* handleGetAllHoliday(action) {
     }
 }
 
+function* handleEditLeave(action) {
+    try {
+        const params = action.payload;
+        yield call(updateLeave, params);
+
+        yield put(leaveActions.editLeaveSuccess());
+        yield put(
+            alertActions.showAlert({
+                text: 'Update Leave successfully',
+                type: 'success'
+            })
+        );
+    } catch (error) {
+        yield put(leaveActions.editLeaveFail());
+        yield put(
+            alertActions.showAlert({
+                text: 'An error occurred, please try again',
+                type: 'error'
+            })
+        );
+    }
+}
+
 function* watchFlow() {
     yield all([
         takeLatest(leaveActions.fetchData.type, handleFetchData),
         takeLatest(leaveActions.submit.type, handleSubmit),
-        takeLatest(leaveActions.getHolidays.type, handleGetAllHoliday)
+        takeLatest(leaveActions.getHolidays.type, handleGetAllHoliday),
+        takeLatest(leaveActions.editLeave.type, handleEditLeave)
     ]);
 }
 
