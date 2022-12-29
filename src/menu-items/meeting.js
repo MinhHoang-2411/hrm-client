@@ -15,7 +15,7 @@ const meeting = {
             id: 'booking',
             title: 'Booking',
             type: 'item',
-            url: '/meeting/book',
+            url: '/meeting/booking',
             icon: icons.IconBrandBooking,
             breadcrumbs: false
         }

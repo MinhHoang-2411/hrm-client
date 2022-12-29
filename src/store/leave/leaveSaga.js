@@ -36,20 +36,6 @@ function* handleGetAllHoliday(action) {
     }
 }
 
-function* handleGetListWaiting(action) {
-    try {
-        const params = action.payload;
-        const assignTo = localStorage.getItem('current_employee_id');
-        params['assignTo.equals'] = assignTo;
-        params['status.equals'] = 'WAITING';
-        const response = yield call(getAll, params);
-
-        yield put(leaveActions.getListWaitingSuccess(response.data));
-    } catch (error) {
-        yield put(leaveActions.getListWaitingFalse('An error occurred, please try again'));
-    }
-}
-
 function* handleEditLeave(action) {
     try {
         const params = action.payload;
@@ -73,13 +59,27 @@ function* handleEditLeave(action) {
     }
 }
 
+function* handleGetListWaiting(action) {
+    try {
+        const params = action.payload;
+        const assignTo = localStorage.getItem('current_employee_id');
+        params['assignTo.equals'] = assignTo;
+        params['status.equals'] = 'WAITING';
+        const response = yield call(getAll, params);
+
+        yield put(leaveActions.getListWaitingSuccess(response.data));
+    } catch (error) {
+        yield put(leaveActions.getListWaitingFalse('An error occurred, please try again'));
+    }
+}
+
 function* watchFlow() {
     yield all([
         takeLatest(leaveActions.fetchData.type, handleFetchData),
         takeLatest(leaveActions.submit.type, handleSubmit),
         takeLatest(leaveActions.getHolidays.type, handleGetAllHoliday),
-        takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting),
-        takeLatest(leaveActions.editLeave.type, handleEditLeave)
+        takeLatest(leaveActions.editLeave.type, handleEditLeave),
+        takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting)
     ]);
 }
 

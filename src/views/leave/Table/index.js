@@ -14,21 +14,32 @@ import {
     IconButton,
     Typography,
     Grid,
-    Card
+    Card,
+    Stack,
+    Chip
 } from '@mui/material';
 import { OrderTableHead } from 'ui-component/table/table-head';
 import PropTypes from 'prop-types';
+import Modal from '@mui/material/Modal';
 
 // icon
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // format
-import { formatTimeStampToDate } from 'utils/format/date';
+import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
 import '../../../assets/scss/leave.scss';
+
+// style
+import { STYLE_MODAL } from 'constants/style';
+
+// model
+import ModelLeaveDetail from '../Modal/model-leave-detail';
+import ModelCancelLeave from '../Modal/model-cancel-leave';
 
 const headCells = [
     {
@@ -93,75 +104,85 @@ const headCells = [
         label: 'Status',
         fontSize: '15px',
         paddingLeft: '10px'
+    },
+    {
+        id: 'action',
+        align: 'left',
+        disablePadding: false,
+        label: 'Action',
+        fontSize: '15px',
+        paddingLeft: '25px'
     }
 ];
 
-const boxColors = [
-    {
-        status: 'WAITING',
-        color: 'warning.dark'
-    },
-    {
-        status: 'CONFIRMED',
-        color: 'primary.dark'
-    },
-    {
-        status: 'REJECTED',
-        color: 'orange.dark'
-    },
-    {
-        status: 'CANCEL',
-        color: 'grey'
-    },
-    {
-        status: 'APPROVED',
-        color: 'success.dark'
+const showStatusLeave = (status) => {
+    let color = '';
+    switch (status) {
+        case 'CONFIRMED':
+            color = '#1E88E5';
+            break;
+        case 'APPROVED':
+            color = '#00C853';
+            break;
+        case 'REJECTED':
+            color = '#D84315';
+            break;
+        case 'CANCELED':
+            color = '#9E9E9E';
+            break;
+        case 'WAITING':
+            color = '#FFC107';
+            break;
     }
-];
-
-const ColorBox = ({ bgcolor, title }) => (
-    <>
-        <Card sx={{ borderRadius: '0 !important' }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '75px',
-                    height: '40px',
-                    bgcolor,
-                    color: 'white',
-                    borderRadius: '3px !important'
-                }}
-            >
-                {title && (
-                    <Typography variant="subtitle1" color="inherit">
-                        {title}
-                    </Typography>
-                )}
-            </Box>
-        </Card>
-    </>
-);
+    return (
+        <Chip
+            label={upperCaseFirstCharacter(status)}
+            sx={{ fontWeight: 'bold', backgroundColor: color, color: '#ffff', borderRadius: '4px', width: '86px' }}
+        />
+    );
+};
 
 export default function TableLeaveHistory({ data }) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
+    const [open, setOpen] = useState(false);
+    const [typeOpenModal, setTypeOpenModal] = useState('');
+    const [selectedLeave, setSelectedLeave] = useState({});
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        setTypeOpenModal('');
+    };
+
+    const switchModal = (type) => {
+        switch (type) {
+            case 'detail':
+                return (
+                    <Box sx={{ ...STYLE_MODAL, width: 900 }}>
+                        <ModelLeaveDetail leaveDetail={selectedLeave} handleClose={handleClose} />
+                    </Box>
+                );
+            case 'cancel':
+                return (
+                    <Box sx={{ ...STYLE_MODAL, width: 700 }}>
+                        <ModelCancelLeave leaveCancel={selectedLeave} handleClose={handleClose} />
+                    </Box>
+                );
+            default:
+                return <Box sx={{ ...STYLE_MODAL, width: 750 }}></Box>;
+        }
+    };
 
     function Row(props) {
         const { row } = props;
-        const [open, setOpen] = React.useState(false);
 
         return (
             <React.Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    <TableCell className="table-cell" align="left">
-                        <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                        </IconButton>
-                    </TableCell>
+                    <TableCell align="left" className="table-cell"></TableCell>
                     <TableCell align="left" className="table-cell">
-                        {formatTimeStampToDate(row?.createdDate)}
+                        {formatTimeStampToDateTime(row?.createdDate)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
                         {formatTimeStampToDate(row?.startDate)}
@@ -169,80 +190,59 @@ export default function TableLeaveHistory({ data }) {
                     <TableCell align="left" className="table-cell">
                         {formatTimeStampToDate(row?.endDate)}
                     </TableCell>
-                    <TableCell align="left" className="table-cell">
+                    <TableCell
+                        align="left"
+                        className="table-cell"
+                        style={{ minWidth: 150, maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
                         {row?.title}
                     </TableCell>
-                    <TableCell align="left" className="table-cell">
+                    <TableCell
+                        align="left"
+                        className="table-cell"
+                        style={{ minWidth: 200, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
                         {row?.reason}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
                         {upperCaseFirstCharacter(row?.type)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
-                        <ColorBox
-                            bgcolor={
-                                boxColors.filter((item) => item.status === row?.status).length === 0
-                                    ? 'primary.light'
-                                    : boxColors.filter((item) => item.status === row?.status).at(0)?.color
-                            }
-                            title={upperCaseFirstCharacter(row?.status)}
-                        />
+                        {showStatusLeave(row?.status)}
                     </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{ margin: 2 }}>
-                                <Table size="small" aria-label="purchases">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Date</TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell>Note</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {row?.leaveDetailsDTOS?.map((historyRow, index) => (
-                                            <TableRow
-                                                key={index}
-                                                className={`row-detail-leave ${index == row?.leaveDetailsDTOS?.length - 1 && 'last-row'}`}
-                                            >
-                                                <TableCell align="left">{formatTimeStampToDate(historyRow.leaveDate)}</TableCell>
-                                                <TableCell align="left">
-                                                    {historyRow.dateType === 'ALL_DAY'
-                                                        ? 'All day'
-                                                        : upperCaseFirstCharacter(historyRow.dateType)}
-                                                </TableCell>
-                                                <TableCell align="left">{historyRow.note}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Box>
-                        </Collapse>
+                    <TableCell align="left" className="table-cell">
+                        <Box>
+                            <Stack direction="row" spacing={1}>
+                                <IconButton
+                                    aria-label="detail"
+                                    onClick={(e) => {
+                                        setSelectedLeave(row);
+                                        setTypeOpenModal('detail');
+                                        handleOpen();
+                                    }}
+                                >
+                                    <VisibilityIcon fontSize="medium" />
+                                </IconButton>
+                                <IconButton
+                                    style={{ marginLeft: '0px' }}
+                                    onClick={(e) => {
+                                        setSelectedLeave(row);
+                                        setTypeOpenModal('cancel');
+                                        handleOpen();
+                                    }}
+                                    aria-label="cancel"
+                                    disabled={row?.status === 'WAITING' ? false : true}
+                                    color="error"
+                                >
+                                    <DeleteIcon fontSize="medium" />
+                                </IconButton>
+                            </Stack>
+                        </Box>
                     </TableCell>
                 </TableRow>
             </React.Fragment>
         );
     }
-
-    Row.propTypes = {
-        row: PropTypes.shape({
-            createdDate: PropTypes.string.isRequired,
-            startDate: PropTypes.string.isRequired,
-            endDate: PropTypes.string.isRequired,
-            leaveDetailsDTOS: PropTypes.arrayOf(
-                PropTypes.shape({
-                    leaveDate: PropTypes.string.isRequired,
-                    dateType: PropTypes.string.isRequired
-                })
-            ).isRequired,
-            title: PropTypes.string.isRequired,
-            reason: PropTypes.string.isRequired,
-            type: PropTypes.string.isRequired,
-            status: PropTypes.string.isRequired
-        }).isRequired
-    };
 
     return (
         <Box>
@@ -261,8 +261,8 @@ export default function TableLeaveHistory({ data }) {
 
                     {data?.length ? (
                         <TableBody>
-                            {data.map((row, index) => (
-                                <Row key={index} row={row} />
+                            {data.map((item, index) => (
+                                <Row key={index} row={item} />
                             ))}
                         </TableBody>
                     ) : (
@@ -274,6 +274,9 @@ export default function TableLeaveHistory({ data }) {
                     )}
                 </Table>
             </TableContainer>
+            <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                {switchModal(typeOpenModal)}
+            </Modal>
         </Box>
     );
 }

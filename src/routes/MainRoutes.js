@@ -82,7 +82,7 @@ const MainRoutes = {
             path: 'meeting',
             children: [
                 {
-                    path: 'book',
+                    path: 'booking',
                     element: <Booking />
                 }
             ]

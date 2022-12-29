@@ -11,16 +11,27 @@
 }
 
 .title-form {
-    span {
-        margin-bottom: 5px;
-        font-weight: bold;
-        margin-right: auto;
-        margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-right: auto;
+    margin-top: 5px;
+
+    .require {
+        color: red;
+        margin-left: 5px;
     }
 }
 
+
+
+
 .table-cell {
     padding: 10px !important;
+}
+
+
+.table-cell-modal {
+    padding: 10px 15px !important;
 }
 
 .non-working-day-title {
@@ -37,4 +48,9 @@
 }
 .css-if7jzm-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
     color: #673AB7;
+}
+
+.leave-detail {
+    font-size: 15px;
+    padding: 3px 0 3px 0;
 }

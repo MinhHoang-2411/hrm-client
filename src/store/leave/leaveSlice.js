@@ -94,6 +94,18 @@ const leaveSlice = createSlice({
         },
         editLeaveFail(state, action) {
             state.loadingEdit = false;
+        },
+
+        // EDIT
+        editLeave(state, action) {
+            state.loadingEdit = true;
+        },
+        editLeaveSuccess(state, action) {
+            state.loadingEdit = false;
+            state.reloadList = !state.reloadList;
+        },
+        editLeaveFail(state, action) {
+            state.loadingEdit = false;
         }
     }
 });

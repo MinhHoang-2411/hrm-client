@@ -49,7 +49,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LEAVE_TYPE, LEAVE_STATUS } from 'constants/index';
 
 // format
-import { formatTimeStampToDate, formatTomeStampToDateTime } from 'utils/format/date';
+import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
 
 import { nameMatching } from 'utils/format/name';
@@ -252,7 +252,7 @@ const ManagementLeave = () => {
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={12}>
                                     <span style={{ fontWeight: 'bold' }}>Date Submitted:</span>{' '}
-                                    {formatTomeStampToDateTime(row?.createdDate)}
+                                    {formatTimeStampToDateTime(row?.createdDate)}
                                 </Grid>
                             </Grid>
                         </Box>
