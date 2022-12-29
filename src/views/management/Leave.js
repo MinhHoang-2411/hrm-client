@@ -306,7 +306,7 @@ const ManagementLeave = () => {
     }, [paramsWaiting, reloadList]);
 
     useEffect(() => {
-        const role = JSON.parse(localStorage.getItem('role'));
+        const role = localStorage.getItem('role');
         if (role === 'MANAGER') setHavePermission(true);
         else setHavePermission(false);
     });
