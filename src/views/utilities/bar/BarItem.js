@@ -11,7 +11,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 export default function BarItem() {
     return (
-        <Card style={{ backgroundColor: '#F5F5F5' }} variant="outlined" sx={{ maxWidth: 345, position: 'relative' }}>
+        <Card style={{ backgroundColor: '#F5F5F5' }} variant="outlined" sx={{ position: 'relative' }}>
             <CardMedia
                 component="img"
                 alt="redbull"
@@ -42,7 +42,7 @@ export default function BarItem() {
                 <Typography component="div" variant="h4" sx={{ flexGrow: 1, color: '#4527A0' }}>
                     20.000
                 </Typography>
-                <Button variant="outlined" color="secondary" startIcon={<AddShoppingCartIcon />} size="small">
+                <Button variant="contained" color="secondary" startIcon={<AddShoppingCartIcon />}>
                     Add
                 </Button>
             </CardActions>
