@@ -1,47 +1,43 @@
-import { call, delay, fork, put, take } from 'redux-saga/effects';
+import { call, delay, fork, put, take, takeLatest, all } from 'redux-saga/effects';
 import { authActions } from './authSlice';
 import { login, getCurrentEmployeeLogin } from 'api/login';
+import { alertActions } from '../alert/alertSlice';
 
-function* handleLogin(payload) {
+function* handleLogin(action) {
     try {
         //yield delay(1000);
-        const response = yield call(login, payload);
+        const response = yield call(login, action.payload);
         localStorage.setItem('access_token', JSON.stringify(response.data.id_token));
-        yield put(authActions.loginSuccess({ ...payload }));
-        const responseEmployee = yield call(getCurrentEmployeeLogin, payload);
+        yield put(authActions.loginSuccess({ ...action.payload }));
+        const responseEmployee = yield call(getCurrentEmployeeLogin, action.payload);
         localStorage.setItem('role', responseEmployee.data.position);
         localStorage.setItem('current_employee_id', responseEmployee.data.id);
         localStorage.setItem('full_name', responseEmployee.data.user.firstName + ' ' + responseEmployee.data.user.lastName);
 
-        payload.onNavigate?.();
+        action.payload.onNavigate?.();
     } catch (error) {
-        console.error(error);
         yield put(authActions.loginFailed(error));
+        yield put(
+            alertActions.showAlert({
+                text: 'The username or password you entered did not match our records. Please try again',
+                type: 'error'
+            })
+        );
     }
 }
 
-function* handleLogout(payload) {
+function* handleLogout(action) {
     yield delay(500);
     localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('current_employee_id');
     localStorage.removeItem('full_name');
 
-    payload.onNavigate?.();
+    action.payload.onNavigate?.();
 }
 
 function* watchLoginFlow() {
-    while (true) {
-        const isLoggedIn = Boolean(localStorage.getItem('access_token'));
-
-        if (!isLoggedIn) {
-            const action = yield take(authActions.login.type);
-            yield fork(handleLogin, action.payload);
-        }
-
-        const action = yield take(authActions.logout.type);
-        yield call(handleLogout, action.payload);
-    }
+    yield all([takeLatest(authActions.login.type, handleLogin), takeLatest(authActions.logout.type, handleLogout)]);
 }
 
 export function* authSaga() {

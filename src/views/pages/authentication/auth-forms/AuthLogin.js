@@ -38,6 +38,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch } from 'app/hooks';
 import { useNavigate } from 'react-router-dom';
 import { authActions } from 'store/auth/authSlice';
+
+// validation
+import { LoginSchema } from 'utils/validate/login_schema';
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
@@ -59,21 +62,18 @@ const FirebaseLogin = ({ ...others }) => {
         <>
             <Formik
                 initialValues={{
-                    email: '',
+                    username: '',
                     password: '',
                     submit: null
                 }}
-                validationSchema={Yup.object().shape({
-                    email: Yup.string().max(255).required('Password is required'),
-                    password: Yup.string().max(255).required('Password is required')
-                })}
+                validationSchema={LoginSchema()}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
                         dispatch(
                             authActions.login({
-                                username: values.email,
+                                username: values.username,
                                 password: values.password,
                                 onNavigate: () => navigate('/')
                             })
@@ -87,21 +87,28 @@ const FirebaseLogin = ({ ...others }) => {
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
-                        <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email-login">Username</InputLabel>
+                        <FormControl
+                            fullWidth
+                            error={Boolean(touched.username && errors.username)}
+                            sx={{ ...theme.typography.customInput }}
+                        >
+                            <InputLabel color="secondary" htmlFor="outlined-adornment-email-login">
+                                Username
+                            </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
                                 type="text"
-                                value={values.email}
-                                name="email"
+                                value={values.username}
+                                name="username"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 label="Email Address / Username"
                                 inputProps={{}}
+                                color="secondary"
                             />
-                            {touched.email && errors.email && (
+                            {touched.username && errors.username && (
                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {errors.email}
+                                    {errors.username}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -111,7 +118,9 @@ const FirebaseLogin = ({ ...others }) => {
                             error={Boolean(touched.password && errors.password)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
+                            <InputLabel color="secondary" htmlFor="outlined-adornment-password-login">
+                                Password
+                            </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password-login"
                                 type={showPassword ? 'text' : 'password'}
@@ -128,12 +137,13 @@ const FirebaseLogin = ({ ...others }) => {
                                             edge="end"
                                             size="large"
                                         >
-                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
                                 }
                                 label="Password"
                                 inputProps={{}}
+                                color="secondary"
                             />
                             {touched.password && errors.password && (
                                 <FormHelperText error id="standard-weight-helper-text-password-login">

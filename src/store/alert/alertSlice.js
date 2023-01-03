@@ -11,8 +11,6 @@ const alertSlice = createSlice({
     initialState,
     reducers: {
         showAlert(state, action) {
-            console.log('state: ', state);
-            console.log('action: ', action);
             state.alert = action.payload.text;
             state.typeAlert = action.payload.type;
             toast[state.typeAlert](state.alert, { position: toast.POSITION.TOP_RIGHT });
