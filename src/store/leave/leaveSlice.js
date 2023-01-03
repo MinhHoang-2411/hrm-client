@@ -1,3 +1,4 @@
+import { FlareSharp } from '@mui/icons-material';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -10,6 +11,9 @@ const initialState = {
     listHoliday: [],
     loadingHolidays: false,
     loadingEdit: false,
+    loadingCancel: false,
+    loadingConfirm: false,
+    loadingReject: false,
     listDataWaiting: [],
     pagination: undefined,
     paginationWaiting: undefined
@@ -84,28 +88,40 @@ const leaveSlice = createSlice({
             console.error(action.payload);
         },
 
-        // EDIT
-        editLeave(state, action) {
-            state.loadingEdit = true;
+        // CANCEL
+        cancelLeave(state, action) {
+            state.loadingCancel = true;
         },
-        editLeaveSuccess(state, action) {
-            state.loadingEdit = false;
+        cancelLeaveSuccess(state, action) {
+            state.loadingCancel = false;
             state.reloadList = !state.reloadList;
         },
-        editLeaveFail(state, action) {
-            state.loadingEdit = false;
+        cancelLeaveFail(state, action) {
+            state.loadingCancel = false;
         },
 
-        // EDIT
-        editLeave(state, action) {
-            state.loadingEdit = true;
+        // REJECT
+        rejectLeave(state, action) {
+            state.loadingReject = true;
         },
-        editLeaveSuccess(state, action) {
-            state.loadingEdit = false;
+        rejectLeaveSuccess(state, action) {
+            state.loadingReject = false;
             state.reloadList = !state.reloadList;
         },
-        editLeaveFail(state, action) {
-            state.loadingEdit = false;
+        rejectLeaveFail(state, action) {
+            state.loadingReject = false;
+        },
+
+        // CONFIRM
+        confirmLeave(state, action) {
+            state.loadingConfirm = true;
+        },
+        confirmLeaveSuccess(state, action) {
+            state.loadingConfirm = false;
+            state.reloadList = !state.reloadList;
+        },
+        confirmLeaveFail(state, action) {
+            state.loadingConfirm = false;
         }
     }
 });

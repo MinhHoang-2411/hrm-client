@@ -1,4 +1,4 @@
-import { submitLeave, getAll, getAllHoliday, updateLeave } from 'api/leave';
+import { submitLeave, getAll, getAllHoliday, cancelLeave, rejectLeave, confirmLeave } from 'api/leave';
 import { all, call, fork, put, takeEvery, takeLatest, take, delay } from 'redux-saga/effects';
 import { leaveActions } from './leaveSlice';
 import { alertActions } from '../alert/alertSlice';
@@ -36,20 +36,66 @@ function* handleGetAllHoliday(action) {
     }
 }
 
-function* handleEditLeave(action) {
+function* handleCancelLeave(action) {
     try {
         const params = action.payload;
-        yield call(updateLeave, params);
+        yield call(cancelLeave, params);
 
-        yield put(leaveActions.editLeaveSuccess());
+        yield put(leaveActions.cancelLeaveSuccess());
         yield put(
             alertActions.showAlert({
-                text: 'Update Leave successfully',
+                text: 'Cancel Leave successfully',
                 type: 'success'
             })
         );
     } catch (error) {
-        yield put(leaveActions.editLeaveFail());
+        yield put(leaveActions.cancelLeaveFail());
+        yield put(
+            alertActions.showAlert({
+                text: 'An error occurred, please try again',
+                type: 'error'
+            })
+        );
+    }
+}
+
+function* handleRejectLeave(action) {
+    try {
+        const params = action.payload;
+        yield call(rejectLeave, params);
+
+        yield put(leaveActions.rejectLeaveSuccess());
+        yield put(
+            alertActions.showAlert({
+                text: 'Reject Leave successfully',
+                type: 'success'
+            })
+        );
+    } catch (error) {
+        yield put(leaveActions.rejectLeaveFail());
+        yield put(
+            alertActions.showAlert({
+                text: 'An error occurred, please try again',
+                type: 'error'
+            })
+        );
+    }
+}
+
+function* handleConfirmLeave(action) {
+    try {
+        const params = action.payload;
+        yield call(confirmLeave, params);
+
+        yield put(leaveActions.confirmLeaveSuccess());
+        yield put(
+            alertActions.showAlert({
+                text: 'Confirm Leave successfully',
+                type: 'success'
+            })
+        );
+    } catch (error) {
+        yield put(leaveActions.confirmLeaveFail());
         yield put(
             alertActions.showAlert({
                 text: 'An error occurred, please try again',
@@ -78,8 +124,10 @@ function* watchFlow() {
         takeLatest(leaveActions.fetchData.type, handleFetchData),
         takeLatest(leaveActions.submit.type, handleSubmit),
         takeLatest(leaveActions.getHolidays.type, handleGetAllHoliday),
-        takeLatest(leaveActions.editLeave.type, handleEditLeave),
-        takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting)
+        takeLatest(leaveActions.cancelLeave.type, handleCancelLeave),
+        takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting),
+        takeLatest(leaveActions.confirmLeave.type, handleConfirmLeave),
+        takeLatest(leaveActions.rejectLeave.type, handleRejectLeave)
     ]);
 }
 

@@ -10,7 +10,7 @@ function* handleLogin(payload) {
         const responseEmployee = yield call(getCurrentEmployeeLogin, payload);
         localStorage.setItem('role', responseEmployee.data.position);
         localStorage.setItem('current_employee_id', responseEmployee.data.id);
-
+        localStorage.setItem('full_name', responseEmployee.data.user.firstName + ' ' + responseEmployee.data.user.lastName);
         yield put(authActions.loginSuccess({ ...payload }));
 
         payload.onNavigate?.();
@@ -25,6 +25,8 @@ function* handleLogout(payload) {
     localStorage.removeItem('currentEmployeeId');
     localStorage.removeItem('access_token');
     localStorage.removeItem('role');
+    localStorage.removeItem('current_employee_id');
+    localStorage.removeItem('full_name');
 
     payload.onNavigate?.();
 }

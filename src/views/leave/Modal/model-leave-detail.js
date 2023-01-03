@@ -132,7 +132,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                 <span style={{ fontWeight: 'bold' }}>Status</span>
                             </Grid>
                             <Grid item xs={3}>
-                                {showStatusLeave(leaveDetail?.status)}
+                                <span>{upperCaseFirstCharacter(leaveDetail?.status)}</span>
                             </Grid>
                         </Grid>
                         <Grid container>

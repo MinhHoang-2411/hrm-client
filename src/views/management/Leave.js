@@ -16,12 +16,17 @@ import {
     Dialog,
     DialogActions,
     DialogTitle,
-    DialogContent
+    DialogContent,
+    IconButton,
+    Typography
 } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import CheckIcon from '@mui/icons-material/Check';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { InputSearch } from 'ui-component/filter/input-search';
+import Modal from '@mui/material/Modal';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 // convert date
 import { formatDateMaterialForFilter } from 'utils/format/date';
@@ -64,7 +69,7 @@ const styleTitle = {
     fontSize: '18px',
     fontWeight: 'bold',
     marginBottom: '10px',
-    marginTop: '10px'
+    marginTop: '15px'
 };
 const styleName = {
     fontSize: '16px',
@@ -86,15 +91,25 @@ const styleCount = {
     fontSize: '14px'
 };
 
+// style
+import { STYLE_MODAL } from 'constants/style';
+
+// model
+import ModelLeaveDetail from '../leave/Modal/model-leave-detail';
+
 const ManagementLeave = () => {
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
         page: 0,
-        size: 20
+        size: 20,
+        startDate: null,
+        endDate: null
     });
     const [paramsWaiting, setParamsWaiting] = useState({
         page: 0,
-        size: 20
+        size: 20,
+        startDate: null,
+        endDate: null
     });
     const [search, setSearch] = useState('');
     const [searchListWaiting, setSearchListWaiting] = useState('');
@@ -112,11 +127,23 @@ const ManagementLeave = () => {
     const [leaveSelected, setLeaveSelected] = useState({});
     const [havePermission, setHavePermission] = useState(false);
 
+    const [fromWaiting, setFromWaiting] = useState(null);
+    const [toWaiting, setToWaiting] = useState(null);
+    const [fromAll, setFromAll] = useState(null);
+    const [selectedLeave, setSelectedLeave] = useState({});
+
     const handleClose = () => {
         setOpenModelConfirm(false);
         setAction('');
         setTitle('');
         setLeaveSelected('');
+    };
+
+    const [openDetail, setOpenDetail] = useState(false);
+
+    const handleOpenModalDetail = () => setOpenDetail(true);
+    const handleCloseModalDetail = () => {
+        setOpenDetail(false);
     };
 
     const handleClickModelConfirm = (row, title, action) => {
@@ -128,27 +155,30 @@ const ManagementLeave = () => {
 
     const handleUpdateStatus = () => {
         const tmpData = { ...leaveSelected };
-        tmpData['status'] = action;
-        dispatch(leaveActions.editLeave({ ...tmpData }));
+        if (action === 'CONFIRMED') {
+            dispatch(leaveActions.confirmLeave({ ...tmpData }));
+        } else if (action === 'REJECTED') {
+            dispatch(leaveActions.rejectLeave({ ...tmpData }));
+        }
     };
 
     const showStatusLeave = (status) => {
         let color = '';
         switch (status) {
             case 'CONFIRMED':
-                color = '#1890ff';
+                color = '#1E88E5';
                 break;
             case 'APPROVED':
-                color = '#04AA6D';
+                color = '#00C853';
                 break;
             case 'REJECTED':
-                color = '#ff4d4f';
+                color = '#D84315';
                 break;
             case 'CANCELED':
-                color = '#ff8000';
+                color = '#9E9E9E';
                 break;
             case 'WAITING':
-                color = '#6666ff';
+                color = '#FFC107';
                 break;
         }
         return (
@@ -201,6 +231,8 @@ const ManagementLeave = () => {
                 const state = { ...preState };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
+                if (key === 'startDate.greaterThanOrEqual') setFromWaiting(value);
+                if (key === 'endDate.lessThanOrEqual') setToWaiting(value);
                 return state;
             });
         } else {
@@ -208,9 +240,18 @@ const ManagementLeave = () => {
                 const state = { ...preState };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
+                if (key === 'startDate.greaterThanOrEqual') setFromAll(value);
                 return state;
             });
         }
+    };
+
+    const showDetail = (leaveDetail) => {
+        return (
+            <Box sx={{ ...STYLE_MODAL, width: 900 }}>
+                <ModelLeaveDetail leaveDetail={selectedLeave} handleClose={handleCloseModalDetail} />
+            </Box>
+        );
     };
 
     const renderList = useCallback(
@@ -219,25 +260,25 @@ const ManagementLeave = () => {
             data?.map((row, index) => (
                 <Card className="card" key={index} sx={{ fontSize: '15px', marginBottom: '15px', marginTop: '5px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', padding: '10px 30px' }}>
-                        <Box sx={styleTitle}>
-                            <span style={{ color: '#1890ff', marginRight: '5px', fontSize: '20px' }}>{index + 1}</span>
-                            {row?.createdBy}
-                        </Box>
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
-                                <Grid item xs={4}>
-                                    <Box sx={styleName}>{nameMatching(row?.employee?.user?.firstName, row?.employee?.user?.lastName)}</Box>
+                                <Grid item xs={7}>
+                                    <Box sx={styleTitle}>
+                                        <span style={{ fontWeight: 'bold' }}>Creator:</span> {row?.createdBy}
+                                    </Box>
                                 </Grid>
-                                <Grid item xs={4}>
-                                    <Chip
-                                        sx={{ fontWeight: 'bold', borderRadius: '4px' }}
-                                        variant="outlined"
-                                        label={upperCaseFirstCharacter(row?.type)}
-                                        color="primary"
-                                    />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    {showStatusLeave(row?.status)}
+                                <Grid item xs={5}>
+                                    <IconButton
+                                        style={{ float: 'right' }}
+                                        onClick={(e) => {
+                                            setSelectedLeave(row);
+                                            handleOpenModalDetail();
+                                        }}
+                                        aria-label="cancel"
+                                        color="secondary"
+                                    >
+                                        <VisibilityIcon fontSize="medium" />
+                                    </IconButton>
                                 </Grid>
                             </Grid>
                         </Box>
@@ -245,6 +286,23 @@ const ManagementLeave = () => {
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={12}>
                                     <span style={{ fontWeight: 'bold' }}>Title:</span> {row?.title}
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
+                            <Grid container spacing={2} columns={12}>
+                                <Grid item xs={5}>
+                                    <span style={{ fontWeight: 'bold' }}>Leave Type: </span>{' '}
+                                    <Chip
+                                        sx={{ fontWeight: 'bold', borderRadius: '4px', marginLeft: '5px' }}
+                                        variant="outlined"
+                                        label={upperCaseFirstCharacter(row?.type)}
+                                        color="primary"
+                                    />
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <span style={{ fontWeight: 'bold', marginRight: '5px' }}>Status: </span> {showStatusLeave(row?.status)}
                                 </Grid>
                             </Grid>
                         </Box>
@@ -267,7 +325,8 @@ const ManagementLeave = () => {
                             </Grid>
                         </Box>
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <span style={{ fontWeight: 'bold' }}>Reason:</span>&nbsp; {row?.reason}
+                            <span style={{ fontWeight: 'bold' }}>Reason:</span>
+                            <span style={{ marginLeft: '3px' }}>{row?.reason}</span>
                         </Box>
                         {isLeaveWaiting(row?.status) && (
                             <Box sx={{ margin: '10px 10px 12px 0px' }}>
@@ -322,7 +381,7 @@ const ManagementLeave = () => {
                         }}
                     >
                         <Grid container spacing={2} columns={16}>
-                            <Grid xs={9}>
+                            <Grid xs={8}>
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <h3 style={styleLabel}>
@@ -339,14 +398,14 @@ const ManagementLeave = () => {
                                             }}
                                         >
                                             <InputSearch
-                                                width={250}
+                                                width={200}
                                                 search={searchListWaiting}
                                                 handleSearch={(value) => handleSearch(value, 'waiting')}
-                                                placeholder="Search title..."
+                                                placeholder="Search title, reason, ..."
                                             />
                                             <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
-                                                <InputLabel id="demo-simple-select-label" color="secondary">
-                                                    Type
+                                                <InputLabel size="small" id="demo-simple-select-label" color="secondary">
+                                                    Leave Type
                                                 </InputLabel>
                                                 <Select
                                                     size="small"
@@ -367,12 +426,71 @@ const ManagementLeave = () => {
                                                     ))}
                                                 </Select>
                                             </FormControl>
+                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <DatePicker
+                                                        label="From"
+                                                        value={fromWaiting}
+                                                        name="fromWaiting"
+                                                        onChange={(e) => {
+                                                            handleFilter(
+                                                                'startDate.greaterThanOrEqual',
+                                                                formatDateMaterialForFilter(e.toDate()),
+                                                                'waiting'
+                                                            );
+                                                        }}
+                                                        renderInput={(params) => <TextField size="small" color="secondary" {...params} />}
+                                                        inputFormat="DD/MM/YYYY"
+                                                        style={{ maxHeight: '70%' }}
+                                                    />
+                                                </LocalizationProvider>
+                                            </FormControl>
+                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <DatePicker
+                                                        label="To"
+                                                        value={toWaiting}
+                                                        name="toWaiting"
+                                                        onChange={(e) => {
+                                                            handleFilter(
+                                                                'endDate.lessThanOrEqual',
+                                                                formatDateMaterialForFilter(e.toDate()),
+                                                                'waiting'
+                                                            );
+                                                        }}
+                                                        renderInput={(params) => <TextField size="small" color="secondary" {...params} />}
+                                                        inputFormat="DD/MM/YYYY"
+                                                    />
+                                                </LocalizationProvider>
+                                            </FormControl>
                                         </Box>
                                     </Box>
-                                    <Box>{listLeaveWaiting?.length ? renderList(listLeaveWaiting) : <div></div>}</Box>
+                                    <Box>
+                                        {listLeaveWaiting?.length ? (
+                                            renderList(listLeaveWaiting)
+                                        ) : (
+                                            <div>
+                                                <Box>
+                                                    <center>
+                                                        <ErrorOutlineIcon
+                                                            sx={{
+                                                                width: 100,
+                                                                height: 100,
+                                                                marginBottom: '4px',
+                                                                marginTop: '160px',
+                                                                color: '#E0E0E0'
+                                                            }}
+                                                            fontSize="medium"
+                                                        />
+                                                        <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
+                                                    </center>
+                                                </Box>
+                                            </div>
+                                        )}
+                                    </Box>
                                 </Box>
                             </Grid>
-                            <Grid xs={7}>
+                            <Grid xs={8}>
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
                                     <Box
                                         sx={{
@@ -393,11 +511,11 @@ const ManagementLeave = () => {
                                                 width={250}
                                                 search={search}
                                                 handleSearch={handleSearch}
-                                                placeholder="Search title..."
+                                                placeholder="Search title, reason, ..."
                                             />
                                             <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
-                                                <InputLabel id="demo-simple-select-label" color="secondary">
-                                                    Type
+                                                <InputLabel size="small" id="demo-simple-select-label" color="secondary">
+                                                    Leave Type
                                                 </InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-label"
@@ -417,7 +535,7 @@ const ManagementLeave = () => {
                                                 </Select>
                                             </FormControl>
                                             <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
-                                                <InputLabel id="demo-simple-select-label" color="secondary">
+                                                <InputLabel size="small" id="demo-simple-select-label" color="secondary">
                                                     Status
                                                 </InputLabel>
                                                 <Select
@@ -437,53 +555,101 @@ const ManagementLeave = () => {
                                                     ))}
                                                 </Select>
                                             </FormControl>
+                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <DatePicker
+                                                        label="From"
+                                                        value={fromAll}
+                                                        name="fromAll"
+                                                        onChange={(e) => {
+                                                            handleFilter(
+                                                                'startDate.greaterThanOrEqual',
+                                                                formatDateMaterialForFilter(e.toDate())
+                                                            );
+                                                        }}
+                                                        renderInput={(params) => <TextField size="small" color="secondary" {...params} />}
+                                                        inputFormat="DD/MM/YYYY"
+                                                        style={{ maxHeight: '70%' }}
+                                                    />
+                                                </LocalizationProvider>
+                                            </FormControl>
                                         </Box>
                                     </Box>
-                                    <Box sx={{ overflowX: 'auto', height: '90vh', marginTop: '5px' }}>
-                                        {listOtherLeave?.length ? renderList(listOtherLeave) : <div></div>}
+                                    <Box>
+                                        {listOtherLeave?.length ? (
+                                            renderList(listOtherLeave)
+                                        ) : (
+                                            <div>
+                                                <Box>
+                                                    <center>
+                                                        <ErrorOutlineIcon
+                                                            sx={{
+                                                                width: 100,
+                                                                height: 100,
+                                                                marginBottom: '4px',
+                                                                marginTop: '160px',
+                                                                color: '#E0E0E0'
+                                                            }}
+                                                            fontSize="medium"
+                                                        />
+                                                        <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
+                                                    </center>
+                                                </Box>
+                                            </div>
+                                        )}
                                     </Box>
                                 </Box>
                             </Grid>
-                        </Grid>
-                        <Grid>
-                            <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
-                                <DialogTitle sx={{ fontSize: '24px' }}>{title}</DialogTitle>
-                                <DialogContent>
-                                    <Box>
-                                        <span style={{ fontSize: '15px' }}>
-                                            Would you like to <b>{title}</b> this leave?
-                                        </span>
-                                    </Box>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button
-                                        disableElevation
-                                        style={{ width: '20%' }}
-                                        size="large"
-                                        type="reset"
-                                        variant="outlined"
-                                        onClick={handleClose}
-                                        color="secondary"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        disableElevation
-                                        style={{ width: '20%' }}
-                                        size="large"
-                                        type="submit"
-                                        variant="contained"
-                                        color="secondary"
-                                        startIcon={<CheckIcon />}
-                                        onClick={(e) => {
-                                            handleClose();
-                                            handleUpdateStatus();
-                                        }}
-                                    >
-                                        Agree
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
+
+                            <Grid>
+                                <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
+                                    <DialogTitle sx={{ fontSize: '24px' }}>{title}</DialogTitle>
+                                    <DialogContent>
+                                        <Box>
+                                            <span style={{ fontSize: '15px' }}>
+                                                Would you like to <b>{title}</b> this leave?
+                                            </span>
+                                        </Box>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button
+                                            disableElevation
+                                            style={{ width: '20%' }}
+                                            size="large"
+                                            type="reset"
+                                            variant="outlined"
+                                            onClick={handleClose}
+                                            color="secondary"
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            disableElevation
+                                            style={{ width: '20%' }}
+                                            size="large"
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={(e) => {
+                                                handleClose();
+                                                handleUpdateStatus();
+                                            }}
+                                        >
+                                            Agree
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </Grid>
+                            <Grid>
+                                <Modal
+                                    open={openDetail}
+                                    onClose={handleCloseModalDetail}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    {showDetail()}
+                                </Modal>
+                            </Grid>
                         </Grid>
                     </Box>
                 </MainCard>

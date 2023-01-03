@@ -8,9 +8,9 @@ import underContruction3 from 'assets/images/under-contruction/under-contruction
 // scss
 import '../../assets/scss/contruction.scss';
 
-const Policies = ({ ...others }) => {
+const Setting = ({ ...others }) => {
     return (
-        <MainCard title="Policies">
+        <MainCard title="Setting">
             <div>
                 <Paper>
                     <CardContent>
@@ -42,4 +42,4 @@ const Policies = ({ ...others }) => {
     );
 };
 
-export default Policies;
+export default Setting;
