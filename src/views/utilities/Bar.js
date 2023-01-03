@@ -38,11 +38,20 @@ const Bar = ({ ...others }) => {
                                         <MenuItem value={30}>Foods</MenuItem>
                                     </Select>
                                 </FormControl>
+                                <FormControl sx={{ minWidth: 150, mt: 1, mb: 1, ml: 1 }}>
+                                    <InputLabel id="branch-select-label" color="secondary">
+                                        Branch
+                                    </InputLabel>
+                                    <Select labelId="branch-select-label" id="branch-select" color="secondary" label="Branch">
+                                        <MenuItem value={20}>Hue</MenuItem>
+                                        <MenuItem value={10}>Da Nang</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2} item>
                             {Array.from(Array(6)).map((_, index) => (
-                                <Grid item xs={12} sm={6} md={4} key={index}>
+                                <Grid item xs={12} md={6} xl={4} key={index}>
                                     <BarItem />
                                 </Grid>
                             ))}
