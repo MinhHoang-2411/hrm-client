@@ -1,4 +1,4 @@
-import { submitLeave, getAll, getAllHoliday, cancelLeave, rejectLeave, confirmLeave } from 'api/leave';
+import { submitLeave, getAll, getAllHoliday, cancelLeave, rejectLeave, confirmLeave, getAllLeaveForManager } from 'api/leave';
 import { all, call, fork, put, takeEvery, takeLatest, take, delay } from 'redux-saga/effects';
 import { leaveActions } from './leaveSlice';
 import { alertActions } from '../alert/alertSlice';
@@ -111,11 +111,23 @@ function* handleGetListWaiting(action) {
         const assignTo = localStorage.getItem('current_employee_id');
         params['assignTo.equals'] = assignTo;
         params['status.equals'] = 'WAITING';
-        const response = yield call(getAll, params);
+        params['sort'] = 'lastModifiedDate,DESC';
+        const response = yield call(getAllLeaveForManager, params);
 
         yield put(leaveActions.getListWaitingSuccess(response.data));
     } catch (error) {
         yield put(leaveActions.getListWaitingFalse('An error occurred, please try again'));
+    }
+}
+
+function* handleGetListLeaveForManager(action) {
+    try {
+        const params = action.payload;
+        params['sort'] = 'lastModifiedDate,DESC';
+        const response = yield call(getAllLeaveForManager, params);
+        yield put(leaveActions.fetchDataForManagerSuccess(response.data));
+    } catch (error) {
+        yield put(leaveActions.fetchDataForManagerFail('An error occurred, please try again'));
     }
 }
 
@@ -127,7 +139,8 @@ function* watchFlow() {
         takeLatest(leaveActions.cancelLeave.type, handleCancelLeave),
         takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting),
         takeLatest(leaveActions.confirmLeave.type, handleConfirmLeave),
-        takeLatest(leaveActions.rejectLeave.type, handleRejectLeave)
+        takeLatest(leaveActions.rejectLeave.type, handleRejectLeave),
+        takeLatest(leaveActions.fetchDataForManager.type, handleGetListLeaveForManager)
     ]);
 }
 

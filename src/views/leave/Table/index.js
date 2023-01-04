@@ -265,11 +265,13 @@ export default function TableLeaveHistory({ data }) {
                             ))}
                         </TableBody>
                     ) : (
-                        <TableRow>
-                            <TableCell colSpan={12} scope="full" align="center">
-                                <h3>There is currently no data available</h3>
-                            </TableCell>
-                        </TableRow>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell colSpan={12} scope="full" align="center">
+                                    <h3>There is currently no data available</h3>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
                     )}
                 </Table>
             </TableContainer>

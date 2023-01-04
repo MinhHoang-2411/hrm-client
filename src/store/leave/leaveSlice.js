@@ -15,6 +15,7 @@ const initialState = {
     loadingConfirm: false,
     loadingReject: false,
     listDataWaiting: [],
+    listDataManagement: [],
     pagination: undefined,
     paginationWaiting: undefined
 };
@@ -86,6 +87,26 @@ const leaveSlice = createSlice({
         getListWaitingFalse(state, action) {
             state.loadingWaiting = false;
             console.error(action.payload);
+        },
+
+        // LIST LEAVE FOR MANAGER
+        fetchDataForManager(state, action) {
+            state.loading = true;
+            state.pagination = {
+                size: action.payload.size,
+                page: action.payload.page
+            };
+        },
+        fetchDataForManagerSuccess(state, action) {
+            state.loading = false;
+            state.listDataManagement = action.payload.content;
+            state.pagination = {
+                ...state.pagination,
+                totalCount: action?.payload?.totalElements
+            };
+        },
+        fetchDataForManagerFail(state, action) {
+            state.loading = false;
         },
 
         // CANCEL

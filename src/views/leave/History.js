@@ -55,6 +55,9 @@ const LeaveHistory = () => {
 
     const { listData: listLeaveHistory, pagination } = useGetAllList(params, leaveActions, 'leave');
 
+    const [fromError, setFromError] = useState(null);
+    const [toError, setToError] = useState(null);
+
     const handlePagination = (event, value) => {
         setParams((prevState) => {
             return { ...prevState, page: Number(value - 1) };
@@ -112,7 +115,7 @@ const LeaveHistory = () => {
                         sx={{
                             display: 'flex',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'flex-start'
                         }}
                     >
                         <FormControl sx={{ width: { xs: '100%', md: 200 } }}>
@@ -179,12 +182,19 @@ const LeaveHistory = () => {
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     label="From"
-                                    value={startDate}
+                                    value={startDate || null}
                                     name="startDate"
                                     onChange={(e) => {
-                                        handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e.toDate()));
+                                        handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e));
                                     }}
-                                    renderInput={(params) => <TextField color="secondary" {...params} />}
+                                    onError={(newError) => setFromError(newError)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            color="secondary"
+                                            {...params}
+                                            helperText={fromError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                        />
+                                    )}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
                                 />
@@ -194,12 +204,20 @@ const LeaveHistory = () => {
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     label="To"
-                                    value={endDate}
+                                    value={endDate || null}
                                     name="endDate"
+                                    onError={(newError) => setToError(newError)}
                                     onChange={(e) => {
-                                        handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e.toDate()));
+                                        handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e));
                                     }}
-                                    renderInput={(params) => <TextField color="secondary" {...params} />}
+                                    minDate={startDate}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            color="secondary"
+                                            {...params}
+                                            helperText={toError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                        />
+                                    )}
                                     inputFormat="DD/MM/YYYY"
                                 />
                             </LocalizationProvider>

@@ -1,63 +1,52 @@
 // material
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import InfoIcon from '@mui/icons-material/Info';
 import {
     Box,
-    FormControl,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
-    OutlinedInput,
-    Pagination,
-    Select,
-    TextField,
-    Grid,
+    Button,
     Card,
     Chip,
-    Button,
     Dialog,
     DialogActions,
-    DialogTitle,
     DialogContent,
+    DialogTitle,
+    FormControl,
+    Grid,
     IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
     Typography
 } from '@mui/material';
-import MainCard from 'ui-component/cards/MainCard';
-import CheckIcon from '@mui/icons-material/Check';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { InputSearch } from 'ui-component/filter/input-search';
 import Modal from '@mui/material/Modal';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import MainCard from 'ui-component/cards/MainCard';
+import { InputSearch } from 'ui-component/filter/input-search';
 
 // convert date
 import { formatDateMaterialForFilter } from 'utils/format/date';
 
 // react
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // redux
-import { leaveActions } from 'store/leave/leaveSlice';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import useGetAllList from 'hooks/useGetAllList';
-
-// pagination
-import { totalPagePagination } from 'utils/pagination';
+import { leaveActions } from 'store/leave/leaveSlice';
 
 // filter and search
-import _ from 'lodash';
-import { SearchOutlined } from '@ant-design/icons';
-import styled from '@emotion/styled';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import _ from 'lodash';
 
 // constants
-import { LEAVE_TYPE, LEAVE_STATUS } from 'constants/index';
+import { LEAVE_TYPE } from 'constants/index';
 
 // format
 import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/date';
 import { upperCaseFirstCharacter } from 'utils/string';
-
-import { nameMatching } from 'utils/format/name';
 
 // scss
 import '../../assets/scss/asset.scss';
@@ -66,17 +55,9 @@ import '../../assets/scss/asset.scss';
 import forbiddenpng from 'assets/images/forbidden.png';
 
 const styleTitle = {
-    fontSize: '18px',
     fontWeight: 'bold',
     marginBottom: '10px',
     marginTop: '15px'
-};
-const styleName = {
-    fontSize: '16px',
-    cursor: 'pointer',
-    '&:hover': {
-        color: '#1890ff'
-    }
 };
 const styleLabel = {
     marginRight: '10px',
@@ -114,7 +95,9 @@ const ManagementLeave = () => {
     const [search, setSearch] = useState('');
     const [searchListWaiting, setSearchListWaiting] = useState('');
     const { listData: listLeave } = useGetAllList(paramsAll, leaveActions, 'leave');
-    const listOtherLeave = listLeave?.filter(
+
+    const listLeaveForManager = useAppSelector((state) => state.leave.listDataManagement);
+    const listOtherLeave = listLeaveForManager?.filter(
         (item) =>
             (item?.status === 'CONFIRMED' || item?.status === 'REJECTED') && item?.assignTo === +localStorage.getItem('current_employee_id')
     );
@@ -128,9 +111,9 @@ const ManagementLeave = () => {
     const [havePermission, setHavePermission] = useState(false);
 
     const [fromWaiting, setFromWaiting] = useState(null);
-    const [toWaiting, setToWaiting] = useState(null);
     const [fromAll, setFromAll] = useState(null);
-    const [selectedLeave, setSelectedLeave] = useState({});
+    const [fromOtherError, setFromOtherError] = useState(null);
+    const [fromWaitingError, setFromWaitingError] = useState(null);
 
     const handleClose = () => {
         setOpenModelConfirm(false);
@@ -231,8 +214,7 @@ const ManagementLeave = () => {
                 const state = { ...preState };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
-                if (key === 'startDate.greaterThanOrEqual') setFromWaiting(value);
-                if (key === 'endDate.lessThanOrEqual') setToWaiting(value);
+                if (key === 'startDate.equals') setFromWaiting(value);
                 return state;
             });
         } else {
@@ -240,7 +222,7 @@ const ManagementLeave = () => {
                 const state = { ...preState };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
-                if (key === 'startDate.greaterThanOrEqual') setFromAll(value);
+                if (key === 'startDate.equals') setFromAll(value);
                 return state;
             });
         }
@@ -249,7 +231,7 @@ const ManagementLeave = () => {
     const showDetail = (leaveDetail) => {
         return (
             <Box sx={{ ...STYLE_MODAL, width: 900 }}>
-                <ModelLeaveDetail leaveDetail={selectedLeave} handleClose={handleCloseModalDetail} />
+                <ModelLeaveDetail leaveDetail={leaveSelected} handleClose={handleCloseModalDetail} />
             </Box>
         );
     };
@@ -263,21 +245,19 @@ const ManagementLeave = () => {
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={7}>
-                                    <Box sx={styleTitle}>
-                                        <span style={{ fontWeight: 'bold' }}>Creator:</span> {row?.createdBy}
-                                    </Box>
+                                    <Box sx={styleTitle}>{row?.applicantName}</Box>
                                 </Grid>
                                 <Grid item xs={5}>
                                     <IconButton
                                         style={{ float: 'right' }}
                                         onClick={(e) => {
-                                            setSelectedLeave(row);
+                                            setLeaveSelected(row);
                                             handleOpenModalDetail();
                                         }}
                                         aria-label="cancel"
                                         color="secondary"
                                     >
-                                        <VisibilityIcon fontSize="medium" />
+                                        <InfoIcon fontSize="medium" />
                                     </IconButton>
                                 </Grid>
                             </Grid>
@@ -292,7 +272,7 @@ const ManagementLeave = () => {
 
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
-                                <Grid item xs={5}>
+                                <Grid item xs={6}>
                                     <span style={{ fontWeight: 'bold' }}>Leave Type: </span>{' '}
                                     <Chip
                                         sx={{ fontWeight: 'bold', borderRadius: '4px', marginLeft: '5px' }}
@@ -316,10 +296,10 @@ const ManagementLeave = () => {
                         </Box>
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
-                                <Grid item xs={4}>
+                                <Grid item xs={6}>
                                     <span style={{ fontWeight: 'bold' }}>From:</span> {formatTimeStampToDate(row?.startDate)}
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item xs={5}>
                                     <span style={{ fontWeight: 'bold' }}>To:</span> {formatTimeStampToDate(row?.endDate)}
                                 </Grid>
                             </Grid>
@@ -336,7 +316,7 @@ const ManagementLeave = () => {
                                     color="secondary"
                                     startIcon={<CheckOutlined />}
                                     onClick={() => {
-                                        handleClickModelConfirm(row, 'Confirm', 'CONFIRMED');
+                                        handleClickModelConfirm(row, 'confirm', 'CONFIRMED');
                                     }}
                                 >
                                     Confirm
@@ -347,7 +327,7 @@ const ManagementLeave = () => {
                                     color="secondary"
                                     startIcon={<CloseOutlined />}
                                     onClick={() => {
-                                        handleClickModelConfirm(row, 'Reject', 'REJECTED');
+                                        handleClickModelConfirm(row, 'reject', 'REJECTED');
                                     }}
                                 >
                                     Reject
@@ -362,7 +342,8 @@ const ManagementLeave = () => {
 
     useEffect(() => {
         dispatch(leaveActions.getListWaiting(paramsWaiting));
-    }, [paramsWaiting, reloadList]);
+        dispatch(leaveActions.fetchDataForManager(paramsAll));
+    }, [paramsWaiting, paramsAll, reloadList]);
 
     useEffect(() => {
         const role = localStorage.getItem('role');
@@ -381,7 +362,7 @@ const ManagementLeave = () => {
                         }}
                     >
                         <Grid container spacing={2} columns={16}>
-                            <Grid xs={8}>
+                            <Grid item xs={8}>
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <h3 style={styleLabel}>
@@ -390,15 +371,15 @@ const ManagementLeave = () => {
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                alignItems: 'center',
-                                                marginBottom: '15px',
+                                                alignItems: 'flex-start',
+                                                marginBottom: '10.5px',
                                                 width: '99%',
                                                 marginLeft: 'auto',
                                                 marginRight: 'auto'
                                             }}
                                         >
                                             <InputSearch
-                                                width={200}
+                                                width={250}
                                                 search={searchListWaiting}
                                                 handleSearch={(value) => handleSearch(value, 'waiting')}
                                                 placeholder="Search title, reason, ..."
@@ -429,37 +410,23 @@ const ManagementLeave = () => {
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="From"
-                                                        value={fromWaiting}
+                                                        label="Leave Start Date"
+                                                        value={fromWaiting || null}
                                                         name="fromWaiting"
                                                         onChange={(e) => {
-                                                            handleFilter(
-                                                                'startDate.greaterThanOrEqual',
-                                                                formatDateMaterialForFilter(e.toDate()),
-                                                                'waiting'
-                                                            );
+                                                            handleFilter('startDate.equals', formatDateMaterialForFilter(e), 'waiting');
                                                         }}
-                                                        renderInput={(params) => <TextField size="small" color="secondary" {...params} />}
                                                         inputFormat="DD/MM/YYYY"
+                                                        onError={(newError) => setFromWaitingError(newError)}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                size="small"
+                                                                color="secondary"
+                                                                {...params}
+                                                                helperText={fromWaitingError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                            />
+                                                        )}
                                                         style={{ maxHeight: '70%' }}
-                                                    />
-                                                </LocalizationProvider>
-                                            </FormControl>
-                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DatePicker
-                                                        label="To"
-                                                        value={toWaiting}
-                                                        name="toWaiting"
-                                                        onChange={(e) => {
-                                                            handleFilter(
-                                                                'endDate.lessThanOrEqual',
-                                                                formatDateMaterialForFilter(e.toDate()),
-                                                                'waiting'
-                                                            );
-                                                        }}
-                                                        renderInput={(params) => <TextField size="small" color="secondary" {...params} />}
-                                                        inputFormat="DD/MM/YYYY"
                                                     />
                                                 </LocalizationProvider>
                                             </FormControl>
@@ -490,7 +457,7 @@ const ManagementLeave = () => {
                                     </Box>
                                 </Box>
                             </Grid>
-                            <Grid xs={8}>
+                            <Grid item xs={8}>
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
                                     <Box
                                         sx={{
@@ -506,7 +473,7 @@ const ManagementLeave = () => {
                                         <h3 style={styleLabel}>
                                             Other leave <span style={styleCount}>{listOtherLeave?.length || 0}</span>
                                         </h3>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                                             <InputSearch
                                                 width={250}
                                                 search={search}
@@ -548,26 +515,29 @@ const ManagementLeave = () => {
                                                     size="small"
                                                 >
                                                     <MenuItem value={'all'}>All</MenuItem>
-                                                    {LEAVE_STATUS?.map((item, index) => (
-                                                        <MenuItem key={index} value={item}>
-                                                            {upperCaseFirstCharacter(item)}
-                                                        </MenuItem>
-                                                    ))}
+                                                    <MenuItem value={'REJECTED'}>Rejected</MenuItem>
+                                                    <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
                                                 </Select>
                                             </FormControl>
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="From"
-                                                        value={fromAll}
+                                                        label="Leave Start Date"
+                                                        value={fromAll || null}
                                                         name="fromAll"
                                                         onChange={(e) => {
-                                                            handleFilter(
-                                                                'startDate.greaterThanOrEqual',
-                                                                formatDateMaterialForFilter(e.toDate())
-                                                            );
+                                                            handleFilter('startDate.equals', formatDateMaterialForFilter(e));
                                                         }}
-                                                        renderInput={(params) => <TextField size="small" color="secondary" {...params} />}
+                                                        onError={(newError) => setFromOtherError(newError)}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                size="small"
+                                                                color="secondary"
+                                                                {...params}
+                                                                className="input-date-picker"
+                                                                helperText={fromOtherError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                            />
+                                                        )}
                                                         inputFormat="DD/MM/YYYY"
                                                         style={{ maxHeight: '70%' }}
                                                     />
@@ -603,7 +573,7 @@ const ManagementLeave = () => {
 
                             <Grid>
                                 <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
-                                    <DialogTitle sx={{ fontSize: '24px' }}>{title}</DialogTitle>
+                                    <DialogTitle sx={{ fontSize: '24px' }}>{upperCaseFirstCharacter(title)}</DialogTitle>
                                     <DialogContent>
                                         <Box>
                                             <span style={{ fontSize: '15px' }}>

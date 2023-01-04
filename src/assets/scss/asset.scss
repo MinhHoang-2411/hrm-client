@@ -48,3 +48,9 @@
 .title-form {
     font-weight: bold;
 }
+
+.input-date-picker {
+    & input {
+        padding-right: 1px !important;
+    }
+}

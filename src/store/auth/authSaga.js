@@ -22,7 +22,6 @@ function* handleLogin(payload) {
 
 function* handleLogout(payload) {
     yield delay(500);
-    localStorage.removeItem('currentEmployeeId');
     localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('current_employee_id');

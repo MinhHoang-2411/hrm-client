@@ -9,8 +9,12 @@ const GET_LEAVE_COUNT_URL = `${LEAVE_API_URL}/count`;
 const HOLIDAY_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api/holidays`;
 
 const CANCEL_LEAVE_URL = LEAVE_API_URL + '/cancel';
-const CONFIRM_LEAVE_URL = LEAVE_API_URL + '/confirm';
-const REJECT_LEAVE_URL = LEAVE_API_URL + '/reject';
+
+const MANAGEMENT_LEAVE_API_URL = LEAVE_API_URL + '/management';
+
+const CONFIRM_LEAVE_URL = MANAGEMENT_LEAVE_API_URL + '/confirm';
+
+const REJECT_LEAVE_URL = MANAGEMENT_LEAVE_API_URL + '/reject';
 
 export function submitLeave(params) {
     params.startDate = formatDateMaterialToTimeStamp(params.startDate);
@@ -31,6 +35,11 @@ export function getLeaveCount() {
 
 export function getAll(params) {
     const response = axiosClient.get(LEAVE_API_URL, { params });
+    return response;
+}
+
+export function getAllLeaveForManager(params) {
+    const response = axiosClient.get(MANAGEMENT_LEAVE_API_URL, { params });
     return response;
 }
 
