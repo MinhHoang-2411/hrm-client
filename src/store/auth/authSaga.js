@@ -28,7 +28,14 @@ function* handleLogin(action) {
         } else if (error.response.status === 400) {
             yield put(
                 alertActions.showAlert({
-                    text: 'The user login does not match with any employee in database',
+                    text: error.response.data.title,
+                    type: 'error'
+                })
+            );
+        } else if (error.response.status === 500) {
+            yield put(
+                alertActions.showAlert({
+                    text: error.response.data.detail,
                     type: 'error'
                 })
             );
