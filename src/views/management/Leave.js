@@ -49,7 +49,7 @@ import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/d
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
-import '../../assets/scss/asset.scss';
+import '../../assets/scss/leave.scss';
 
 // image
 import forbiddenpng from 'assets/images/forbidden.png';
