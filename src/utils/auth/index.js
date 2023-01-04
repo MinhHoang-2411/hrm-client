@@ -1,4 +1,6 @@
 const AUTH_LOCAL_STORAGE_KEY = 'access_token';
+const ROLE_LOCAL_STORAGE_KEY = 'role';
+
 const getAuth = () => {
     if (!localStorage) {
         return;
@@ -20,4 +22,8 @@ const getAuth = () => {
     }
 };
 
-export { getAuth };
+function getCurrentPermission() {
+    return localStorage.getItem(ROLE_LOCAL_STORAGE_KEY);
+}
+
+export { getAuth, getCurrentPermission };

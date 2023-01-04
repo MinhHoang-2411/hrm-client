@@ -8,6 +8,14 @@ const GET_LEAVE_COUNT_URL = `${LEAVE_API_URL}/count`;
 
 const HOLIDAY_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api/holidays`;
 
+const CANCEL_LEAVE_URL = LEAVE_API_URL + '/cancel';
+
+const MANAGEMENT_LEAVE_API_URL = LEAVE_API_URL + '/management';
+
+const CONFIRM_LEAVE_URL = MANAGEMENT_LEAVE_API_URL + '/confirm';
+
+const REJECT_LEAVE_URL = MANAGEMENT_LEAVE_API_URL + '/reject';
+
 export function submitLeave(params) {
     params.startDate = formatDateMaterialToTimeStamp(params.startDate);
     params.endDate = formatDateMaterialToTimeStamp(params.endDate);
@@ -30,10 +38,23 @@ export function getAll(params) {
     return response;
 }
 
+export function getAllLeaveForManager(params) {
+    const response = axiosClient.get(MANAGEMENT_LEAVE_API_URL, { params });
+    return response;
+}
+
 export function getAllHoliday(params) {
     return axiosClient.get(HOLIDAY_API_URL, { params });
 }
 
-export function updateLeave(params) {
-    return axiosClient.patch(LEAVE_API_URL + `/${params?.id}`, params);
+export function cancelLeave(params) {
+    return axiosClient.patch(CANCEL_LEAVE_URL + `/${params?.id}`, params);
+}
+
+export function rejectLeave(params) {
+    return axiosClient.patch(REJECT_LEAVE_URL + `/${params?.id}`, params);
+}
+
+export function confirmLeave(params) {
+    return axiosClient.patch(CONFIRM_LEAVE_URL + `/${params?.id}`, params);
 }

@@ -83,10 +83,29 @@ const SubmitForm = ({ ...others }) => {
     const [leaveUnUser, setLeaveUnUse] = useState();
     const formikRef = useRef();
     const inputRef = useRef();
+    const [leaveType, setLeaveType] = useState('');
 
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
     const listManager = useAppSelector((state) => state.employee.listData);
+
+    const sortListManagerByAlphabetically = (listManager) => {
+        listManager = listManager.sort(function (a, b) {
+            let fullNameA = a.user.firstName.toLowerCase() + ' ' + a.user.lastName.toLowerCase();
+            let fullNameB = b.user.firstName.toLowerCase() + ' ' + b.user.lastName.toLowerCase();
+
+            if (fullNameA < fullNameB) {
+                return -1;
+            }
+            if (fullNameA > fullNameB) {
+                return 1;
+            }
+            return 0;
+        });
+    };
+
+    const listManagerSortByAlphabetically = [...listManager];
+    sortListManagerByAlphabetically(listManagerSortByAlphabetically);
 
     const handleClickOpen = (idx) => {
         setOpen(true);
@@ -147,6 +166,8 @@ const SubmitForm = ({ ...others }) => {
     const handleSubmit = (value) => {
         if (weekendAndHolidayFilter(dateAndLeaveTimes).length === 0) {
             setErrorMessageDetail('Invalid leave date');
+        } else if (weekendAndHolidayFilter(dateAndLeaveTimes).length > 5 && leaveType !== 'MATERNITY') {
+            setErrorMessageDetail('A leave cannot exceed 5 working days.');
         } else {
             const assignTo = value.assignTo.id;
             value['assignTo'] = assignTo;
@@ -160,6 +181,7 @@ const SubmitForm = ({ ...others }) => {
             const input = inputRef.current.children[0].children[0];
             input.value = '';
             setDateAndLeaveTimes([]);
+            setLeaveType('');
         }
     };
 
@@ -216,7 +238,6 @@ const SubmitForm = ({ ...others }) => {
                     startDate: null,
                     endDate: null,
                     assignTo: null,
-                    search: '',
                     submit: null
                 }}
                 validationSchema={SubmitLeaveSchema()}
@@ -242,7 +263,7 @@ const SubmitForm = ({ ...others }) => {
                                             <Stepper sx={{ width: '100%' }}>
                                                 {steps.map((label) => (
                                                     <Step key={label}>
-                                                        <StepLabel>{label}</StepLabel>
+                                                        <StepLabel className="MuiStepIcon-root">{label}</StepLabel>
                                                     </Step>
                                                 ))}
                                             </Stepper>
@@ -291,7 +312,10 @@ const SubmitForm = ({ ...others }) => {
                                                         id="demo-simple-select"
                                                         name="type"
                                                         value={values.type}
-                                                        onChange={handleChange}
+                                                        onChange={(event) => {
+                                                            setFieldValue('type', event.target.value);
+                                                            setLeaveType(event.target.value);
+                                                        }}
                                                         error={touched.type && Boolean(errors.type)}
                                                         className="form-input"
                                                         color="secondary"
@@ -401,7 +425,7 @@ const SubmitForm = ({ ...others }) => {
                                                         value={values.assignTo}
                                                         onChange={(e, value) => setFieldValue('assignTo', value)}
                                                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                                                        options={listManager}
+                                                        options={listManagerSortByAlphabetically}
                                                         getOptionLabel={(option) => option.user?.firstName + ' ' + option.user?.lastName}
                                                         renderOption={(props, option) => (
                                                             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -525,13 +549,12 @@ const SubmitForm = ({ ...others }) => {
                                             type="submit"
                                             variant="contained"
                                             color="secondary"
-                                            startIcon={<CheckIcon />}
                                             onClick={(e) => {
                                                 handleClose();
                                                 handleSubmit(values);
                                             }}
                                         >
-                                            Confirm
+                                            Submit
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
@@ -555,7 +578,7 @@ const SubmitForm = ({ ...others }) => {
                                             flexDirection: 'column'
                                         }}
                                     >
-                                        {dateAndLeaveTimes?.length === 0 && (
+                                        {dateAndLeaveTimes?.length === 0 && leaveType !== 'MATERNITY' ? (
                                             <Box style={{ marginTop: '150px' }}>
                                                 <center>
                                                     <ErrorOutlineIcon
@@ -570,73 +593,79 @@ const SubmitForm = ({ ...others }) => {
                                                     <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
                                                 </center>
                                             </Box>
+                                        ) : (
+                                            <div></div>
                                         )}
 
                                         {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
+                                        {leaveType === 'MATERNITY' && (
+                                            <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
+                                                Your leave type is Maternity. <br />
+                                                You don't need to select Leave Detail.
+                                            </Alert>
+                                        )}
                                         <ul style={{ paddingLeft: 0 }}>
                                             {values.type !== 'MATERNITY' &&
                                                 dateAndLeaveTimes?.length > 0 &&
                                                 dateAndLeaveTimes?.map((item, index) => {
                                                     return (
-                                                        <>
-                                                            <div key={index}>
-                                                                <li
-                                                                    style={{
-                                                                        color: 'black',
-                                                                        listStyleType: 'none',
-                                                                        display: 'flex',
-                                                                        alignItems: 'center'
+                                                        <div key={index}>
+                                                            <li
+                                                                style={{
+                                                                    color: 'black',
+                                                                    listStyleType: 'none',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center'
+                                                                }}
+                                                            >
+                                                                <CalendarMonthIcon
+                                                                    sx={{
+                                                                        width: 25,
+                                                                        height: 25,
+                                                                        marginBottom: '4px'
                                                                     }}
-                                                                >
-                                                                    <CalendarMonthIcon
-                                                                        sx={{
-                                                                            width: 25,
-                                                                            height: 25,
-                                                                            marginBottom: '4px'
-                                                                        }}
-                                                                        fontSize="medium"
-                                                                    />
-                                                                    <span style={{ marginLeft: '10px', fontSize: '16px' }}>
-                                                                        {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
-                                                                    </span>
-                                                                    {isHoliday(item) === false && isWeekend(item) === false && (
-                                                                        <>
-                                                                            <Select
-                                                                                sx={{ m: 1, width: '40%', marginLeft: '15px' }}
-                                                                                size="small"
-                                                                                labelId="demo-simple-select-label"
-                                                                                value={item.dateType}
-                                                                                onChange={(e) =>
-                                                                                    handleSelectLeaveTime(e.target.value, index)
-                                                                                }
-                                                                                defaultValue="ALL_DAY"
-                                                                                color="secondary"
+                                                                    fontSize="medium"
+                                                                />
+                                                                <span style={{ marginLeft: '10px', fontSize: '16px' }}>
+                                                                    {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
+                                                                </span>
+                                                                {isHoliday(item) === false && isWeekend(item) === false && (
+                                                                    <>
+                                                                        <Select
+                                                                            sx={{ m: 1, width: '40%', marginLeft: '15px' }}
+                                                                            size="small"
+                                                                            labelId="demo-simple-select-label"
+                                                                            value={item.dateType}
+                                                                            onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
+                                                                            defaultValue="ALL_DAY"
+                                                                            color="secondary"
+                                                                        >
+                                                                            <MenuItem value={'ALL_DAY'}>All day</MenuItem>
+                                                                            <MenuItem value={'MORNING'}>Morning</MenuItem>
+                                                                            <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
+                                                                        </Select>
+                                                                        <Stack direction="row" spacing={1}>
+                                                                            <IconButton
+                                                                                aria-label="delete"
+                                                                                onClick={(e) => handleClickOpen(index)}
                                                                             >
-                                                                                <MenuItem value={'ALL_DAY'}>All day</MenuItem>
-                                                                                <MenuItem value={'MORNING'}>Morning</MenuItem>
-                                                                                <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
-                                                                            </Select>
-                                                                            <Stack direction="row" spacing={1}>
-                                                                                <IconButton aria-label="delete">
-                                                                                    <SpeakerNotesIcon
-                                                                                        fontSize="medium"
-                                                                                        color={item.note === '' ? '' : 'secondary'}
-                                                                                        onClick={(e) => handleClickOpen(index)}
-                                                                                    />
-                                                                                </IconButton>
-                                                                            </Stack>
-                                                                        </>
-                                                                    )}
-                                                                    {(isHoliday(item) === true || isWeekend(item) === true) && (
-                                                                        <Box sx={{ m: 1, width: '50%', marginLeft: '15px' }} size="small">
-                                                                            <Typography className="non-working-day-title">
-                                                                                Non-working day
-                                                                            </Typography>
-                                                                        </Box>
-                                                                    )}
-                                                                </li>
-                                                            </div>
-                                                        </>
+                                                                                <SpeakerNotesIcon
+                                                                                    fontSize="medium"
+                                                                                    color={item.note === '' ? '' : 'secondary'}
+                                                                                />
+                                                                            </IconButton>
+                                                                        </Stack>
+                                                                    </>
+                                                                )}
+                                                                {(isHoliday(item) === true || isWeekend(item) === true) && (
+                                                                    <Box sx={{ m: 1, width: '50%', marginLeft: '15px' }} size="small">
+                                                                        <Typography className="non-working-day-title">
+                                                                            Non-working day
+                                                                        </Typography>
+                                                                    </Box>
+                                                                )}
+                                                            </li>
+                                                        </div>
                                                     );
                                                 })}
                                         </ul>

@@ -15,7 +15,7 @@ export default function useGetAllList(params, action, nameState) {
                 console.error({ error });
             }
         },
-        [params]
+        [params, reloadList]
     );
 
     useEffect(() => {

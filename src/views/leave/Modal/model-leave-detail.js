@@ -53,33 +53,6 @@ const headCells = [
     }
 ];
 
-const showStatusLeave = (status) => {
-    let color = '';
-    switch (status) {
-        case 'CONFIRMED':
-            color = '#1E88E5';
-            break;
-        case 'APPROVED':
-            color = '#00C853';
-            break;
-        case 'REJECTED':
-            color = '#D84315';
-            break;
-        case 'CANCELED':
-            color = '#9E9E9E';
-            break;
-        case 'WAITING':
-            color = '#FFC107';
-            break;
-    }
-    return (
-        <Chip
-            label={upperCaseFirstCharacter(status)}
-            sx={{ fontWeight: 'bold', backgroundColor: color, color: '#ffff', borderRadius: '4px' }}
-        />
-    );
-};
-
 export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
     const [order] = useState('asc');
     const [orderBy] = useState('id');
@@ -115,24 +88,24 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                 {formatTimeStampToDateTime(leaveDetail?.createdDate)}
                             </Grid>
                             <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>Leave type</span>
+                                <span style={{ fontWeight: 'bold' }}>Duration</span>
                             </Grid>
                             <Grid item xs={3}>
-                                {upperCaseFirstCharacter(leaveDetail?.type)}
+                                {formatTimeStampToDate(leaveDetail?.startDate)} - {formatTimeStampToDate(leaveDetail?.endDate)}
                             </Grid>
                         </Grid>
                         <Grid container>
                             <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>Duration</span>
+                                <span style={{ fontWeight: 'bold' }}>Leave type</span>
                             </Grid>
                             <Grid item xs={4}>
-                                {formatTimeStampToDate(leaveDetail?.startDate)} - {formatTimeStampToDate(leaveDetail?.endDate)}
+                                {upperCaseFirstCharacter(leaveDetail?.type)}
                             </Grid>
                             <Grid item xs={2}>
                                 <span style={{ fontWeight: 'bold' }}>Status</span>
                             </Grid>
                             <Grid item xs={3}>
-                                {showStatusLeave(leaveDetail?.status)}
+                                <span>{upperCaseFirstCharacter(leaveDetail?.status)}</span>
                             </Grid>
                         </Grid>
                         <Grid container>
@@ -141,42 +114,47 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                     <Table aria-labelledby="tableTitle">
                                         <OrderTableHead headCells={headCells} order={order} orderBy={orderBy} />
                                         <TableBody sx={{ backgroundColor: '#FAFAFA' }}>
-                                            {leaveDetail?.leaveDetailsDTOS?.map((item, index) => (
-                                                <TableRow
-                                                    hover
-                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                >
-                                                    <TableCell
-                                                        className="table-cell-modal"
-                                                        align="left"
-                                                        style={{
-                                                            width: 250
-                                                        }}
+                                            {leaveDetail?.leaveDetailsDTOS
+                                                ?.slice()
+                                                .sort(function (a, b) {
+                                                    return new Date(a.leaveDate) - new Date(b.leaveDate);
+                                                })
+                                                .map((item, index) => (
+                                                    <TableRow
+                                                        hover
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        tabIndex={-1}
+                                                        key={index}
                                                     >
-                                                        {formatTimeStampToDate(item?.leaveDate)}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        className="table-cell-modal"
-                                                        align="left"
-                                                        style={{
-                                                            width: 250
-                                                        }}
-                                                    >
-                                                        {upperCaseFirstCharacter(item?.dateType)}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        className="table-cell-modal"
-                                                        align="left"
-                                                        style={{
-                                                            maxWidth: 250
-                                                        }}
-                                                    >
-                                                        {item?.note}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
+                                                        <TableCell
+                                                            className="table-cell-modal"
+                                                            align="left"
+                                                            style={{
+                                                                width: 250
+                                                            }}
+                                                        >
+                                                            {formatTimeStampToDate(item?.leaveDate)}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            className="table-cell-modal"
+                                                            align="left"
+                                                            style={{
+                                                                width: 250
+                                                            }}
+                                                        >
+                                                            {upperCaseFirstCharacter(item?.dateType)}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            className="table-cell-modal"
+                                                            align="left"
+                                                            style={{
+                                                                maxWidth: 250
+                                                            }}
+                                                        >
+                                                            {item?.note}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>

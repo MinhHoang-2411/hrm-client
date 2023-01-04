@@ -25,7 +25,6 @@ import Modal from '@mui/material/Modal';
 // icon
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 // format
 import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/date';
@@ -234,7 +233,7 @@ export default function TableLeaveHistory({ data }) {
                                     disabled={row?.status === 'WAITING' ? false : true}
                                     color="error"
                                 >
-                                    <DeleteIcon fontSize="medium" />
+                                    <CancelIcon fontSize="medium" />
                                 </IconButton>
                             </Stack>
                         </Box>
@@ -266,11 +265,13 @@ export default function TableLeaveHistory({ data }) {
                             ))}
                         </TableBody>
                     ) : (
-                        <TableRow>
-                            <TableCell colSpan={12} scope="full" align="center">
-                                <h3>There is currently no data available</h3>
-                            </TableCell>
-                        </TableRow>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell colSpan={12} scope="full" align="center">
+                                    <h3>There is currently no data available</h3>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
                     )}
                 </Table>
             </TableContainer>

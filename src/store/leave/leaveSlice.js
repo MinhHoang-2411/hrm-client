@@ -1,14 +1,23 @@
+import { FlareSharp } from '@mui/icons-material';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     alert: false,
     loading: false,
+    loadingWaiting: false,
     reloadList: false,
     listData: [],
+    reloadListWaiting: false,
     listHoliday: [],
     loadingHolidays: false,
     loadingEdit: false,
-    pagination: undefined
+    loadingCancel: false,
+    loadingConfirm: false,
+    loadingReject: false,
+    listDataWaiting: [],
+    listDataManagement: [],
+    pagination: undefined,
+    paginationWaiting: undefined
 };
 
 const leaveSlice = createSlice({
@@ -59,17 +68,81 @@ const leaveSlice = createSlice({
         getHolidayFail(state, action) {
             state.loadingHolidays = false;
         },
-
-        // EDIT
-        editLeave(state, action) {
-            state.loadingEdit = true;
+        // LEAVE WAITING
+        getListWaiting(state, action) {
+            state.loadingWaiting = true;
+            state.paginationWaiting = {
+                size: action.payload.size,
+                page: action.payload.page
+            };
         },
-        editLeaveSuccess(state, action) {
-            state.loadingEdit = false;
+        getListWaitingSuccess(state, action) {
+            state.loadingWaiting = false;
+            state.listDataWaiting = action.payload.content;
+            state.paginationWaiting = {
+                ...state.pagination,
+                totalCount: action?.payload?.totalElements
+            };
+        },
+        getListWaitingFalse(state, action) {
+            state.loadingWaiting = false;
+            console.error(action.payload);
+        },
+
+        // LIST LEAVE FOR MANAGER
+        fetchDataForManager(state, action) {
+            state.loading = true;
+            state.pagination = {
+                size: action.payload.size,
+                page: action.payload.page
+            };
+        },
+        fetchDataForManagerSuccess(state, action) {
+            state.loading = false;
+            state.listDataManagement = action.payload.content;
+            state.pagination = {
+                ...state.pagination,
+                totalCount: action?.payload?.totalElements
+            };
+        },
+        fetchDataForManagerFail(state, action) {
+            state.loading = false;
+        },
+
+        // CANCEL
+        cancelLeave(state, action) {
+            state.loadingCancel = true;
+        },
+        cancelLeaveSuccess(state, action) {
+            state.loadingCancel = false;
             state.reloadList = !state.reloadList;
         },
-        editLeaveFail(state, action) {
-            state.loadingEdit = false;
+        cancelLeaveFail(state, action) {
+            state.loadingCancel = false;
+        },
+
+        // REJECT
+        rejectLeave(state, action) {
+            state.loadingReject = true;
+        },
+        rejectLeaveSuccess(state, action) {
+            state.loadingReject = false;
+            state.reloadList = !state.reloadList;
+        },
+        rejectLeaveFail(state, action) {
+            state.loadingReject = false;
+        },
+
+        // CONFIRM
+        confirmLeave(state, action) {
+            state.loadingConfirm = true;
+        },
+        confirmLeaveSuccess(state, action) {
+            state.loadingConfirm = false;
+            state.reloadList = !state.reloadList;
+        },
+        confirmLeaveFail(state, action) {
+            state.loadingConfirm = false;
         }
     }
 });

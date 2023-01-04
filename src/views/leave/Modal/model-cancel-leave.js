@@ -9,8 +9,7 @@ export default function ModelCancelLeave({ leaveCancel, handleClose }) {
 
     const handleUpdate = () => {
         const tmpData = { ...leaveCancel };
-        tmpData['status'] = 'CANCELED';
-        dispatch(leaveActions.editLeave({ ...tmpData }));
+        dispatch(leaveActions.cancelLeave({ ...tmpData }));
     };
 
     return (
