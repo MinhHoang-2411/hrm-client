@@ -44,7 +44,7 @@ function* handleCancelLeave(action) {
         yield put(leaveActions.cancelLeaveSuccess());
         yield put(
             alertActions.showAlert({
-                text: 'Cancel Leave successfully',
+                text: 'Cancel leave successfully',
                 type: 'success'
             })
         );
@@ -67,7 +67,7 @@ function* handleRejectLeave(action) {
         yield put(leaveActions.rejectLeaveSuccess());
         yield put(
             alertActions.showAlert({
-                text: 'Reject Leave successfully',
+                text: 'Reject leave successfully',
                 type: 'success'
             })
         );
@@ -90,7 +90,7 @@ function* handleConfirmLeave(action) {
         yield put(leaveActions.confirmLeaveSuccess());
         yield put(
             alertActions.showAlert({
-                text: 'Confirm Leave successfully',
+                text: 'Confirm leave successfully',
                 type: 'success'
             })
         );
@@ -108,7 +108,7 @@ function* handleConfirmLeave(action) {
 function* handleGetListWaiting(action) {
     try {
         const params = action.payload;
-        const assignTo = localStorage.getItem('current_employee_id');
+        const assignTo = JSON.parse(localStorage.getItem('employee')).id;
         params['assignTo.equals'] = assignTo;
         params['status.equals'] = 'WAITING';
         params['sort'] = 'lastModifiedDate,DESC';

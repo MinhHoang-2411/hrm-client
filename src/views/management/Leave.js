@@ -99,7 +99,8 @@ const ManagementLeave = () => {
     const listLeaveForManager = useAppSelector((state) => state.leave.listDataManagement);
     const listOtherLeave = listLeaveForManager?.filter(
         (item) =>
-            (item?.status === 'CONFIRMED' || item?.status === 'REJECTED') && item?.assignTo === +localStorage.getItem('current_employee_id')
+            (item?.status === 'CONFIRMED' || item?.status === 'REJECTED') &&
+            item?.assignTo === JSON.parse(localStorage.getItem('employee')).id
     );
     const listLeaveWaiting = useAppSelector((state) => state.leave.listDataWaiting);
     const reloadList = useAppSelector((state) => state.leave.reloadList);
@@ -114,6 +115,7 @@ const ManagementLeave = () => {
     const [fromAll, setFromAll] = useState(null);
     const [fromOtherError, setFromOtherError] = useState(null);
     const [fromWaitingError, setFromWaitingError] = useState(null);
+    const [basicInfo, setBasicInfor] = useState({});
 
     const handleClose = () => {
         setOpenModelConfirm(false);
@@ -346,7 +348,11 @@ const ManagementLeave = () => {
     }, [paramsWaiting, paramsAll, reloadList]);
 
     useEffect(() => {
-        const role = localStorage.getItem('role');
+        setBasicInfor(JSON.parse(localStorage.getItem('employee')));
+    }, []);
+
+    useEffect(() => {
+        const role = basicInfo.position;
         if (role === 'MANAGER') setHavePermission(true);
         else setHavePermission(false);
     });
@@ -366,7 +372,7 @@ const ManagementLeave = () => {
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <h3 style={styleLabel}>
-                                            Waiting leave <span style={styleCount}>{listLeaveWaiting?.length || 0}</span>
+                                            Waiting leave requests <span style={styleCount}>{listLeaveWaiting?.length || 0}</span>
                                         </h3>
                                         <Box
                                             sx={{
@@ -410,7 +416,7 @@ const ManagementLeave = () => {
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="Leave Start Date"
+                                                        label="Start Date"
                                                         value={fromWaiting || null}
                                                         name="fromWaiting"
                                                         onChange={(e) => {
@@ -471,16 +477,16 @@ const ManagementLeave = () => {
                                         }}
                                     >
                                         <h3 style={styleLabel}>
-                                            Other leave <span style={styleCount}>{listOtherLeave?.length || 0}</span>
+                                            Other leave requests <span style={styleCount}>{listOtherLeave?.length || 0}</span>
                                         </h3>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                                             <InputSearch
-                                                width={250}
+                                                width={200}
                                                 search={search}
                                                 handleSearch={handleSearch}
                                                 placeholder="Search title, reason, ..."
                                             />
-                                            <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
+                                            <FormControl sx={{ minWidth: 120, marginLeft: '5px' }}>
                                                 <InputLabel size="small" id="demo-simple-select-label" color="secondary">
                                                     Leave Type
                                                 </InputLabel>
@@ -501,7 +507,7 @@ const ManagementLeave = () => {
                                                     ))}
                                                 </Select>
                                             </FormControl>
-                                            <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
+                                            <FormControl sx={{ minWidth: 120, marginLeft: '5px' }}>
                                                 <InputLabel size="small" id="demo-simple-select-label" color="secondary">
                                                     Status
                                                 </InputLabel>
@@ -519,10 +525,10 @@ const ManagementLeave = () => {
                                                     <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
                                                 </Select>
                                             </FormControl>
-                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
+                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="Leave Start Date"
+                                                        label="Start Date"
                                                         value={fromAll || null}
                                                         name="fromAll"
                                                         onChange={(e) => {

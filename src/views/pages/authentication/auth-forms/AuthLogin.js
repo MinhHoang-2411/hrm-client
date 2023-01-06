@@ -184,7 +184,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     variant="contained"
                                     color="secondary"
                                 >
-                                    Sign in
+                                    Login
                                 </Button>
                             </AnimateButton>
                         </Box>

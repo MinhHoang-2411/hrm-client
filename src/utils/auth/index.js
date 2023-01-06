@@ -1,5 +1,5 @@
 const AUTH_LOCAL_STORAGE_KEY = 'access_token';
-const ROLE_LOCAL_STORAGE_KEY = 'role';
+const EMPLOYEE_LOCAL_STORAGE_KEY = 'employee';
 
 const getAuth = () => {
     if (!localStorage) {
@@ -23,7 +23,7 @@ const getAuth = () => {
 };
 
 function getCurrentPermission() {
-    return localStorage.getItem(ROLE_LOCAL_STORAGE_KEY);
+    return JSON.parse(localStorage.getItem(EMPLOYEE_LOCAL_STORAGE_KEY)).position.toString();
 }
 
 export { getAuth, getCurrentPermission };
