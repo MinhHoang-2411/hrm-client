@@ -194,7 +194,7 @@ const SubmitForm = ({ ...others }) => {
 
     const showToastMessage = (param) => {
         if (param === 'success') {
-            toast.success('Submit Leave successfully', {
+            toast.success('Submit leave successfully', {
                 position: toast.POSITION.TOP_RIGHT
             });
         } else if (param === 'failed') {

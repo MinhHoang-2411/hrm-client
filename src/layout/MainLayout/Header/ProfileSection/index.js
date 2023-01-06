@@ -46,6 +46,7 @@ const ProfileSection = () => {
 
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
+    const [basicInfo, setBasicInfor] = useState({});
     /**
      * anchorRef is used on different componets and specifying one type leads to other components throwing an error
      * */
@@ -85,6 +86,9 @@ const ProfileSection = () => {
 
         prevOpen.current = open;
     }, [open]);
+    useEffect(() => {
+        setBasicInfor(JSON.parse(localStorage.getItem('employee')));
+    }, []);
 
     return (
         <>
@@ -158,12 +162,10 @@ const ProfileSection = () => {
                                             <Stack direction="row" spacing={0.5} alignItems="center">
                                                 <Typography variant="h4">Welcome,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    {localStorage.getItem('full_name')}
+                                                    {basicInfo.user.firstName} {basicInfo.user.lastName}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">
-                                                {upperCaseFirstCharacter(localStorage.getItem('role'))}
-                                            </Typography>
+                                            <Typography variant="subtitle2">{upperCaseFirstCharacter(basicInfo.position)}</Typography>
                                         </Stack>
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
