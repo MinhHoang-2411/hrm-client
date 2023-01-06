@@ -84,6 +84,8 @@ const SubmitForm = ({ ...others }) => {
     const formikRef = useRef();
     const inputRef = useRef();
     const [leaveType, setLeaveType] = useState('');
+    const [fromError, setFromError] = useState(null);
+    const [toError, setToError] = useState(null);
 
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
@@ -190,6 +192,15 @@ const SubmitForm = ({ ...others }) => {
         tmpDate[currentIndex].note = value.note;
         setDateAndLeaveTimes(tmpDate);
         handleClose();
+    };
+
+    const checkValidDate = (inDates) => {
+        try {
+            inDates?.forEach((date) => dateFormat(date.leaveDate, 'dd/mm/yyyy'));
+            return true;
+        } catch {
+            return false;
+        }
     };
 
     const showToastMessage = (param) => {
@@ -355,12 +366,17 @@ const SubmitForm = ({ ...others }) => {
                                                                 handleGetArrayDate(value, values.endDate);
                                                                 setErrorMessageDetail('');
                                                             }}
+                                                            onError={(newError) => setFromError(newError)}
                                                             onChangeRaw={(e) => e.preventDefault()}
                                                             renderInput={(params) => (
                                                                 <TextField
                                                                     {...params}
                                                                     error={touched.startDate && Boolean(errors.startDate)}
-                                                                    helperText={touched.startDate && errors.startDate}
+                                                                    helperText={
+                                                                        fromError === 'invalidDate'
+                                                                            ? 'Please follow the format dd/mm/yyyy'
+                                                                            : touched.startDate && errors.startDate
+                                                                    }
                                                                     color="secondary"
                                                                 />
                                                             )}
@@ -392,11 +408,16 @@ const SubmitForm = ({ ...others }) => {
                                                                 handleGetArrayDate(values.startDate, value);
                                                                 setErrorMessageDetail('');
                                                             }}
+                                                            onError={(newError) => setToError(newError)}
                                                             renderInput={(params) => (
                                                                 <TextField
                                                                     {...params}
                                                                     error={touched.endDate && Boolean(errors.endDate)}
-                                                                    helperText={touched.endDate && errors.endDate}
+                                                                    helperText={
+                                                                        toError === 'invalidDate'
+                                                                            ? 'Please follow the format dd/mm/yyyy'
+                                                                            : touched.endDate && errors.endDate
+                                                                    }
                                                                     color="secondary"
                                                                 />
                                                             )}
@@ -607,6 +628,7 @@ const SubmitForm = ({ ...others }) => {
                                         <ul style={{ paddingLeft: 0 }}>
                                             {values.type !== 'MATERNITY' &&
                                                 dateAndLeaveTimes?.length > 0 &&
+                                                checkValidDate(dateAndLeaveTimes) &&
                                                 dateAndLeaveTimes?.map((item, index) => {
                                                     return (
                                                         <div key={index}>
