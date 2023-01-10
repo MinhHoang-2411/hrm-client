@@ -20,7 +20,7 @@ const AssetHistory = Loadable(lazy(() => import('views/asset/History')));
 // project routing
 const ProjectDashboard = Loadable(lazy(() => import('views/project/Dashboard')));
 const ProjectList = Loadable(lazy(() => import('views/project/ProjectList')));
-const TaskList = Loadable(lazy(() => import('views/project/TaskList')));
+const WorkList = Loadable(lazy(() => import('views/project/WorkList')));
 
 // utilities routing
 const Bar = Loadable(lazy(() => import('views/utilities/Bar')));
@@ -117,8 +117,8 @@ const MainRoutes = {
                     element: <ProjectList />
                 },
                 {
-                    path: 'my-tasks',
-                    element: <TaskList />
+                    path: 'my-works',
+                    element: <WorkList />
                 }
             ]
         },

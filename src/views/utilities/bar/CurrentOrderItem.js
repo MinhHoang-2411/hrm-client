@@ -87,7 +87,7 @@ export default function CurrentOrderItem() {
                                                     id="item1-quantity"
                                                     value={count}
                                                     sx={{ height: '26', width: '40px' }}
-                                                    disableUnderline="true"
+                                                    disableUnderline={true}
                                                     inputProps={{ style: { textAlign: 'center' } }}
                                                 />
                                             </FormControl>

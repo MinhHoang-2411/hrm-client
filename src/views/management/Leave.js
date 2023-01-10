@@ -18,7 +18,8 @@ import {
     MenuItem,
     Select,
     TextField,
-    Typography
+    Typography,
+    Stack
 } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import MainCard from 'ui-component/cards/MainCard';
@@ -53,6 +54,9 @@ import '../../assets/scss/leave.scss';
 
 // image
 import forbiddenpng from 'assets/images/forbidden.png';
+
+// empty
+import Empty from 'ui-component/Empty';
 
 const styleTitle = {
     fontWeight: 'bold',
@@ -115,6 +119,10 @@ const ManagementLeave = () => {
     const [fromAll, setFromAll] = useState(null);
     const [fromOtherError, setFromOtherError] = useState(null);
     const [fromWaitingError, setFromWaitingError] = useState(null);
+    const [toWaiting, setToWaiting] = useState(null);
+    const [toAll, setToAll] = useState(null);
+    const [toOtherError, setToOtherError] = useState(null);
+    const [toWaitingError, setToWaitingError] = useState(null);
     const [basicInfo, setBasicInfor] = useState({});
 
     const handleClose = () => {
@@ -216,7 +224,8 @@ const ManagementLeave = () => {
                 const state = { ...preState };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
-                if (key === 'startDate.equals') setFromWaiting(value);
+                if (key === 'startDate.greaterThanOrEqual') setFromWaiting(value);
+                if (key === 'endDate.lessThanOrEqual') setToWaiting(value);
                 return state;
             });
         } else {
@@ -224,7 +233,8 @@ const ManagementLeave = () => {
                 const state = { ...preState };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
-                if (key === 'startDate.equals') setFromAll(value);
+                if (key === 'startDate.greaterThanOrEqual') setFromAll(value);
+                if (key === 'endDate.lessThanOrEqual') setToAll(value);
                 return state;
             });
         }
@@ -342,6 +352,53 @@ const ManagementLeave = () => {
         [listLeave, listLeaveWaiting]
     );
 
+    const handleClearFilter = (type) => {
+        if (type == 'waiting') {
+            setParamsWaiting((preState) => {
+                const state = {
+                    page: 0,
+                    size: 20,
+                    startDate: null,
+                    endDate: null
+                };
+                return state;
+            });
+        } else {
+            setParamsAll((preState) => {
+                const state = {
+                    page: 0,
+                    size: 20,
+                    startDate: null,
+                    endDate: null
+                };
+                return state;
+            });
+        }
+    };
+
+    const isShowFilterMessage = (type) => {
+        if (type === 'waiting') {
+            if (
+                (paramsWaiting['title.contains'] && paramsWaiting['title.contains'] !== '') ||
+                (paramsWaiting['type.equals'] && paramsWaiting['type.equals'] !== '') ||
+                (paramsWaiting['startDate.greaterThanOrEqual'] && paramsWaiting['startDate.greaterThanOrEqual'] !== '') ||
+                (paramsWaiting['endDate.lessThanOrEqual'] && paramsWaiting['endDate.lessThanOrEqual'] !== '')
+            )
+                return true;
+            else return false;
+        } else {
+            if (
+                (paramsAll['title.contains'] && paramsAll['title.contains'] !== '') ||
+                (paramsAll['type.equals'] && paramsAll['type.equals'] !== '') ||
+                (paramsAll['startDate.greaterThanOrEqual'] && paramsAll['startDate.greaterThanOrEqual'] !== '') ||
+                (paramsAll['endDate.lessThanOrEqual'] && paramsAll['endDate.lessThanOrEqual'] !== '') ||
+                (paramsAll['status.equals'] && paramsAll['status.equals'] !== '')
+            )
+                return true;
+            else return false;
+        }
+    };
+
     useEffect(() => {
         dispatch(leaveActions.getListWaiting(paramsWaiting));
         dispatch(leaveActions.fetchDataForManager(paramsAll));
@@ -370,95 +427,117 @@ const ManagementLeave = () => {
                         <Grid container spacing={2} columns={16}>
                             <Grid item xs={8}>
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '5px' }}>
                                         <h3 style={styleLabel}>
                                             Waiting leave requests <span style={styleCount}>{listLeaveWaiting?.length || 0}</span>
                                         </h3>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                alignItems: 'flex-start',
-                                                marginBottom: '10.5px',
-                                                width: '99%',
-                                                marginLeft: 'auto',
-                                                marginRight: 'auto'
-                                            }}
-                                        >
-                                            <InputSearch
-                                                width={250}
-                                                search={searchListWaiting}
-                                                handleSearch={(value) => handleSearch(value, 'waiting')}
-                                                placeholder="Search title, reason, ..."
-                                            />
-                                            <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
-                                                <InputLabel size="small" id="demo-simple-select-label" color="secondary">
-                                                    Leave Type
-                                                </InputLabel>
-                                                <Select
-                                                    size="small"
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={paramsAll?.['type.equals']}
-                                                    onChange={(e) => handleFilter('type.equals', e.target.value, 'waiting')}
-                                                    label="Type"
-                                                    color="secondary"
-                                                >
-                                                    <MenuItem size="small" value={'all'}>
-                                                        All
-                                                    </MenuItem>
-                                                    {LEAVE_TYPE?.map((item, index) => (
-                                                        <MenuItem key={index} value={item} size="small">
-                                                            {upperCaseFirstCharacter(item)}
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                                            <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px' }}>
+                                                <InputSearch
+                                                    width={'520px'}
+                                                    search={searchListWaiting}
+                                                    handleSearch={(value) => handleSearch(value, 'pending')}
+                                                    placeholder="Search..."
+                                                />
+                                            </Stack>
+                                            <Box>
+                                                <FormControl sx={{ minWidth: 150, marginTop: '10px' }}>
+                                                    <InputLabel size="small" color="secondary" id="demo-simple-select-label">
+                                                        Leave type
+                                                    </InputLabel>
+                                                    <Select
+                                                        size="small"
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={paramsAll?.['type.equals']}
+                                                        onChange={(e) => handleFilter('type.equals', e.target.value, 'waiting')}
+                                                        label="Type"
+                                                        color="secondary"
+                                                    >
+                                                        <MenuItem size="small" value={'all'}>
+                                                            All
                                                         </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DatePicker
-                                                        label="Start Date"
-                                                        value={fromWaiting || null}
-                                                        name="fromWaiting"
-                                                        onChange={(e) => {
-                                                            handleFilter('startDate.equals', formatDateMaterialForFilter(e), 'waiting');
-                                                        }}
-                                                        inputFormat="DD/MM/YYYY"
-                                                        onError={(newError) => setFromWaitingError(newError)}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                size="small"
-                                                                color="secondary"
-                                                                {...params}
-                                                                helperText={fromWaitingError ? 'Please follow the format dd/mm/yyyy' : ''}
-                                                            />
-                                                        )}
-                                                        style={{ maxHeight: '70%' }}
-                                                    />
-                                                </LocalizationProvider>
-                                            </FormControl>
+                                                        {LEAVE_TYPE?.map((item, index) => (
+                                                            <MenuItem key={index} value={item} size="small">
+                                                                {upperCaseFirstCharacter(item)}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                                <FormControl
+                                                    sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', marginTop: '10px' }}
+                                                    size="small"
+                                                >
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DatePicker
+                                                            label="Start Date"
+                                                            value={fromWaiting || null}
+                                                            name="fromWaiting"
+                                                            onChange={(e) => {
+                                                                handleFilter(
+                                                                    'startDate.greaterThanOrEqual',
+                                                                    formatDateMaterialForFilter(e),
+                                                                    'waiting'
+                                                                );
+                                                            }}
+                                                            inputFormat="DD/MM/YYYY"
+                                                            onError={(newError) => setFromWaitingError(newError)}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    size="small"
+                                                                    color="secondary"
+                                                                    {...params}
+                                                                    helperText={
+                                                                        fromWaitingError ? 'Please follow the format dd/mm/yyyy' : ''
+                                                                    }
+                                                                />
+                                                            )}
+                                                            style={{ maxHeight: '70%' }}
+                                                        />
+                                                    </LocalizationProvider>
+                                                </FormControl>
+                                                <FormControl
+                                                    sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', marginTop: '10px' }}
+                                                    size="small"
+                                                >
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <DatePicker
+                                                            label="End Date"
+                                                            value={toWaiting || null}
+                                                            name="toWaiting"
+                                                            onChange={(e) => {
+                                                                handleFilter(
+                                                                    'endDate.lessThanOrEqual',
+                                                                    formatDateMaterialForFilter(e),
+                                                                    'waiting'
+                                                                );
+                                                            }}
+                                                            inputFormat="DD/MM/YYYY"
+                                                            onError={(newError) => setToWaitingError(newError)}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    size="small"
+                                                                    color="secondary"
+                                                                    {...params}
+                                                                    helperText={toWaitingError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                                />
+                                                            )}
+                                                            style={{ maxHeight: '70%' }}
+                                                        />
+                                                    </LocalizationProvider>
+                                                </FormControl>
+                                            </Box>
                                         </Box>
                                     </Box>
                                     <Box>
                                         {listLeaveWaiting?.length ? (
                                             renderList(listLeaveWaiting)
                                         ) : (
-                                            <div>
-                                                <Box>
-                                                    <center>
-                                                        <ErrorOutlineIcon
-                                                            sx={{
-                                                                width: 100,
-                                                                height: 100,
-                                                                marginBottom: '4px',
-                                                                marginTop: '160px',
-                                                                color: '#E0E0E0'
-                                                            }}
-                                                            fontSize="medium"
-                                                        />
-                                                        <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
-                                                    </center>
-                                                </Box>
-                                            </div>
+                                            <Empty
+                                                title={
+                                                    isShowFilterMessage('waiting') ? 'No results matched your search' : 'No data available'
+                                                }
+                                            />
                                         )}
                                     </Box>
                                 </Box>
@@ -469,7 +548,6 @@ const ManagementLeave = () => {
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            paddingRight: '5px',
                                             marginBottom: '15px',
                                             width: '99%',
                                             marginLeft: 'auto',
@@ -479,14 +557,16 @@ const ManagementLeave = () => {
                                         <h3 style={styleLabel}>
                                             Other leave requests <span style={styleCount}>{listOtherLeave?.length || 0}</span>
                                         </h3>
-                                        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '12.5px' }}>
                                             <InputSearch
-                                                width={200}
+                                                width={'595px'}
                                                 search={search}
                                                 handleSearch={handleSearch}
                                                 placeholder="Search title, reason, ..."
                                             />
-                                            <FormControl sx={{ minWidth: 120, marginLeft: '5px' }}>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                            <FormControl sx={{ minWidth: 120 }}>
                                                 <InputLabel size="small" id="demo-simple-select-label" color="secondary">
                                                     Leave Type
                                                 </InputLabel>
@@ -532,7 +612,7 @@ const ManagementLeave = () => {
                                                         value={fromAll || null}
                                                         name="fromAll"
                                                         onChange={(e) => {
-                                                            handleFilter('startDate.equals', formatDateMaterialForFilter(e));
+                                                            handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e));
                                                         }}
                                                         onError={(newError) => setFromOtherError(newError)}
                                                         renderInput={(params) => (
@@ -549,29 +629,48 @@ const ManagementLeave = () => {
                                                     />
                                                 </LocalizationProvider>
                                             </FormControl>
+                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <DatePicker
+                                                        label="To Date"
+                                                        value={toAll || null}
+                                                        name="toAll"
+                                                        onChange={(e) => {
+                                                            handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e));
+                                                        }}
+                                                        onError={(newError) => setToOtherError(newError)}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                size="small"
+                                                                color="secondary"
+                                                                {...params}
+                                                                className="input-date-picker"
+                                                                helperText={toOtherError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                            />
+                                                        )}
+                                                        inputFormat="DD/MM/YYYY"
+                                                        style={{ maxHeight: '70%' }}
+                                                    />
+                                                </LocalizationProvider>
+                                            </FormControl>
+                                            {/* <Button
+                                                sx={{ width: { xs: '100%', md: 90 }, marginLeft: '5px', height: '100%' }}
+                                                size="medium"
+                                                variant="contained"
+                                                onClick={(e) => {
+                                                    handleClearFilter('other');
+                                                }}
+                                                color="secondary"
+                                            >
+                                                Clear
+                                            </Button> */}
                                         </Box>
                                     </Box>
                                     <Box>
                                         {listOtherLeave?.length ? (
                                             renderList(listOtherLeave)
                                         ) : (
-                                            <div>
-                                                <Box>
-                                                    <center>
-                                                        <ErrorOutlineIcon
-                                                            sx={{
-                                                                width: 100,
-                                                                height: 100,
-                                                                marginBottom: '4px',
-                                                                marginTop: '160px',
-                                                                color: '#E0E0E0'
-                                                            }}
-                                                            fontSize="medium"
-                                                        />
-                                                        <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
-                                                    </center>
-                                                </Box>
-                                            </div>
+                                            <Empty title={isShowFilterMessage() ? 'No results matched your search' : 'No data available'} />
                                         )}
                                     </Box>
                                 </Box>
@@ -583,7 +682,7 @@ const ManagementLeave = () => {
                                     <DialogContent>
                                         <Box>
                                             <span style={{ fontSize: '15px' }}>
-                                                Would you like to <b>{title}</b> this leave?
+                                                Are you sure to <b>{title}</b> this leave?
                                             </span>
                                         </Box>
                                     </DialogContent>

@@ -8,9 +8,9 @@ import underContruction3 from 'assets/images/under-contruction/under-contruction
 // scss
 import '../../assets/scss/contruction.scss';
 
-const TaskList = ({ ...others }) => {
+const WorkList = ({ ...others }) => {
     return (
-        <MainCard title="My Tasks">
+        <MainCard title="My Works">
             <div>
                 <Paper>
                     <CardContent>
@@ -42,4 +42,4 @@ const TaskList = ({ ...others }) => {
     );
 };
 
-export default TaskList;
+export default WorkList;

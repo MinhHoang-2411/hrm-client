@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 // material-ui
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
@@ -20,6 +20,7 @@ const NavItem = ({ item, level }) => {
     const dispatch = useAppDispatch();
     const customization = useAppSelector((state) => state.action);
     const matchesSM = useMediaQuery(theme.breakpoints.down('lg'));
+    const { pathname } = useLocation();
 
     const Icon = item.icon;
     const itemIcon = item?.icon ? (
@@ -45,6 +46,7 @@ const NavItem = ({ item, level }) => {
     if (item?.external) {
         listItemProps = { component: 'a', href: item.url, target: itemTarget };
     }
+    const isSelected = item?.url == pathname;
 
     const itemHandler = (id) => {
         dispatch(
@@ -75,7 +77,7 @@ const NavItem = ({ item, level }) => {
             );
         }
         // eslint-disable-next-line
-    }, []);
+    }, [pathname]);
 
     return (
         <ListItemButton
@@ -89,13 +91,13 @@ const NavItem = ({ item, level }) => {
                 py: level > 1 ? 1 : 1.25,
                 pl: `${level * 24}px`
             }}
-            selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
+            selected={isSelected}
             onClick={() => itemHandler(item.id)}
         >
             <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
             <ListItemText
                 primary={
-                    <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color="inherit">
+                    <Typography variant={isSelected ? 'h5' : 'body1'} color="inherit">
                         {item.title}
                     </Typography>
                 }

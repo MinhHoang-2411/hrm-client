@@ -29,10 +29,10 @@ const project = {
             target: false
         },
         {
-            id: 'task-list',
-            title: 'My Tasks',
+            id: 'work-list',
+            title: 'My Works',
             type: 'item',
-            url: '/project/my-tasks',
+            url: '/project/my-works',
             icon: icons.IconSubtask,
             breadcrumbs: false,
             target: false
