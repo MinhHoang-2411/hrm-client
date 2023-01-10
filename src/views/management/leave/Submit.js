@@ -6,11 +6,11 @@ import underContruction2 from 'assets/images/under-contruction/under-contruction
 import underContruction3 from 'assets/images/under-contruction/under-contruction-3.svg';
 
 // scss
-import '../../assets/scss/contruction.scss';
+import '../../../assets/scss/contruction.scss';
 
-const TaskList = ({ ...others }) => {
+const Submit = () => {
     return (
-        <MainCard title="My Tasks">
+        <MainCard title="Submit for employee">
             <div>
                 <Paper>
                     <CardContent>
@@ -41,5 +41,4 @@ const TaskList = ({ ...others }) => {
         </MainCard>
     );
 };
-
-export default TaskList;
+export default Submit;

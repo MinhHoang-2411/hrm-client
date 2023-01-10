@@ -49,7 +49,7 @@ import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/d
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
-import '../../assets/scss/leave.scss';
+import '../../../assets/scss/leave.scss';
 
 // image
 import forbiddenpng from 'assets/images/forbidden.png';
@@ -76,7 +76,7 @@ const styleCount = {
 import { STYLE_MODAL } from 'constants/style';
 
 // model
-import ModelLeaveDetail from '../leave/Modal/model-leave-detail';
+import ModelLeaveDetail from '../../leave/Modal/model-leave-detail';
 
 const ManagementLeave = () => {
     const dispatch = useAppDispatch();
