@@ -28,6 +28,8 @@ import { InputSearch } from 'ui-component/filter/input-search';
 // convert date
 import { formatDateMaterialForFilter } from 'utils/format/date';
 
+import { fetchMoreCondition } from 'utils/pagination';
+
 // react
 import { useCallback, useEffect, useState } from 'react';
 
@@ -58,6 +60,9 @@ import forbiddenpng from 'assets/images/forbidden.png';
 // empty
 import Empty from 'ui-component/Empty';
 
+// infinite scroll
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 const styleTitle = {
     fontWeight: 'bold',
     marginBottom: '10px',
@@ -85,29 +90,38 @@ import ModelLeaveDetail from '../leave/Modal/model-leave-detail';
 const ManagementLeave = () => {
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
-        page: 0,
-        size: 20,
-        startDate: null,
-        endDate: null
+        size: 2,
+        page: 0
     });
     const [paramsWaiting, setParamsWaiting] = useState({
-        page: 0,
-        size: 20,
-        startDate: null,
-        endDate: null
+        size: 2,
+        page: 0
     });
+    const [page, setPage] = useState(0);
+    const [pageWaiting, setPageWaiting] = useState(0);
     const [search, setSearch] = useState('');
     const [searchListWaiting, setSearchListWaiting] = useState('');
     const { listData: listLeave } = useGetAllList(paramsAll, leaveActions, 'leave');
 
+    // const {
+    //     listDataWaiting: listLeavePending,
+    //     loadMorePending,
+    //     loadMore,
+    //     reloadList,
+    //     loadingPending,
+    //     loading,
+    //     pagination,
+    //     paginationPending
+    // } = useAppSelector((state) => state.leave);
+
     const listLeaveForManager = useAppSelector((state) => state.leave.listDataManagement);
-    const listOtherLeave = listLeaveForManager?.filter(
-        (item) =>
-            (item?.status === 'CONFIRMED' || item?.status === 'REJECTED') &&
-            item?.assignTo === JSON.parse(localStorage.getItem('employee')).id
-    );
     const listLeaveWaiting = useAppSelector((state) => state.leave.listDataWaiting);
     const reloadList = useAppSelector((state) => state.leave.reloadList);
+    const loadMore = useAppSelector((state) => state.leave.loadMore);
+    const loadMoreWaiting = useAppSelector((state) => state.leave.loadMoreWaiting);
+    const pagination = useAppSelector((state) => state.leave.pagination);
+    const paginationManager = useAppSelector((state) => state.leave.paginationManager);
+    const paginationWaiting = useAppSelector((state) => state.leave.paginationWaiting);
     const isLeaveWaiting = (status) => status == 'WAITING';
     const [openModelConfirm, setOpenModelConfirm] = useState(false);
     const [action, setAction] = useState('');
@@ -216,12 +230,14 @@ const ManagementLeave = () => {
         if (type == 'waiting') setSearchListWaiting(value);
         else setSearch(value);
         debounceSearch(value, type);
+        setPage(0);
+        setPageWaiting(0);
     };
 
     const handleFilter = (key, value, type) => {
         if (type == 'waiting') {
             setParamsWaiting((preState) => {
-                const state = { ...preState };
+                const state = { ...preState, page: 0 };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
                 if (key === 'startDate.greaterThanOrEqual') setFromWaiting(value);
@@ -230,7 +246,7 @@ const ManagementLeave = () => {
             });
         } else {
             setParamsAll((preState) => {
-                const state = { ...preState };
+                const state = { ...preState, page: 0 };
                 if (value === 'all') delete state[key];
                 else state[key] = value;
                 if (key === 'startDate.greaterThanOrEqual') setFromAll(value);
@@ -238,6 +254,8 @@ const ManagementLeave = () => {
                 return state;
             });
         }
+        setPage(0);
+        setPageWaiting(0);
     };
 
     const showDetail = (leaveDetail) => {
@@ -352,6 +370,19 @@ const ManagementLeave = () => {
         [listLeave, listLeaveWaiting]
     );
 
+    const handleFetchMoreWaitingLeave = () => {
+        console.log('condition: ', fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting));
+        if (fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting)) {
+            dispatch(leaveActions.loadMoreWaiting({ ...paramsWaiting, page: pageWaiting + 1 }));
+            setPageWaiting(pageWaiting + 1);
+        }
+    };
+
+    const handleFetchMoreLeave = () => {
+        if (fetchMoreCondition(page, pagination, paramsAll)) dispatch(leaveActions.loadMore({ ...paramsAll, page: page + 1 }));
+        setPage(page + 1);
+    };
+
     const handleClearFilter = (type) => {
         if (type == 'waiting') {
             setParamsWaiting((preState) => {
@@ -429,14 +460,14 @@ const ManagementLeave = () => {
                                 <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '5px' }}>
                                         <h3 style={styleLabel}>
-                                            Waiting leave requests <span style={styleCount}>{listLeaveWaiting?.length || 0}</span>
+                                            Waiting leave requests <span style={styleCount}>{paginationWaiting?.totalCount || 0}</span>
                                         </h3>
                                         <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                                             <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px' }}>
                                                 <InputSearch
                                                     width={'520px'}
                                                     search={searchListWaiting}
-                                                    handleSearch={(value) => handleSearch(value, 'pending')}
+                                                    handleSearch={(value) => handleSearch(value, 'waiting')}
                                                     placeholder="Search..."
                                                 />
                                             </Stack>
@@ -529,7 +560,14 @@ const ManagementLeave = () => {
                                             </Box>
                                         </Box>
                                     </Box>
-                                    <Box>
+                                    <InfiniteScroll
+                                        loader={loadMoreWaiting ? null : null}
+                                        height="80vh"
+                                        hasMore={fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting)}
+                                        dataLength={listLeaveWaiting.length}
+                                        next={handleFetchMoreWaitingLeave}
+                                        scrollThreshold="1px"
+                                    >
                                         {listLeaveWaiting?.length ? (
                                             renderList(listLeaveWaiting)
                                         ) : (
@@ -539,7 +577,7 @@ const ManagementLeave = () => {
                                                 }
                                             />
                                         )}
-                                    </Box>
+                                    </InfiniteScroll>
                                 </Box>
                             </Grid>
                             <Grid item xs={8}>
@@ -555,7 +593,7 @@ const ManagementLeave = () => {
                                         }}
                                     >
                                         <h3 style={styleLabel}>
-                                            Other leave requests <span style={styleCount}>{listOtherLeave?.length || 0}</span>
+                                            Other leave requests <span style={styleCount}>{paginationManager?.totalCount || 0}</span>
                                         </h3>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '12.5px' }}>
                                             <InputSearch
@@ -666,13 +704,20 @@ const ManagementLeave = () => {
                                             </Button> */}
                                         </Box>
                                     </Box>
-                                    <Box>
-                                        {listOtherLeave?.length ? (
-                                            renderList(listOtherLeave)
+                                    <InfiniteScroll
+                                        loader={loadMore ? null : null}
+                                        height="70vh"
+                                        hasMore={fetchMoreCondition(page, pagination, paramsAll)}
+                                        dataLength={listLeaveForManager.length}
+                                        next={handleFetchMoreLeave}
+                                        scrollThreshold="1px"
+                                    >
+                                        {listLeaveForManager?.length ? (
+                                            renderList(listLeaveForManager)
                                         ) : (
                                             <Empty title={isShowFilterMessage() ? 'No results matched your search' : 'No data available'} />
                                         )}
-                                    </Box>
+                                    </InfiniteScroll>
                                 </Box>
                             </Grid>
 

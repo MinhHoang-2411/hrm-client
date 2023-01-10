@@ -17,7 +17,10 @@ const initialState = {
     listDataWaiting: [],
     listDataManagement: [],
     pagination: undefined,
-    paginationWaiting: undefined
+    paginationWaiting: undefined,
+    paginationManager: undefined,
+    loadMore: false,
+    loadMoreWaiting: false
 };
 
 const leaveSlice = createSlice({
@@ -92,7 +95,7 @@ const leaveSlice = createSlice({
         // LIST LEAVE FOR MANAGER
         fetchDataForManager(state, action) {
             state.loading = true;
-            state.pagination = {
+            state.paginationManager = {
                 size: action.payload.size,
                 page: action.payload.page
             };
@@ -100,8 +103,8 @@ const leaveSlice = createSlice({
         fetchDataForManagerSuccess(state, action) {
             state.loading = false;
             state.listDataManagement = action.payload.content;
-            state.pagination = {
-                ...state.pagination,
+            state.paginationManager = {
+                ...state.paginationManager,
                 totalCount: action?.payload?.totalElements
             };
         },
@@ -143,6 +146,32 @@ const leaveSlice = createSlice({
         },
         confirmLeaveFail(state, action) {
             state.loadingConfirm = false;
+        },
+
+        // LOAD MORE WAITING
+        loadMoreWaiting(state, action) {
+            state.loadMoreWaiting = true;
+        },
+        loadMoreWaitingSuccess(state, action) {
+            state.listDataWaiting = [...state.listDataWaiting, ...action.payload.content];
+            state.loadMoreWaiting = false;
+        },
+        loadMoreWaitingFail(state, action) {
+            state.loadMoreWaiting = false;
+            console.error(action.payload);
+        },
+
+        // LOAD MORE
+        loadMore(state, action) {
+            state.loadMore = true;
+        },
+        loadMoreSuccess(state, action) {
+            state.listDataManagement = [...state.listDataManagement, ...action.payload.content];
+            state.loadMore = false;
+        },
+        loadMoreFail(state, action) {
+            state.loadMore = false;
+            console.error(action.payload);
         }
     }
 });

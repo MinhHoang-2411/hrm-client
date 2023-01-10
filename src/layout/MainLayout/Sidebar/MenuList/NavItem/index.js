@@ -21,6 +21,7 @@ const NavItem = ({ item, level }) => {
     const customization = useAppSelector((state) => state.action);
     const matchesSM = useMediaQuery(theme.breakpoints.down('lg'));
     const { pathname } = useLocation();
+    const { countMenu } = customization;
 
     const Icon = item.icon;
     const itemIcon = item?.icon ? (
@@ -114,7 +115,7 @@ const NavItem = ({ item, level }) => {
                     color={item.chip.color}
                     variant={item.chip.variant}
                     size={item.chip.size}
-                    label={item.chip.label}
+                    label={item.chip.label || countMenu[item?.chip?.data] || 0}
                     avatar={item.chip.avatar && <Avatar>{item.chip.avatar}</Avatar>}
                 />
             )}

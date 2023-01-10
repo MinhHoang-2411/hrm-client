@@ -19,7 +19,11 @@ const management = {
             url: '/management/leave',
             icon: icons.IconCalendar,
             breadcrumbs: false,
-            permissions: 'MANAGER'
+            permissions: 'MANAGER',
+            chip: {
+                data: 'leave',
+                size: 'small'
+            }
         }
     ]
 };
