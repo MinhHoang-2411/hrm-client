@@ -13,13 +13,28 @@ const management = {
     permissions: 'MANAGER',
     children: [
         {
-            id: 'management-leave',
+            id: 'leave',
             title: 'Leave',
-            type: 'item',
-            url: '/management/leave',
+            type: 'collapse',
             icon: icons.IconCalendar,
             breadcrumbs: false,
-            permissions: 'MANAGER'
+            permissions: 'MANAGER',
+            children: [
+                {
+                    id: 'assignment',
+                    title: 'Assignment',
+                    type: 'item',
+                    url: '/management/leave/assignment',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'submit',
+                    title: 'Submit for employee',
+                    type: 'item',
+                    url: '/management/leave/submit',
+                    breadcrumbs: false
+                }
+            ]
         }
     ]
 };

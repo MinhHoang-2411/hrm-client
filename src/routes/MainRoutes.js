@@ -20,7 +20,7 @@ const AssetHistory = Loadable(lazy(() => import('views/asset/History')));
 // project routing
 const ProjectDashboard = Loadable(lazy(() => import('views/project/Dashboard')));
 const ProjectList = Loadable(lazy(() => import('views/project/ProjectList')));
-const TaskList = Loadable(lazy(() => import('views/project/TaskList')));
+const WorkList = Loadable(lazy(() => import('views/project/WorkList')));
 
 // utilities routing
 const Bar = Loadable(lazy(() => import('views/utilities/Bar')));
@@ -36,8 +36,9 @@ const Booking = Loadable(lazy(() => import('views/meeting/Booking')));
 const Profile = Loadable(lazy(() => import('views/personal/Profile')));
 const Setting = Loadable(lazy(() => import('views/personal/Setting')));
 
-// management routing
-const ManagementLeave = Loadable(lazy(() => import('views/management/Leave')));
+// management leave routing
+const ManagementLeave = Loadable(lazy(() => import('views/management/leave/Assignment')));
+const Submit = Loadable(lazy(() => import('views/management/leave/Submit')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -117,8 +118,8 @@ const MainRoutes = {
                     element: <ProjectList />
                 },
                 {
-                    path: 'my-tasks',
-                    element: <TaskList />
+                    path: 'my-works',
+                    element: <WorkList />
                 }
             ]
         },
@@ -162,8 +163,18 @@ const MainRoutes = {
             children: [
                 {
                     path: 'leave',
-                    //element: hasPermission('MANAGER') ? <ManagementLeave /> : <Navigate to="/" />
-                    element: <ManagementLeave />
+                    children: [
+                        {
+                            path: 'assignment',
+                            //element: hasPermission('MANAGER') ? <ManagementLeave /> : <Navigate to="/dashboard" />
+                            element: <ManagementLeave />
+                        },
+                        {
+                            path: 'submit',
+                            //element: hasPermission('MANAGER') ? <Submit /> : <Navigate to="/dashboard" />
+                            element: <Submit />
+                        }
+                    ]
                 }
             ]
         }
