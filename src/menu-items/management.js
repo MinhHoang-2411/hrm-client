@@ -21,10 +21,10 @@ const management = {
             permissions: 'MANAGER',
             children: [
                 {
-                    id: 'assignment',
-                    title: 'Assignment',
+                    id: 'monitor',
+                    title: 'Monitor',
                     type: 'item',
-                    url: '/management/leave/assignment',
+                    url: '/management/leave/monitor',
                     breadcrumbs: false,
                     chip: {
                         data: 'leave',
