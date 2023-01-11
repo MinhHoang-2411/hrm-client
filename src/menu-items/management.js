@@ -25,7 +25,11 @@ const management = {
                     title: 'Assignment',
                     type: 'item',
                     url: '/management/leave/assignment',
-                    breadcrumbs: false
+                    breadcrumbs: false,
+                    chip: {
+                        data: 'leave',
+                        size: 'small'
+                    }
                 },
                 {
                     id: 'submit',

@@ -19,7 +19,6 @@ import { useTheme } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import CheckIcon from '@mui/icons-material/Check';
 
 // third party
 import { Formik } from 'formik';
@@ -33,7 +32,7 @@ import dateFormat from 'dateformat';
 
 // utils
 import { gridSpacing } from 'store/constant';
-import { getDatesInRange } from 'utils/date-time';
+import { getDatesInRange, addMonths } from 'utils/date-time';
 
 // api leave
 import { getLeaveCount } from 'api/leave';
@@ -166,7 +165,7 @@ const SubmitForm = ({ ...others }) => {
     };
 
     const handleSubmit = (value) => {
-        if (weekendAndHolidayFilter(dateAndLeaveTimes).length === 0) {
+        if (weekendAndHolidayFilter(dateAndLeaveTimes).length === 0 && leaveType !== 'MATERNITY') {
             setErrorMessageDetail('Invalid leave date');
         } else if (weekendAndHolidayFilter(dateAndLeaveTimes).length > 5 && leaveType !== 'MATERNITY') {
             setErrorMessageDetail('A leave cannot exceed 5 working days.');
@@ -217,6 +216,12 @@ const SubmitForm = ({ ...others }) => {
 
     const handleGetLeaveCount = async () => {
         return await getLeaveCount();
+    };
+
+    const setDate = (date, values) => {
+        if (leaveType === 'MATERNITY') {
+            formikRef.current?.setFieldValue('endDate', addMonths(date, 6));
+        }
     };
 
     useEffect(() => {
@@ -326,6 +331,7 @@ const SubmitForm = ({ ...others }) => {
                                                         onChange={(event) => {
                                                             setFieldValue('type', event.target.value);
                                                             setLeaveType(event.target.value);
+                                                            setDate(values.startDate, values);
                                                         }}
                                                         error={touched.type && Boolean(errors.type)}
                                                         className="form-input"
@@ -363,6 +369,7 @@ const SubmitForm = ({ ...others }) => {
                                                             name="startDate"
                                                             onChange={(value) => {
                                                                 setFieldValue('startDate', value);
+                                                                setDate(value, values);
                                                                 handleGetArrayDate(value, values.endDate);
                                                                 setErrorMessageDetail('');
                                                             }}
@@ -542,12 +549,12 @@ const SubmitForm = ({ ...others }) => {
                                         {leaveUnUser === 0 ? (
                                             <Box>
                                                 <span style={{ fontSize: '15px' }}>
-                                                    You have used up your leave for this year. Would you like to submit your leave?
+                                                    You have used up your leave for this year. Would you like to submit this leave?
                                                 </span>
                                             </Box>
                                         ) : (
                                             <Box>
-                                                <span style={{ fontSize: '15px' }}>Would you like to submit your leave?</span>
+                                                <span style={{ fontSize: '15px' }}>Are you sure to submit this leave?</span>
                                             </Box>
                                         )}
                                     </DialogContent>
@@ -741,6 +748,7 @@ const SubmitForm = ({ ...others }) => {
                                     color="secondary"
                                     error={touched.note && Boolean(errors.note)}
                                     helperText={touched.note && errors.note}
+                                    style={{ marginTop: '5px' }}
                                 />
                             </DialogContent>
                             <DialogActions>

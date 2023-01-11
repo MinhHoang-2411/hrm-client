@@ -2,6 +2,7 @@ import { submitLeave, getAll, getAllHoliday, cancelLeave, rejectLeave, confirmLe
 import { all, call, fork, put, takeEvery, takeLatest, take, delay } from 'redux-saga/effects';
 import { leaveActions } from './leaveSlice';
 import { alertActions } from '../alert/alertSlice';
+import { actionActions } from 'store/action/actionSlice';
 
 function* handleSubmit(action) {
     try {
@@ -43,6 +44,7 @@ function* handleCancelLeave(action) {
         yield call(cancelLeave, params);
 
         yield put(leaveActions.cancelLeaveSuccess());
+        yield put(actionActions.minusCountMenu('leave'));
         yield put(
             alertActions.showAlert({
                 text: 'Cancel leave successfully',
@@ -66,6 +68,8 @@ function* handleRejectLeave(action) {
         yield call(rejectLeave, params);
 
         yield put(leaveActions.rejectLeaveSuccess());
+        yield put(actionActions.minusCountMenu('leave'));
+
         yield put(
             alertActions.showAlert({
                 text: 'Reject leave successfully',
@@ -89,6 +93,7 @@ function* handleConfirmLeave(action) {
         yield call(confirmLeave, params);
 
         yield put(leaveActions.confirmLeaveSuccess());
+        yield put(actionActions.minusCountMenu('leave'));
         yield put(
             alertActions.showAlert({
                 text: 'Confirm leave successfully',
@@ -124,11 +129,41 @@ function* handleGetListWaiting(action) {
 function* handleGetListLeaveForManager(action) {
     try {
         const params = action.payload;
+        const assignTo = JSON.parse(localStorage.getItem('employee')).id;
+        params['assignTo.equals'] = assignTo;
+        params['status.in'] = 'REJECTED,CONFIRMED';
         params['sort'] = 'lastModifiedDate,DESC';
         const response = yield call(getAllLeaveForManager, params);
         yield put(leaveActions.fetchDataForManagerSuccess(response.data));
     } catch (error) {
         yield put(leaveActions.fetchDataForManagerFail('An error occurred, please try again'));
+    }
+}
+
+function* handleLoadMoreWaiting(action) {
+    try {
+        const params = action.payload;
+        const assignTo = JSON.parse(localStorage.getItem('employee')).id;
+        params['assignTo.equals'] = assignTo;
+        params['status.equals'] = 'WAITING';
+        params['sort'] = 'lastModifiedDate,DESC';
+        const response = yield call(getAllLeaveForManager, params);
+
+        yield put(leaveActions.loadMoreWaitingSuccess(response.data));
+    } catch (error) {
+        yield put(leaveActions.loadMoreWaitingFail('An error occurred, please try again'));
+    }
+}
+
+function* handleLoadMore(action) {
+    try {
+        const params = action.payload;
+        params['sort'] = 'lastModifiedDate,DESC';
+        const response = yield call(getAllLeaveForManager, params);
+
+        yield put(leaveActions.loadMoreSuccess(response.data));
+    } catch (error) {
+        yield put(leaveActions.loadMoreFail('An error occurred, please try again'));
     }
 }
 
@@ -141,7 +176,9 @@ function* watchFlow() {
         takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting),
         takeLatest(leaveActions.confirmLeave.type, handleConfirmLeave),
         takeLatest(leaveActions.rejectLeave.type, handleRejectLeave),
-        takeLatest(leaveActions.fetchDataForManager.type, handleGetListLeaveForManager)
+        takeLatest(leaveActions.fetchDataForManager.type, handleGetListLeaveForManager),
+        takeLatest(leaveActions.loadMoreWaiting.type, handleLoadMoreWaiting),
+        takeLatest(leaveActions.loadMore.type, handleLoadMore)
     ]);
 }
 

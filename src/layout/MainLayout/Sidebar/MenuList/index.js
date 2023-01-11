@@ -6,9 +6,17 @@ import NavGroup from './NavGroup';
 import menuItem from 'menu-items';
 import { hasPermission } from 'utils/permission';
 
+import { useEffect } from 'react';
+import { useAppDispatch } from 'app/hooks';
+import { actionActions } from 'store/action/actionSlice';
+
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(actionActions.getCountMenu());
+    }, []);
     const navItems = menuItem.items.map((item) => {
         switch (item.type) {
             case 'group':

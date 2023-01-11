@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
 import Modal from '@mui/material/Modal';
 
 // icon
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import InfoIcon from '@mui/icons-material/Info';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 // format
@@ -40,6 +40,9 @@ import { STYLE_MODAL } from 'constants/style';
 import ModelLeaveDetail from '../Modal/model-leave-detail';
 import ModelCancelLeave from '../Modal/model-cancel-leave';
 
+// empty
+import Empty from 'ui-component/Empty';
+
 const headCells = [
     {
         id: 'dropdown',
@@ -52,23 +55,7 @@ const headCells = [
         id: 'createdDate',
         align: 'left',
         disablePadding: false,
-        label: 'Date Submitted',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'from',
-        align: 'left',
-        disablePadding: false,
-        label: 'From',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'to',
-        align: 'left',
-        disablePadding: false,
-        label: 'To',
+        label: 'Submitted Date',
         fontSize: '15px',
         paddingLeft: '10px'
     },
@@ -85,6 +72,22 @@ const headCells = [
         align: 'left',
         disablePadding: false,
         label: 'Reason',
+        fontSize: '15px',
+        paddingLeft: '10px'
+    },
+    {
+        id: 'from',
+        align: 'left',
+        disablePadding: false,
+        label: 'From',
+        fontSize: '15px',
+        paddingLeft: '10px'
+    },
+    {
+        id: 'to',
+        align: 'left',
+        disablePadding: false,
+        label: 'To',
         fontSize: '15px',
         paddingLeft: '10px'
     },
@@ -141,7 +144,7 @@ const showStatusLeave = (status) => {
     );
 };
 
-export default function TableLeaveHistory({ data }) {
+export default function TableLeaveHistory({ data, showFilterMessage }) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [open, setOpen] = useState(false);
@@ -183,12 +186,6 @@ export default function TableLeaveHistory({ data }) {
                     <TableCell align="left" className="table-cell">
                         {formatTimeStampToDateTime(row?.createdDate)}
                     </TableCell>
-                    <TableCell align="left" className="table-cell">
-                        {formatTimeStampToDate(row?.startDate)}
-                    </TableCell>
-                    <TableCell align="left" className="table-cell">
-                        {formatTimeStampToDate(row?.endDate)}
-                    </TableCell>
                     <TableCell
                         align="left"
                         className="table-cell"
@@ -202,6 +199,12 @@ export default function TableLeaveHistory({ data }) {
                         style={{ minWidth: 200, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}
                     >
                         {row?.reason}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.startDate)}
+                    </TableCell>
+                    <TableCell align="left" className="table-cell">
+                        {formatTimeStampToDate(row?.endDate)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
                         {upperCaseFirstCharacter(row?.type)}
@@ -219,8 +222,9 @@ export default function TableLeaveHistory({ data }) {
                                         setTypeOpenModal('detail');
                                         handleOpen();
                                     }}
+                                    color="secondary"
                                 >
-                                    <VisibilityIcon fontSize="medium" />
+                                    <InfoIcon fontSize="medium" />
                                 </IconButton>
                                 <IconButton
                                     style={{ marginLeft: '0px' }}
@@ -268,7 +272,10 @@ export default function TableLeaveHistory({ data }) {
                         <TableBody>
                             <TableRow>
                                 <TableCell colSpan={12} scope="full" align="center">
-                                    <h3>There is currently no data available</h3>
+                                    <Empty
+                                        title={showFilterMessage ? 'No results matched your search' : 'No data available'}
+                                        height="400px"
+                                    />
                                 </TableCell>
                             </TableRow>
                         </TableBody>

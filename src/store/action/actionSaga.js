@@ -1,33 +1,24 @@
-import { fork, put, take } from 'redux-saga/effects';
+import { fork, put, take, all, takeEvery, call } from 'redux-saga/effects';
 import { actionActions } from './actionSlice';
+import { getAllLeaveForManager } from 'api/leave';
 
-function* handleSetMenu(payload) {
-    yield put(actionActions.setMenu(payload));
-}
-function* handleOpenMenu(payload) {
-    yield put(actionActions.openMenu(payload));
-}
-function* handleBorderMenu(payload) {
-    yield put(actionActions.setBorderRadius(payload));
-}
-function* handleFontFamily(payload) {
-    yield put(actionActions.setFontFamily(payload));
+function* handleGetCount(action) {
+    try {
+        const params = {};
+        params['status.equals'] = 'WAITING';
+        const response = yield call(getAllLeaveForManager, params);
+        yield put(
+            actionActions.getCountMenuSuccess({
+                leave: response?.data?.content.length || 0
+            })
+        );
+    } catch (error) {
+        yield put(actionActions.getCountMenuFalse('An error occurred, please try again'));
+    }
 }
 
 function* watchFlow() {
-    while (true) {
-        const actionSetMenu = yield take(actionActions.setMenu.type);
-        yield fork(handleSetMenu, actionSetMenu.payload);
-
-        const actionOpenMenu = yield take(actionActions.openMenu.type);
-        yield fork(handleOpenMenu, actionOpenMenu.payload);
-
-        const actionSetBorderRadius = yield take(actionActions.setBorderRadius.type);
-        yield fork(handleBorderMenu, actionSetBorderRadius.payload);
-
-        const actionSetFontFamily = yield take(actionActions.setFontFamily.type);
-        yield fork(handleFontFamily, actionSetFontFamily.payload);
-    }
+    yield all([takeEvery(actionActions.getCountMenu.type, handleGetCount)]);
 }
 
 export function* actionSaga() {

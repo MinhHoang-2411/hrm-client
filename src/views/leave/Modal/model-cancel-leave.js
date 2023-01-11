@@ -18,7 +18,9 @@ export default function ModelCancelLeave({ leaveCancel, handleClose }) {
                 <CardHeader title="Cancel Leave"></CardHeader>
                 <Divider light />
                 <CardContent>
-                    <Box style={{ fontSize: '15px' }}>Would you like to cancel your leave?</Box>
+                    <Box style={{ fontSize: '15px' }}>
+                        Are you sure to <b>cancel</b> this leave?
+                    </Box>
                 </CardContent>
                 <Divider light />
                 <CardActions sx={{ justifyContent: 'end' }}>

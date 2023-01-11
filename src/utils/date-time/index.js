@@ -13,3 +13,9 @@ export function getDatesInRange(startDate, endDate) {
     dateArray.push(currentDate);
     return dateArray;
 }
+
+export function addMonths(date, months) {
+    var currentDate = dayjs(date);
+    currentDate = currentDate.add(+months, 'month');
+    return currentDate;
+}

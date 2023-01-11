@@ -1,5 +1,16 @@
 // material
-import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Select, TextField } from '@mui/material';
+import {
+    Box,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Pagination,
+    Select,
+    TextField,
+    Button
+} from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 
 // convert date
@@ -52,6 +63,8 @@ const LeaveHistory = () => {
     });
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [status, setStatus] = useState('');
+    const [type, setType] = useState('');
 
     const { listData: listLeaveHistory, pagination } = useGetAllList(params, leaveActions, 'leave');
 
@@ -70,6 +83,8 @@ const LeaveHistory = () => {
             state[key] = value;
             if (value === 'ALL_STATUS') delete state['status.equals'];
             if (value === 'ALL_TYPE') delete state['type.in'];
+            if (key === 'status.equals') setStatus(value);
+            if (key === 'type.in') setType(value);
             if (key === 'startDate.greaterThanOrEqual') setStartDate(value);
             if (key === 'endDate.lessThanOrEqual') setEndDate(value);
             return state;
@@ -98,6 +113,37 @@ const LeaveHistory = () => {
     const handleSearch = (value) => {
         setSearch(value);
         debounceSearch(value);
+    };
+
+    const handleClearFilter = () => {
+        setParams((preState) => {
+            const state = {
+                size: 10,
+                page: 0,
+                sort: '',
+                order: 'asc',
+                startDate: null,
+                endDate: null
+            };
+            return state;
+        });
+        setStartDate(null);
+        setEndDate(null);
+        setSearch('');
+        setStatus('');
+        setType('');
+    };
+
+    const isShowFilterMessage = () => {
+        if (
+            (params['title.contains'] && params['title.contains'] !== '') ||
+            (params['type.equals'] && params['type.equals'] !== '') ||
+            (params['status.equals'] && params['status.equals'] !== '') ||
+            (params['startDate.greaterThanOrEqual'] && params['startDate.greaterThanOrEqual'] !== '') ||
+            (params['endDate.lessThanOrEqual'] && params['endDate.lessThanOrEqual'] !== '')
+        )
+            return true;
+        else return false;
     };
 
     return (
@@ -143,7 +189,7 @@ const LeaveHistory = () => {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={params.status}
+                                value={status}
                                 onChange={(e) => handleFilter('status.equals', e.target.value)}
                                 label="Status"
                                 defaultValue="ALL_STATUS"
@@ -158,13 +204,13 @@ const LeaveHistory = () => {
                             </Select>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
-                            <InputLabel color="secondary" id="demo-simple-select-label">
+                            <InputLabel size="normal" color="secondary" id="demo-simple-select-label">
                                 Leave Type
                             </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={params.status}
+                                value={type}
                                 onChange={(e) => handleFilter('type.in', e.target.value)}
                                 label="Leave Type"
                                 defaultValue="ALL_TYPE"
@@ -222,11 +268,24 @@ const LeaveHistory = () => {
                                 />
                             </LocalizationProvider>
                         </FormControl>
+                        <Box>
+                            <Button
+                                sx={{ width: { xs: '100%', md: 80 }, marginLeft: '15px', height: '100%' }}
+                                size="large"
+                                variant="contained"
+                                onClick={(e) => {
+                                    handleClearFilter();
+                                }}
+                                color="secondary"
+                            >
+                                Clear
+                            </Button>
+                        </Box>
                     </Box>
                 </Box>
 
                 {/* Start Table */}
-                <TableEmployee data={listLeaveHistory} />
+                <TableEmployee data={listLeaveHistory} showFilterMessage={isShowFilterMessage()} />
                 {/* End Table */}
                 {pagination && listLeaveHistory?.length > 0 && (
                     <BoxPagination>
