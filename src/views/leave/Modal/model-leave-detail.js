@@ -65,7 +65,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
         return leaveDetailResponse?.status === 'REJECTED' && leaveDetailResponse?.confirmerName === '';
     };
 
-    const isNotRejected = (leaveDetailResponse) => {
+    const isNotRejectedAndCanceled = (leaveDetailResponse) => {
         return leaveDetailResponse?.status !== 'REJECTED' && leaveDetailResponse?.status !== 'CANCELED';
     };
 
@@ -152,7 +152,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                 </Grid>
                             </Grid>
                         )}
-                        {isNotRejected(leaveDetail) && (
+                        {isNotRejectedAndCanceled(leaveDetail) && (
                             <Grid container>
                                 <Grid item xs={3}>
                                     <span style={{ fontWeight: 'bold' }}>Confirmed by</span>
