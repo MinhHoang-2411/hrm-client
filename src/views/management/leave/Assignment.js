@@ -259,7 +259,7 @@ const ManagementLeave = () => {
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={7}>
-                                    <Box sx={styleTitle}>{row?.applicantName}</Box>
+                                    <Box sx={styleTitle}>{row?.personOnLeave}</Box>
                                 </Grid>
                                 <Grid item xs={5}>
                                     <IconButton
