@@ -77,7 +77,7 @@ const MainRoutes = {
                     element: <SubmitForm />
                 },
                 {
-                    path: 'history',
+                    path: 'history/*',
                     element: <LeaveHistory />
                 }
             ]
