@@ -37,7 +37,7 @@ const Profile = Loadable(lazy(() => import('views/personal/Profile')));
 const Setting = Loadable(lazy(() => import('views/personal/Setting')));
 
 // management leave routing
-const ManagementLeave = Loadable(lazy(() => import('views/management/leave/Assignment')));
+const MonitorLeave = Loadable(lazy(() => import('views/management/leave/Monitor')));
 const Submit = Loadable(lazy(() => import('views/management/leave/Submit')));
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -165,9 +165,9 @@ const MainRoutes = {
                     path: 'leave',
                     children: [
                         {
-                            path: 'assignment',
+                            path: 'monitor',
                             //element: hasPermission('MANAGER') ? <ManagementLeave /> : <Navigate to="/dashboard" />
-                            element: <ManagementLeave />
+                            element: <MonitorLeave />
                         },
                         {
                             path: 'submit',

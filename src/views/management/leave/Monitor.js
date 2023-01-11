@@ -84,7 +84,7 @@ import { STYLE_MODAL } from 'constants/style';
 // model
 import ModelLeaveDetail from '../../leave/Modal/model-leave-detail';
 
-const ManagementLeave = () => {
+const MonitorLeave = () => {
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
         size: 2,
@@ -743,4 +743,4 @@ const ManagementLeave = () => {
         </>
     );
 };
-export default ManagementLeave;
+export default MonitorLeave;
