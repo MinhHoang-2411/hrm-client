@@ -29,7 +29,7 @@ const project = {
             target: false
         },
         {
-            id: 'work-list',
+            id: 'task-list',
             title: 'My Works',
             type: 'item',
             url: '/project/my-works',

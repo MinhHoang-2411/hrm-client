@@ -119,6 +119,7 @@ const leaveSlice = createSlice({
         cancelLeaveSuccess(state, action) {
             state.loadingCancel = false;
             state.reloadList = !state.reloadList;
+            state.reloadListWaiting = !state.reloadListWaiting;
         },
         cancelLeaveFail(state, action) {
             state.loadingCancel = false;
@@ -131,6 +132,7 @@ const leaveSlice = createSlice({
         rejectLeaveSuccess(state, action) {
             state.loadingReject = false;
             state.reloadList = !state.reloadList;
+            state.reloadListWaiting = !state.reloadListWaiting;
         },
         rejectLeaveFail(state, action) {
             state.loadingReject = false;
@@ -143,6 +145,7 @@ const leaveSlice = createSlice({
         confirmLeaveSuccess(state, action) {
             state.loadingConfirm = false;
             state.reloadList = !state.reloadList;
+            state.reloadListWaiting = !state.reloadListWaiting;
         },
         confirmLeaveFail(state, action) {
             state.loadingConfirm = false;

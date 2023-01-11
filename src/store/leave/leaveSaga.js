@@ -134,7 +134,6 @@ function* handleGetListLeaveForManager(action) {
         params['status.in'] = 'REJECTED,CONFIRMED';
         params['sort'] = 'lastModifiedDate,DESC';
         const response = yield call(getAllLeaveForManager, params);
-        console.log('response: ', response);
         yield put(leaveActions.fetchDataForManagerSuccess(response.data));
     } catch (error) {
         yield put(leaveActions.fetchDataForManagerFail('An error occurred, please try again'));

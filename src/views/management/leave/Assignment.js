@@ -1,6 +1,5 @@
 // material
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import {
     Box,
@@ -18,7 +17,6 @@ import {
     MenuItem,
     Select,
     TextField,
-    Typography,
     Stack
 } from '@mui/material';
 import Modal from '@mui/material/Modal';
@@ -35,7 +33,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 // redux
 import { useAppDispatch, useAppSelector } from 'app/hooks';
-import useGetAllList from 'hooks/useGetAllList';
 import { leaveActions } from 'store/leave/leaveSlice';
 
 // filter and search
@@ -52,7 +49,7 @@ import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/d
 import { upperCaseFirstCharacter } from 'utils/string';
 
 // scss
-import '../../assets/scss/leave.scss';
+import '../../../assets/scss/leave.scss';
 
 // image
 import forbiddenpng from 'assets/images/forbidden.png';
@@ -85,7 +82,7 @@ const styleCount = {
 import { STYLE_MODAL } from 'constants/style';
 
 // model
-import ModelLeaveDetail from '../leave/Modal/model-leave-detail';
+import ModelLeaveDetail from '../../leave/Modal/model-leave-detail';
 
 const ManagementLeave = () => {
     const dispatch = useAppDispatch();
@@ -101,27 +98,18 @@ const ManagementLeave = () => {
     const [pageWaiting, setPageWaiting] = useState(0);
     const [search, setSearch] = useState('');
     const [searchListWaiting, setSearchListWaiting] = useState('');
-    const { listData: listLeave } = useGetAllList(paramsAll, leaveActions, 'leave');
 
-    // const {
-    //     listDataWaiting: listLeavePending,
-    //     loadMorePending,
-    //     loadMore,
-    //     reloadList,
-    //     loadingPending,
-    //     loading,
-    //     pagination,
-    //     paginationPending
-    // } = useAppSelector((state) => state.leave);
+    const {
+        listDataManagement: listLeaveForManager,
+        listDataWaiting: listLeaveWaiting,
+        loadMoreWaiting,
+        loadMore,
+        reloadList,
+        reloadListWaiting,
+        paginationManager,
+        paginationWaiting
+    } = useAppSelector((state) => state.leave);
 
-    const listLeaveForManager = useAppSelector((state) => state.leave.listDataManagement);
-    const listLeaveWaiting = useAppSelector((state) => state.leave.listDataWaiting);
-    const reloadList = useAppSelector((state) => state.leave.reloadList);
-    const loadMore = useAppSelector((state) => state.leave.loadMore);
-    const loadMoreWaiting = useAppSelector((state) => state.leave.loadMoreWaiting);
-    const pagination = useAppSelector((state) => state.leave.pagination);
-    const paginationManager = useAppSelector((state) => state.leave.paginationManager);
-    const paginationWaiting = useAppSelector((state) => state.leave.paginationWaiting);
     const isLeaveWaiting = (status) => status == 'WAITING';
     const [openModelConfirm, setOpenModelConfirm] = useState(false);
     const [action, setAction] = useState('');
@@ -137,7 +125,7 @@ const ManagementLeave = () => {
     const [toAll, setToAll] = useState(null);
     const [toOtherError, setToOtherError] = useState(null);
     const [toWaitingError, setToWaitingError] = useState(null);
-    const [basicInfo, setBasicInfor] = useState({});
+    const basicInfo = JSON.parse(localStorage.getItem('employee'));
 
     const handleClose = () => {
         setOpenModelConfirm(false);
@@ -230,8 +218,6 @@ const ManagementLeave = () => {
         if (type == 'waiting') setSearchListWaiting(value);
         else setSearch(value);
         debounceSearch(value, type);
-        setPage(0);
-        setPageWaiting(0);
     };
 
     const handleFilter = (key, value, type) => {
@@ -254,8 +240,6 @@ const ManagementLeave = () => {
                 return state;
             });
         }
-        setPage(0);
-        setPageWaiting(0);
     };
 
     const showDetail = (leaveDetail) => {
@@ -367,11 +351,10 @@ const ManagementLeave = () => {
                     </Box>
                 </Card>
             )),
-        [listLeave, listLeaveWaiting]
+        [listLeaveForManager, listLeaveWaiting]
     );
 
     const handleFetchMoreWaitingLeave = () => {
-        console.log('condition: ', fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting));
         if (fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting)) {
             dispatch(leaveActions.loadMoreWaiting({ ...paramsWaiting, page: pageWaiting + 1 }));
             setPageWaiting(pageWaiting + 1);
@@ -379,32 +362,8 @@ const ManagementLeave = () => {
     };
 
     const handleFetchMoreLeave = () => {
-        if (fetchMoreCondition(page, pagination, paramsAll)) dispatch(leaveActions.loadMore({ ...paramsAll, page: page + 1 }));
+        if (fetchMoreCondition(page, paginationManager, paramsAll)) dispatch(leaveActions.loadMore({ ...paramsAll, page: page + 1 }));
         setPage(page + 1);
-    };
-
-    const handleClearFilter = (type) => {
-        if (type == 'waiting') {
-            setParamsWaiting((preState) => {
-                const state = {
-                    page: 0,
-                    size: 20,
-                    startDate: null,
-                    endDate: null
-                };
-                return state;
-            });
-        } else {
-            setParamsAll((preState) => {
-                const state = {
-                    page: 0,
-                    size: 20,
-                    startDate: null,
-                    endDate: null
-                };
-                return state;
-            });
-        }
     };
 
     const isShowFilterMessage = (type) => {
@@ -431,19 +390,20 @@ const ManagementLeave = () => {
     };
 
     useEffect(() => {
-        dispatch(leaveActions.getListWaiting(paramsWaiting));
         dispatch(leaveActions.fetchDataForManager(paramsAll));
-    }, [paramsWaiting, paramsAll, reloadList]);
+        setPage(0);
+    }, [reloadList, paramsAll]);
 
     useEffect(() => {
-        setBasicInfor(JSON.parse(localStorage.getItem('employee')));
-    }, []);
+        dispatch(leaveActions.getListWaiting(paramsWaiting));
+        setPageWaiting(0);
+    }, [reloadListWaiting, paramsWaiting]);
 
     useEffect(() => {
         const role = basicInfo.position;
         if (role === 'MANAGER') setHavePermission(true);
         else setHavePermission(false);
-    });
+    }, []);
 
     return (
         <>
@@ -457,7 +417,7 @@ const ManagementLeave = () => {
                     >
                         <Grid container spacing={2} columns={16}>
                             <Grid item xs={8}>
-                                <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
+                                <Box sx={{ padding: '10px 20px' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '5px' }}>
                                         <h3 style={styleLabel}>
                                             Waiting leave requests <span style={styleCount}>{paginationWaiting?.totalCount || 0}</span>
@@ -581,7 +541,7 @@ const ManagementLeave = () => {
                                 </Box>
                             </Grid>
                             <Grid item xs={8}>
-                                <Box sx={{ padding: '10px 20px', overflowX: 'auto', height: '90vh' }}>
+                                <Box sx={{ padding: '10px 20px' }}>
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -707,7 +667,7 @@ const ManagementLeave = () => {
                                     <InfiniteScroll
                                         loader={loadMore ? null : null}
                                         height="70vh"
-                                        hasMore={fetchMoreCondition(page, pagination, paramsAll)}
+                                        hasMore={fetchMoreCondition(page, paginationManager, paramsAll)}
                                         dataLength={listLeaveForManager.length}
                                         next={handleFetchMoreLeave}
                                         scrollThreshold="1px"

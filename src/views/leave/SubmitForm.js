@@ -19,7 +19,6 @@ import { useTheme } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import CheckIcon from '@mui/icons-material/Check';
 
 // third party
 import { Formik } from 'formik';
@@ -221,7 +220,7 @@ const SubmitForm = ({ ...others }) => {
 
     const setDate = (date, values) => {
         if (leaveType === 'MATERNITY') {
-            formikRef.current?.setFieldValue('endDate', addMonths(date, 180));
+            formikRef.current?.setFieldValue('endDate', addMonths(date, 6));
         }
     };
 

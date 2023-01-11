@@ -36,8 +36,9 @@ const Booking = Loadable(lazy(() => import('views/meeting/Booking')));
 const Profile = Loadable(lazy(() => import('views/personal/Profile')));
 const Setting = Loadable(lazy(() => import('views/personal/Setting')));
 
-// management routing
-const ManagementLeave = Loadable(lazy(() => import('views/management/Leave')));
+// management leave routing
+const ManagementLeave = Loadable(lazy(() => import('views/management/leave/Assignment')));
+const Submit = Loadable(lazy(() => import('views/management/leave/Submit')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -162,8 +163,18 @@ const MainRoutes = {
             children: [
                 {
                     path: 'leave',
-                    //element: hasPermission('MANAGER') ? <ManagementLeave /> : <Navigate to="/" />
-                    element: <ManagementLeave />
+                    children: [
+                        {
+                            path: 'assignment',
+                            //element: hasPermission('MANAGER') ? <ManagementLeave /> : <Navigate to="/dashboard" />
+                            element: <ManagementLeave />
+                        },
+                        {
+                            path: 'submit',
+                            //element: hasPermission('MANAGER') ? <Submit /> : <Navigate to="/dashboard" />
+                            element: <Submit />
+                        }
+                    ]
                 }
             ]
         }
