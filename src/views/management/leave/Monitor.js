@@ -84,6 +84,10 @@ import { STYLE_MODAL } from 'constants/style';
 // model
 import ModelLeaveDetail from '../../leave/Modal/model-leave-detail';
 
+// third party
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 const MonitorLeave = () => {
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
@@ -148,13 +152,16 @@ const MonitorLeave = () => {
         setLeaveSelected(row);
     };
 
-    const handleUpdateStatus = () => {
+    const handleUpdateStatus = (values) => {
         const tmpData = { ...leaveSelected };
+
         if (action === 'CONFIRMED') {
             dispatch(leaveActions.confirmLeave({ ...tmpData }));
         } else if (action === 'REJECTED') {
+            if (values.rejectReason !== '') tmpData['rejectReason'] = values.rejectReason;
             dispatch(leaveActions.rejectLeave({ ...tmpData }));
         }
+        handleClose();
     };
 
     const showStatusLeave = (status) => {
@@ -682,43 +689,84 @@ const MonitorLeave = () => {
                             </Grid>
 
                             <Grid>
-                                <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
-                                    <DialogTitle sx={{ fontSize: '24px' }}>{upperCaseFirstCharacter(title)}</DialogTitle>
-                                    <DialogContent>
-                                        <Box>
-                                            <span style={{ fontSize: '15px' }}>
-                                                Are you sure to <b>{title}</b> this leave?
-                                            </span>
-                                        </Box>
-                                    </DialogContent>
-                                    <DialogActions>
-                                        <Button
-                                            disableElevation
-                                            style={{ width: '20%' }}
-                                            size="large"
-                                            type="reset"
-                                            variant="outlined"
-                                            onClick={handleClose}
-                                            color="secondary"
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            disableElevation
-                                            style={{ width: '20%' }}
-                                            size="large"
-                                            type="submit"
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={(e) => {
-                                                handleClose();
-                                                handleUpdateStatus();
-                                            }}
-                                        >
-                                            Agree
-                                        </Button>
-                                    </DialogActions>
-                                </Dialog>
+                                <Formik
+                                    initialValues={{
+                                        rejectReason: ''
+                                    }}
+                                    validationSchema={Yup.object().shape({
+                                        rejectReason: Yup.string().max(255, 'Please enter no more than 255 characters')
+                                    })}
+                                    onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
+                                        try {
+                                            handleUpdateStatus(values);
+                                            resetForm();
+                                        } catch (err) {
+                                            setStatus({ success: false });
+                                            setErrors({ submit: err.message });
+                                            setSubmitting(false);
+                                        }
+                                    }}
+                                >
+                                    {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => (
+                                        <form noValidate onSubmit={handleSubmit}>
+                                            <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
+                                                <DialogTitle sx={{ fontSize: '24px' }}>{upperCaseFirstCharacter(title)}</DialogTitle>
+                                                <DialogContent>
+                                                    <span style={{ fontSize: '15px' }}>
+                                                        Are you sure to <b>{title}</b> this leave?
+                                                    </span>
+                                                    {action === 'REJECTED' && (
+                                                        <FormControl fullWidth sx={{ marginTop: '10px' }}>
+                                                            <TextField
+                                                                id="outlined-multiline-static"
+                                                                fullWidth
+                                                                multiline
+                                                                type="text"
+                                                                name="rejectReason"
+                                                                value={values.rejectReason}
+                                                                onChange={handleChange}
+                                                                rows={5}
+                                                                placeholder="Rejection reason (Optional)"
+                                                                color="secondary"
+                                                                style={{ marginTop: '5px' }}
+                                                                error={touched.rejectReason && Boolean(errors.rejectReason)}
+                                                                helperText={touched.rejectReason && errors.rejectReason}
+                                                            />
+                                                        </FormControl>
+                                                    )}
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Button
+                                                        disableElevation
+                                                        style={{ width: '20%' }}
+                                                        size="large"
+                                                        type="reset"
+                                                        variant="outlined"
+                                                        onClick={(e) => {
+                                                            resetForm();
+                                                            handleClose();
+                                                        }}
+                                                        color="secondary"
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        style={{ width: '20%' }}
+                                                        size="large"
+                                                        type="submit"
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        onClick={(e) => {
+                                                            handleSubmit(values);
+                                                        }}
+                                                    >
+                                                        Agree
+                                                    </Button>
+                                                </DialogActions>
+                                            </Dialog>
+                                        </form>
+                                    )}
+                                </Formik>
                             </Grid>
                             <Grid>
                                 <Modal
