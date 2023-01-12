@@ -169,7 +169,7 @@ const SubmitForm = ({ ...others }) => {
             setErrorMessageDetail('Invalid leave date');
         } else if (weekendAndHolidayFilter(dateAndLeaveTimes).length > 5 && leaveType !== 'MATERNITY') {
             setErrorMessageDetail('A leave cannot exceed 5 working days.');
-        } else {
+        } else if (openModelConfirm === false) {
             const assignTo = value.assignTo.id;
             value['assignTo'] = assignTo;
             dispatch(
@@ -222,6 +222,10 @@ const SubmitForm = ({ ...others }) => {
         if (leaveType === 'MATERNITY') {
             formikRef.current?.setFieldValue('endDate', addMonths(date, 6));
         }
+    };
+
+    const checkValidLeave = () => {
+        if (formikRef.current?.isValid && formikRef.current?.dirty) setOpenModelConfirm(true);
     };
 
     useEffect(() => {
@@ -530,11 +534,11 @@ const SubmitForm = ({ ...others }) => {
                                                 disabled={isSubmitting}
                                                 style={{ width: '20%' }}
                                                 size="large"
-                                                type="button"
+                                                type="submit"
                                                 variant="contained"
                                                 color="secondary"
                                                 startIcon={<SendIcon />}
-                                                onClick={(e) => handleClickModelConfirm()}
+                                                onClick={(e) => checkValidLeave()}
                                             >
                                                 Submit
                                             </Button>
