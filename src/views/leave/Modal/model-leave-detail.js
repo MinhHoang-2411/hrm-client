@@ -58,11 +58,11 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
     const [orderBy] = useState('id');
 
     const isRejectedByAdmin = (leaveDetailResponse) => {
-        return leaveDetailResponse?.status === 'REJECTED' && leaveDetailResponse?.confirmerName !== '';
+        return leaveDetailResponse?.status === 'REJECTED' && leaveDetailResponse?.confirmerName !== undefined;
     };
 
     const isRejectedByManager = (leaveDetailResponse) => {
-        return leaveDetailResponse?.status === 'REJECTED' && leaveDetailResponse?.confirmerName === '';
+        return leaveDetailResponse?.status === 'REJECTED' && leaveDetailResponse?.confirmerName === undefined;
     };
 
     const isNotRejectedAndCanceled = (leaveDetailResponse) => {
