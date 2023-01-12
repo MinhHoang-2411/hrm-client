@@ -567,7 +567,7 @@ const MonitorLeave = () => {
                                                 width={'595px'}
                                                 search={search}
                                                 handleSearch={handleSearch}
-                                                placeholder="Search title, reason, ..."
+                                                placeholder="Search ..."
                                             />
                                         </Box>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
