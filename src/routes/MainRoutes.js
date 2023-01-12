@@ -40,6 +40,9 @@ const Setting = Loadable(lazy(() => import('views/personal/Setting')));
 const MonitorLeave = Loadable(lazy(() => import('views/management/leave/Monitor')));
 const Submit = Loadable(lazy(() => import('views/management/leave/Submit')));
 
+// under construction routing
+const UnderConstruction = Loadable(lazy(() => import('views/under-construction/UnderConstruction')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -56,7 +59,8 @@ const MainRoutes = {
         },
         {
             path: '/',
-            element: <DashboardDefault />
+            //element: <DashboardDefault />
+            element: <UnderConstruction />
         },
 
         {
@@ -64,7 +68,8 @@ const MainRoutes = {
             children: [
                 {
                     path: '',
-                    element: <DashboardDefault />
+                    //element: <DashboardDefault />
+                    element: <UnderConstruction />
                 }
             ]
         },
@@ -88,7 +93,8 @@ const MainRoutes = {
             children: [
                 {
                     path: 'booking',
-                    element: <Booking />
+                    //element: <Booking />
+                    element: <UnderConstruction />
                 }
             ]
         },
@@ -98,11 +104,13 @@ const MainRoutes = {
             children: [
                 {
                     path: 'request',
-                    element: <RequestAsset />
+                    //element: <RequestAsset />
+                    element: <UnderConstruction />
                 },
                 {
                     path: 'history',
-                    element: <AssetHistory />
+                    //element: <AssetHistory />
+                    element: <UnderConstruction />
                 }
             ]
         },
@@ -128,7 +136,8 @@ const MainRoutes = {
             children: [
                 {
                     path: 'bar',
-                    element: <Bar />
+                    //element: <Bar />
+                    element: <UnderConstruction />
                 },
                 {
                     path: 'charity',
