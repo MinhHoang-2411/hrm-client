@@ -131,7 +131,7 @@ function* handleGetListLeaveForManager(action) {
         const params = action.payload;
         const assignTo = JSON.parse(localStorage.getItem('employee')).id;
         params['assignTo.equals'] = assignTo;
-        params['status.in'] = 'REJECTED,CONFIRMED';
+        params['status.in'] = 'REJECTED,CONFIRMED,APPROVED';
         params['sort'] = 'lastModifiedDate,DESC';
         const response = yield call(getAllLeaveForManager, params);
         yield put(leaveActions.fetchDataForManagerSuccess(response.data));
