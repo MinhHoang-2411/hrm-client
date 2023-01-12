@@ -608,6 +608,7 @@ const MonitorLeave = () => {
                                                     <MenuItem value={'all'}>All</MenuItem>
                                                     <MenuItem value={'REJECTED'}>Rejected</MenuItem>
                                                     <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
+                                                    <MenuItem value={'APPROVED'}>Approved</MenuItem>
                                                 </Select>
                                             </FormControl>
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
@@ -637,7 +638,7 @@ const MonitorLeave = () => {
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="To Date"
+                                                        label="End Date"
                                                         value={toAll || null}
                                                         name="toAll"
                                                         onChange={(e) => {
