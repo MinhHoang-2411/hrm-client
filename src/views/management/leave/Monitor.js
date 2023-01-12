@@ -503,6 +503,7 @@ const MonitorLeave = () => {
                                                             label="End Date"
                                                             value={toWaiting || null}
                                                             name="toWaiting"
+                                                            minDate={fromWaiting}
                                                             onChange={(e) => {
                                                                 handleFilter(
                                                                     'endDate.lessThanOrEqual',
@@ -644,6 +645,7 @@ const MonitorLeave = () => {
                                                         onChange={(e) => {
                                                             handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e));
                                                         }}
+                                                        minDate={fromAll}
                                                         onError={(newError) => setToOtherError(newError)}
                                                         renderInput={(params) => (
                                                             <TextField
