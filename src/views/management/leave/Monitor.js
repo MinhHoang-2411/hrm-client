@@ -91,11 +91,11 @@ import * as Yup from 'yup';
 const MonitorLeave = () => {
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
-        size: 2,
+        size: 10,
         page: 0
     });
     const [paramsWaiting, setParamsWaiting] = useState({
-        size: 2,
+        size: 10,
         page: 0
     });
     const [page, setPage] = useState(0);
