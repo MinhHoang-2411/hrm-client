@@ -54,7 +54,7 @@ const LeaveHistory = () => {
     const dispatch = useAppDispatch();
     const [search, setSearch] = useState('');
     const [params, setParams] = useState({
-        size: 2,
+        size: 10,
         page: 0,
         sort: '',
         order: 'asc',
