@@ -26,4 +26,10 @@ function getCurrentPermission() {
     return JSON.parse(localStorage.getItem(EMPLOYEE_LOCAL_STORAGE_KEY)).position.toString();
 }
 
-export { getAuth, getCurrentPermission };
+const handleLogout = () => {
+    localStorage.removeItem(AUTH_LOCAL_STORAGE_KEY);
+    localStorage.removeItem(EMPLOYEE_LOCAL_STORAGE_KEY);
+    window.location.href = '/login';
+};
+
+export { getAuth, getCurrentPermission, handleLogout };
