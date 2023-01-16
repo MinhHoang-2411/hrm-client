@@ -138,7 +138,7 @@ const FirebaseLogin = ({ ...others }) => {
                                             edge="end"
                                             size="large"
                                         >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
                                         </IconButton>
                                     </InputAdornment>
                                 }
