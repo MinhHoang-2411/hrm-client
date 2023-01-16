@@ -75,6 +75,7 @@ const FirebaseLogin = ({ ...others }) => {
                             authActions.login({
                                 username: values.username,
                                 password: values.password,
+                                rememberMe: checked,
                                 onNavigate: () => navigate('/dashboard')
                             })
                         );
@@ -137,7 +138,7 @@ const FirebaseLogin = ({ ...others }) => {
                                             edge="end"
                                             size="large"
                                         >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
                                         </IconButton>
                                     </InputAdornment>
                                 }

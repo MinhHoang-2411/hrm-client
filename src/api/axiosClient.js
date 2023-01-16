@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { getAuth } from 'utils/auth';
+import { getAuth, handleLogout } from 'utils/auth';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -32,6 +32,9 @@ axiosClient.interceptors.response.use(
         return response;
     },
     function (error) {
+        if (error?.response?.status === 401 || error?.response?.status === 403) {
+            handleLogout();
+        }
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
         return Promise.reject(error);
