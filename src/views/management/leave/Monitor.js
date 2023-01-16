@@ -554,7 +554,7 @@ const MonitorLeave = () => {
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            marginBottom: '15px',
+                                            marginBottom: '10px',
                                             width: '99%',
                                             marginLeft: 'auto',
                                             marginRight: 'auto'
