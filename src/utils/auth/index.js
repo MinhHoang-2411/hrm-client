@@ -27,9 +27,11 @@ function getCurrentPermission() {
 }
 
 const handleLogout = () => {
-    localStorage.removeItem(AUTH_LOCAL_STORAGE_KEY);
-    localStorage.removeItem(EMPLOYEE_LOCAL_STORAGE_KEY);
-    window.location.href = '/login';
+    if (window.location.pathname !== '/login') {
+        localStorage.removeItem(AUTH_LOCAL_STORAGE_KEY);
+        localStorage.removeItem(EMPLOYEE_LOCAL_STORAGE_KEY);
+        window.location.href = '/login';
+    }
 };
 
 export { getAuth, getCurrentPermission, handleLogout };
