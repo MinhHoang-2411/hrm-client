@@ -54,7 +54,7 @@ const LeaveHistory = () => {
     const dispatch = useAppDispatch();
     const [search, setSearch] = useState('');
     const [params, setParams] = useState({
-        size: 10,
+        size: 2,
         page: 0,
         sort: '',
         order: 'asc',
@@ -79,7 +79,7 @@ const LeaveHistory = () => {
 
     const handleFilter = (key, value) => {
         setParams((preState) => {
-            const state = { ...preState };
+            const state = { ...preState, page: 0 };
             state[key] = value;
             if (value === 'ALL_STATUS') delete state['status.equals'];
             if (value === 'ALL_TYPE') delete state['type.in'];
