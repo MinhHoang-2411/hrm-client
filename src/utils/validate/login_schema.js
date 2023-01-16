@@ -3,6 +3,9 @@ import * as Yup from 'yup';
 export const LoginSchema = (type) => {
     return Yup.object().shape({
         username: Yup.string().max(25, 'Please no more than 25 characters').required('Please enter Username'),
-        password: Yup.string().max(25, 'Please no more than 25 characters').required('Please enter Password')
+        password: Yup.string()
+            .min(8, 'Please enter at least 8 characters')
+            .max(60, 'Please enter no more than 60 characters')
+            .required('Please enter Password')
     });
 };
