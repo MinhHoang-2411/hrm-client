@@ -172,6 +172,8 @@ const SubmitForm = ({ ...others }) => {
         } else if (openModelConfirm === false) {
             const assignTo = value.assignTo.id;
             value['assignTo'] = assignTo;
+            value['title'] = value['title'].trim();
+            value['reason'] = value['reason'].trim();
             dispatch(
                 leaveActions.submit({
                     ...value,
@@ -711,7 +713,7 @@ const SubmitForm = ({ ...others }) => {
             </Formik>
             <Formik
                 initialValues={{
-                    note: '',
+                    note: dateAndLeaveTimes[currentIndex]?.note,
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -720,6 +722,9 @@ const SubmitForm = ({ ...others }) => {
                         .max(255, 'Please enter between 10 and 255 characters')
                         .required('Please enter Note')
                 })}
+                enableReinitialize={true}
+                validateOnChange={true}
+                validateOnMount={true}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
                     try {
                         setStatus({ success: false });
