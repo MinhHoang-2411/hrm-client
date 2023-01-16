@@ -220,12 +220,6 @@ const SubmitForm = ({ ...others }) => {
         return await getLeaveCount();
     };
 
-    const setDate = (date, values) => {
-        if (leaveType === 'MATERNITY') {
-            formikRef.current?.setFieldValue('endDate', addMonths(date, 6));
-        }
-    };
-
     const checkValidLeave = () => {
         if (formikRef.current?.isValid && formikRef.current?.dirty) setOpenModelConfirm(true);
     };
@@ -337,7 +331,6 @@ const SubmitForm = ({ ...others }) => {
                                                         onChange={(event) => {
                                                             setFieldValue('type', event.target.value);
                                                             setLeaveType(event.target.value);
-                                                            setDate(values.startDate, values);
                                                         }}
                                                         error={touched.type && Boolean(errors.type)}
                                                         className="form-input"
@@ -375,7 +368,6 @@ const SubmitForm = ({ ...others }) => {
                                                             name="startDate"
                                                             onChange={(value) => {
                                                                 setFieldValue('startDate', value);
-                                                                setDate(value, values);
                                                                 handleGetArrayDate(value, values.endDate);
                                                                 setErrorMessageDetail('');
                                                             }}
