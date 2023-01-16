@@ -718,8 +718,8 @@ const SubmitForm = ({ ...others }) => {
                 }}
                 validationSchema={Yup.object().shape({
                     note: Yup.string()
-                        .min(10, 'Please enter between 10 and 255 characters')
-                        .max(255, 'Please enter between 10 and 255 characters')
+                        .min(10, 'Please enter between 10 and 50 characters')
+                        .max(50, 'Please enter between 10 and 50 characters')
                         .required('Please enter Note')
                 })}
                 enableReinitialize={true}
