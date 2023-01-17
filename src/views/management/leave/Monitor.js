@@ -158,7 +158,7 @@ const MonitorLeave = () => {
         if (action === 'CONFIRMED') {
             dispatch(leaveActions.confirmLeave({ ...tmpData }));
         } else if (action === 'REJECTED') {
-            if (values.rejectReason !== '') tmpData['rejectReason'] = values.rejectReason;
+            if (values.rejectReason !== '') tmpData['rejectReason'] = values.rejectReason.trim();
             dispatch(leaveActions.rejectLeave({ ...tmpData }));
         }
         handleClose();
@@ -697,7 +697,7 @@ const MonitorLeave = () => {
                                         rejectReason: ''
                                     }}
                                     validationSchema={Yup.object().shape({
-                                        rejectReason: Yup.string().max(255, 'Please enter no more than 255 characters')
+                                        rejectReason: Yup.string().max(255, 'Please enter no more than 255 characters').trim()
                                     })}
                                     onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
                                         try {

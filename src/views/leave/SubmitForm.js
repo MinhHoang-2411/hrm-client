@@ -190,7 +190,7 @@ const SubmitForm = ({ ...others }) => {
 
     const handleSubmitNote = (value) => {
         const tmpDate = [...dateAndLeaveTimes];
-        tmpDate[currentIndex].note = value.note;
+        tmpDate[currentIndex].note = value.note.trim();
         setDateAndLeaveTimes(tmpDate);
         handleClose();
     };
@@ -710,9 +710,9 @@ const SubmitForm = ({ ...others }) => {
                 }}
                 validationSchema={Yup.object().shape({
                     note: Yup.string()
-                        .min(10, 'Please enter between 10 and 50 characters')
-                        .max(50, 'Please enter between 10 and 50 characters')
-                        .required('Please enter Note')
+                        .min(0, 'Please enter between 0 and 255 characters')
+                        .max(255, 'Please enter between 0 and 255 characters')
+                        .trim()
                 })}
                 enableReinitialize={true}
                 validateOnChange={true}
