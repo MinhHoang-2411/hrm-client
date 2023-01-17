@@ -26,7 +26,7 @@ const Submit = () => {
                                 <div className="group-text">
                                     <Grid container className="under-contruction-grid-container-text">
                                         <Grid item xs={12}>
-                                            <Typography className="under-contruction-title">Under Contruction</Typography>
+                                            <Typography className="under-contruction-title">Under Construction</Typography>
                                         </Grid>
                                         <Grid item xs={12} className="under-contruction-description">
                                             <Typography>This site is on under construction!! Please check after some time</Typography>

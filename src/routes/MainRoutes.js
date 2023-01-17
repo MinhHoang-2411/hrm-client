@@ -54,10 +54,6 @@ const MainRoutes = {
             element: <Navigate to="/" />
         },
         {
-            path: '*',
-            element: <Navigate to="/" />
-        },
-        {
             path: '/',
             //element: <DashboardDefault />
             element: <UnderConstruction />
