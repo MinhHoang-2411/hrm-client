@@ -76,7 +76,7 @@ const FirebaseLogin = ({ ...others }) => {
                                 username: values.username,
                                 password: values.password,
                                 rememberMe: checked,
-                                onNavigate: () => navigate('/dashboard')
+                                onNavigate: () => navigate('/')
                             })
                         );
                     } catch (err) {
