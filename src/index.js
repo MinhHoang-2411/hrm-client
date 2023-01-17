@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client';
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
 
 // third party
 import { BrowserRouter } from 'react-router-dom';
@@ -12,6 +13,8 @@ import App from 'App';
 // style + assets
 import 'assets/scss/style.scss';
 import { store } from 'app/store';
+import history from 'routes/history';
+
 // ==============================|| REACT DOM RENDER  ||============================== //
 
 const container = document.getElementById('root');
@@ -19,9 +22,9 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 root.render(
     <StrictMode>
         <Provider store={store}>
-            <BrowserRouter>
+            <HistoryRouter history={history}>
                 <App />
-            </BrowserRouter>
+            </HistoryRouter>
         </Provider>
     </StrictMode>
 );
