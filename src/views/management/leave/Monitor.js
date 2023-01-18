@@ -22,6 +22,7 @@ import {
 import Modal from '@mui/material/Modal';
 import MainCard from 'ui-component/cards/MainCard';
 import { InputSearch } from 'ui-component/filter/input-search';
+import SkeletonLoading from 'ui-component/SkeletonLoading';
 
 // convert date
 import { formatDateMaterialForFilter } from 'utils/format/date';
@@ -111,7 +112,9 @@ const MonitorLeave = () => {
         reloadList,
         reloadListWaiting,
         paginationManager,
-        paginationWaiting
+        paginationWaiting,
+        loadingWaiting,
+        loading
     } = useAppSelector((state) => state.leave);
 
     const isLeaveWaiting = (status) => status == 'WAITING';
@@ -529,14 +532,23 @@ const MonitorLeave = () => {
                                         </Box>
                                     </Box>
                                     <InfiniteScroll
-                                        loader={loadMoreWaiting ? null : null}
-                                        height="80vh"
+                                        loader={
+                                            loadMoreWaiting ? <SkeletonLoading sx={{ marginBottom: '15px', minHeight: '270px' }} /> : null
+                                        }
+                                        height="75vh"
                                         hasMore={fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting)}
                                         dataLength={listLeaveWaiting.length}
                                         next={handleFetchMoreWaitingLeave}
                                         scrollThreshold="1px"
                                     >
-                                        {listLeaveWaiting?.length ? (
+                                        {loadingWaiting ? (
+                                            [...Array(3).keys()].map((value) => (
+                                                <SkeletonLoading
+                                                    key={value}
+                                                    sx={{ marginBottom: '15px', minHeight: '50px', height: '50px', marginLeft: '5px' }}
+                                                />
+                                            ))
+                                        ) : listLeaveWaiting?.length ? (
                                             renderList(listLeaveWaiting)
                                         ) : (
                                             <Empty
@@ -675,14 +687,21 @@ const MonitorLeave = () => {
                                         </Box>
                                     </Box>
                                     <InfiniteScroll
-                                        loader={loadMore ? null : null}
-                                        height="70vh"
+                                        loader={loadMore ? <SkeletonLoading sx={{ marginBottom: '15px', minHeight: '270px' }} /> : null}
+                                        height="75vh"
                                         hasMore={fetchMoreCondition(page, paginationManager, paramsAll)}
                                         dataLength={listLeaveForManager.length}
                                         next={handleFetchMoreLeave}
                                         scrollThreshold="1px"
                                     >
-                                        {listLeaveForManager?.length ? (
+                                        {loading ? (
+                                            [...Array(3).keys()].map((value) => (
+                                                <SkeletonLoading
+                                                    key={value}
+                                                    sx={{ marginBottom: '15px', minHeight: '50px', height: '50px', marginLeft: '5px' }}
+                                                />
+                                            ))
+                                        ) : listLeaveForManager?.length ? (
                                             renderList(listLeaveForManager)
                                         ) : (
                                             <Empty title={isShowFilterMessage() ? 'No results matched your search' : 'No data available'} />

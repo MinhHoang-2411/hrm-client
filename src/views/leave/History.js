@@ -12,6 +12,7 @@ import {
     Button
 } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
+import SkeletonLoading from 'ui-component/SkeletonLoading';
 
 // convert date
 import { formatDateMaterialForFilter } from 'utils/format/date';
@@ -21,7 +22,7 @@ import { useCallback, useState, useEffect } from 'react';
 
 // redux
 import { leaveActions } from 'store/leave/leaveSlice';
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import useGetAllList from 'hooks/useGetAllList';
 
 // pagination
@@ -67,6 +68,7 @@ const LeaveHistory = () => {
     const [type, setType] = useState('');
 
     const { listData: listLeaveHistory, pagination } = useGetAllList(params, leaveActions, 'leave');
+    const loading = useAppSelector((state) => state.leave.loading);
 
     const [fromError, setFromError] = useState(null);
     const [toError, setToError] = useState(null);
@@ -285,7 +287,14 @@ const LeaveHistory = () => {
                 </Box>
 
                 {/* Start Table */}
-                <TableEmployee data={listLeaveHistory} showFilterMessage={isShowFilterMessage()} />
+                {loading ? (
+                    [...Array(5).keys()].map((value) => (
+                        <SkeletonLoading key={value} sx={{ marginBottom: '15px', minHeight: '5px', marginLeft: '20px', height: '30px' }} />
+                    ))
+                ) : (
+                    <TableEmployee data={listLeaveHistory} showFilterMessage={isShowFilterMessage()} />
+                )}
+
                 {/* End Table */}
                 {pagination && listLeaveHistory?.length > 0 && (
                     <BoxPagination>
