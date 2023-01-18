@@ -521,7 +521,13 @@ const MonitorLeave = () => {
                                                                     size="small"
                                                                     color="secondary"
                                                                     {...params}
-                                                                    helperText={toWaitingError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                                    helperText={
+                                                                        toWaitingError === 'invalidDate'
+                                                                            ? 'Please follow the format dd/mm/yyyy'
+                                                                            : toWaitingError === 'minDate'
+                                                                            ? 'Please choose valid time'
+                                                                            : ''
+                                                                    }
                                                                 />
                                                             )}
                                                             style={{ maxHeight: '70%' }}
@@ -665,7 +671,13 @@ const MonitorLeave = () => {
                                                                 color="secondary"
                                                                 {...params}
                                                                 className="input-date-picker"
-                                                                helperText={toOtherError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                                helperText={
+                                                                    toOtherError === 'invalidDate'
+                                                                        ? 'Please follow the format dd/mm/yyyy'
+                                                                        : toOtherError === 'minDate'
+                                                                        ? 'Please choose valid time'
+                                                                        : ''
+                                                                }
                                                             />
                                                         )}
                                                         inputFormat="DD/MM/YYYY"
