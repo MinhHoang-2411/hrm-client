@@ -41,6 +41,9 @@ const actionSlice = createSlice({
             if (state.countMenu[action.payload] > 0) {
                 state.countMenu[action.payload] = state.countMenu[action.payload] - 1;
             }
+        },
+        plusCountMenu(state, action) {
+            state.countMenu[action.payload] = state.countMenu[action.payload] + 1;
         }
     }
 });

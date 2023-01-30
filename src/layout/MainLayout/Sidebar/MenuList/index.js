@@ -7,16 +7,17 @@ import menuItem from 'menu-items';
 import { hasPermission } from 'utils/permission';
 
 import { useEffect } from 'react';
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { actionActions } from 'store/action/actionSlice';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
     const dispatch = useAppDispatch();
+    const reloadListWaiting = useAppSelector((state) => state.leave.reloadListWaiting);
     useEffect(() => {
         dispatch(actionActions.getCountMenu());
-    }, []);
+    }, [reloadListWaiting]);
     const navItems = menuItem.items.map((item) => {
         switch (item.type) {
             case 'group':
