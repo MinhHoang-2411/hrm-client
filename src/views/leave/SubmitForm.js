@@ -19,6 +19,7 @@ import { useTheme } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import BackdropLoading from 'ui-component/BackdropLoading';
 
 // third party
 import { Formik } from 'formik';
@@ -72,6 +73,7 @@ const steps = ['Submit a leave', 'Manager confirms the leave', 'Admin approves t
 const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
     const alert = useAppSelector((state) => state.leave.alert);
+    const loading = useAppSelector((state) => state.leave.loading);
     const theme = useTheme();
     const [dateAndLeaveTimes, setDateAndLeaveTimes] = useState([]);
     const [inforLeaveUnUse, setInforLeaveUnUse] = useState('');
@@ -85,6 +87,7 @@ const SubmitForm = ({ ...others }) => {
     const [leaveType, setLeaveType] = useState('');
     const [fromError, setFromError] = useState(null);
     const [toError, setToError] = useState(null);
+    const [openLoadingSubmit, setOpenLoadingSubmit] = React.useState(false);
 
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
@@ -698,6 +701,12 @@ const SubmitForm = ({ ...others }) => {
                                         </ul>
                                     </CardContent>
                                 </Card>
+                            </Grid>
+                            <Grid>
+                                {loading ? setOpenLoadingSubmit(true) : setOpenLoadingSubmit(false)}
+                                <div>
+                                    <BackdropLoading open={openLoadingSubmit} />
+                                </div>
                             </Grid>
                         </Grid>
                     </form>
