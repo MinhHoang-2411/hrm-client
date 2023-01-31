@@ -8,9 +8,6 @@ const AuthFooter = () => (
         <Typography variant="subtitle2" component={Link} href="https://www.chainhaus.com/" target="_blank" underline="hover">
             www.chainhaus.com
         </Typography>
-        {/* <Typography variant="subtitle2" component={Link} href="https://codedthemes.com" target="_blank" underline="hover">
-            &copy; codedthemes.com
-        </Typography> */}
     </Stack>
 );
 
