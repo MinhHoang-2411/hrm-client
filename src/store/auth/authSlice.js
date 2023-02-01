@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     isLoggedIn: false, // logged
     logging: false, // loading
-    currentUser: undefined // info user if login success
+    currentUser: undefined, // info user if login success
+    isPasswordChanging: false
 };
 
 const authSlice = createSlice({
@@ -25,6 +26,16 @@ const authSlice = createSlice({
         logout(state, action) {
             state.isLoggedIn = false;
             state.currentUser = undefined;
+        },
+
+        changePassword(state, action) {
+            state.isPasswordChanging = true;
+        },
+        changePasswordSuccess(state, action) {
+            state.isPasswordChanging = false;
+        },
+        changePasswordFail(state, action) {
+            state.isPasswordChanging = false;
         }
     }
 });

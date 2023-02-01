@@ -444,7 +444,7 @@ const MonitorLeave = () => {
                                             <Box>
                                                 <FormControl sx={{ minWidth: 150, marginTop: '10px' }}>
                                                     <InputLabel size="small" color="secondary" id="demo-simple-select-label">
-                                                        Leave type
+                                                        Leave Type
                                                     </InputLabel>
                                                     <Select
                                                         size="small"

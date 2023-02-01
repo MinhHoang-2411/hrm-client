@@ -2,6 +2,7 @@ import { call, delay, fork, put, take, takeLatest, all } from 'redux-saga/effect
 import { authActions } from './authSlice';
 import { login, getCurrentEmployeeLogin } from 'api/login';
 import { alertActions } from '../alert/alertSlice';
+import { changePassword } from 'api/password';
 
 function* handleLogin(action) {
     try {
@@ -49,8 +50,49 @@ function* handleLogout(action) {
     action.payload.onNavigate?.();
 }
 
+function* handleChangePassword(action) {
+    try {
+        const response = yield call(changePassword, action.payload);
+        yield put(authActions.changePasswordSuccess({ ...action.payload }));
+        yield put(
+            alertActions.showAlert({
+                text: 'Change Password successfully',
+                type: 'success'
+            })
+        );
+    } catch (error) {
+        yield put(authActions.changePasswordFail(error));
+        if (error.response.status === 400) {
+            yield put(
+                alertActions.showAlert({
+                    text: error.response.data.title,
+                    type: 'error'
+                })
+            );
+        } else if (error.response.status === 500) {
+            yield put(
+                alertActions.showAlert({
+                    text: error.response.data.detail,
+                    type: 'error'
+                })
+            );
+        } else {
+            yield put(
+                alertActions.showAlert({
+                    text: 'An error occurred, please try again',
+                    type: 'error'
+                })
+            );
+        }
+    }
+}
+
 function* watchLoginFlow() {
-    yield all([takeLatest(authActions.login.type, handleLogin), takeLatest(authActions.logout.type, handleLogout)]);
+    yield all([
+        takeLatest(authActions.login.type, handleLogin),
+        takeLatest(authActions.logout.type, handleLogout),
+        takeLatest(authActions.changePassword.type, handleChangePassword)
+    ]);
 }
 
 export function* authSaga() {
