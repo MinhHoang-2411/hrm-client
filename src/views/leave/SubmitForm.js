@@ -67,7 +67,8 @@ import * as React from 'react';
 // constant
 import { LEAVE_TYPE } from 'constants/index';
 
-const steps = ['Submit a leave', 'Manager confirms the leave', 'Admin approves the leave'];
+// i18n
+import { useTranslation } from 'react-i18next';
 
 const SubmitForm = ({ ...others }) => {
     const dispatch = useAppDispatch();
@@ -85,7 +86,9 @@ const SubmitForm = ({ ...others }) => {
     const [leaveType, setLeaveType] = useState('');
     const [fromError, setFromError] = useState(null);
     const [toError, setToError] = useState(null);
+    const { t, i18n } = useTranslation();
 
+    const steps = [t('Submit a leave'), t('Manager confirms the leave'), t('Admin approves the leave')];
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
     const listManager = useAppSelector((state) => state.employee.listData);
@@ -206,11 +209,11 @@ const SubmitForm = ({ ...others }) => {
 
     const showToastMessage = (param) => {
         if (param === 'success') {
-            toast.success('Submit leave successfully', {
+            toast.success(t('Submit leave successfully'), {
                 position: toast.POSITION.TOP_RIGHT
             });
         } else if (param === 'failed') {
-            toast.error('Submit Leave fail', {
+            toast.error(t('Submit Leave fail'), {
                 position: toast.POSITION.TOP_RIGHT
             });
         }
@@ -230,9 +233,9 @@ const SubmitForm = ({ ...others }) => {
             let leaveUnUse = result.data.leaveUnUse < 0 ? 0 : result.data.leaveUnUse;
             setLeaveUnUse(leaveUnUse);
             if (leaveUnUse === 0 || leaveUnUse === 1) {
-                setInforLeaveUnUse(leaveUnUse + ' day of Annual Leave');
+                setInforLeaveUnUse(leaveUnUse + ' ');
             } else {
-                setInforLeaveUnUse(leaveUnUse + ' days of Annual Leave');
+                setInforLeaveUnUse(leaveUnUse + ' ');
             }
         });
         showToastMessage(alert);
@@ -244,7 +247,7 @@ const SubmitForm = ({ ...others }) => {
     }, []);
 
     return (
-        <MainCard title="Leave Request">
+        <MainCard title={t('Leave Request')}>
             <Formik
                 innerRef={formikRef}
                 initialValues={{
@@ -294,7 +297,7 @@ const SubmitForm = ({ ...others }) => {
                                                     sx={{ ...theme.typography.customInput }}
                                                 >
                                                     <Box className="title-form">
-                                                        <span>Title</span>
+                                                        <span>{t('Title')}</span>
                                                         <span className="require">(*)</span>
                                                     </Box>
 
@@ -302,13 +305,13 @@ const SubmitForm = ({ ...others }) => {
                                                         id="outlined-adornment-title"
                                                         type="text"
                                                         name="title"
-                                                        placeholder="Title"
+                                                        placeholder={t('Title')}
                                                         value={values.title}
                                                         onChange={handleChange}
                                                         inputProps={{ style: { fontSize: '16px' } }}
                                                         className="form-input"
                                                         error={touched.title && Boolean(errors.title)}
-                                                        helperText={touched.title && errors.title}
+                                                        helperText={t(touched.title) && t(errors.title)}
                                                         color="secondary"
                                                     />
                                                 </FormControl>
@@ -320,7 +323,7 @@ const SubmitForm = ({ ...others }) => {
                                                     sx={{ ...theme.typography.customInput }}
                                                 >
                                                     <Box className="title-form">
-                                                        <span>Leave Type</span>
+                                                        <span>{t('Leave Type')}</span>
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <Select
@@ -338,7 +341,7 @@ const SubmitForm = ({ ...others }) => {
                                                     >
                                                         {LEAVE_TYPE?.map((item, index) => (
                                                             <MenuItem key={index} value={item}>
-                                                                {upperCaseFirstCharacter(item)}
+                                                                {t(upperCaseFirstCharacter(item))}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
@@ -359,7 +362,7 @@ const SubmitForm = ({ ...others }) => {
                                                     sx={{ ...theme.typography.customInput }}
                                                 >
                                                     <Box className="title-form">
-                                                        <span>From</span>
+                                                        <span>{t('From')}</span>
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -380,7 +383,7 @@ const SubmitForm = ({ ...others }) => {
                                                                     helperText={
                                                                         fromError === 'invalidDate'
                                                                             ? 'Please follow the format dd/mm/yyyy'
-                                                                            : touched.startDate && errors.startDate
+                                                                            : t(touched.startDate) && t(errors.startDate)
                                                                     }
                                                                     color="secondary"
                                                                 />
@@ -399,7 +402,7 @@ const SubmitForm = ({ ...others }) => {
                                                     sx={{ ...theme.typography.customInput }}
                                                 >
                                                     <Box className="title-form">
-                                                        <span>To</span>
+                                                        <span>{t('To')}</span>
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -421,7 +424,7 @@ const SubmitForm = ({ ...others }) => {
                                                                     helperText={
                                                                         toError === 'invalidDate'
                                                                             ? 'Please follow the format dd/mm/yyyy'
-                                                                            : touched.endDate && errors.endDate
+                                                                            : t(touched.endDate) && t(errors.endDate)
                                                                     }
                                                                     color="secondary"
                                                                 />
@@ -441,7 +444,7 @@ const SubmitForm = ({ ...others }) => {
                                                     className="title-form"
                                                 >
                                                     <Box className="title-form">
-                                                        <span>Assign To</span>
+                                                        <span>{t('Assign To')}</span>
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <Autocomplete
@@ -465,7 +468,7 @@ const SubmitForm = ({ ...others }) => {
                                                                 name="assignTo"
                                                                 {...params}
                                                                 error={touched.assignTo && Boolean(errors.assignTo)}
-                                                                helperText={touched.assignTo && errors.assignTo}
+                                                                helperText={t(touched.assignTo) && t(errors.assignTo)}
                                                                 color="secondary"
                                                             />
                                                         )}
@@ -484,7 +487,7 @@ const SubmitForm = ({ ...others }) => {
                                             className="title-form"
                                         >
                                             <Box className="title-form">
-                                                <span>Reason</span>
+                                                <span>{t('Reason')}</span>
                                                 <span className="require">(*)</span>
                                             </Box>
                                             <TextField
@@ -493,12 +496,12 @@ const SubmitForm = ({ ...others }) => {
                                                 name="reason"
                                                 type="text"
                                                 rows={6}
-                                                placeholder="Reason"
+                                                placeholder={t('Reason')}
                                                 value={values.reason}
                                                 onChange={handleChange}
                                                 inputProps={{ style: { fontSize: '16px' } }}
                                                 error={touched.reason && Boolean(errors.reason)}
-                                                helperText={touched.reason && errors.reason}
+                                                helperText={t(touched.reason) && t(errors.reason)}
                                                 color="secondary"
                                             />
                                         </FormControl>
@@ -521,7 +524,7 @@ const SubmitForm = ({ ...others }) => {
                                                 color="secondary"
                                                 startIcon={<RestartAltIcon />}
                                             >
-                                                Reset
+                                                {t('Reset')}
                                             </Button>
                                             <Button
                                                 disableElevation
@@ -534,7 +537,7 @@ const SubmitForm = ({ ...others }) => {
                                                 startIcon={<SendIcon />}
                                                 onClick={(e) => checkValidLeave()}
                                             >
-                                                Submit
+                                                {t('Submit')}
                                             </Button>
                                         </Stack>
                                     </Grid>
@@ -542,17 +545,17 @@ const SubmitForm = ({ ...others }) => {
                             </Grid>
                             <Grid>
                                 <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
-                                    <DialogTitle sx={{ fontSize: '24px' }}>Confirm</DialogTitle>
+                                    <DialogTitle sx={{ fontSize: '24px' }}>{t('Confirm')}</DialogTitle>
                                     <DialogContent>
                                         {leaveUnUser === 0 ? (
                                             <Box>
                                                 <span style={{ fontSize: '15px' }}>
-                                                    You have used up your leave for this year. Would you like to submit this leave?
+                                                    {t('You have used up your leave for this year. Would you like to submit this leave?')}
                                                 </span>
                                             </Box>
                                         ) : (
                                             <Box>
-                                                <span style={{ fontSize: '15px' }}>Are you sure to submit this leave?</span>
+                                                <span style={{ fontSize: '15px' }}>{t('Are you sure to submit this leave?')}</span>
                                             </Box>
                                         )}
                                     </DialogContent>
@@ -566,7 +569,7 @@ const SubmitForm = ({ ...others }) => {
                                             onClick={handleClose}
                                             color="secondary"
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
                                         <Button
                                             disableElevation
@@ -580,7 +583,7 @@ const SubmitForm = ({ ...others }) => {
                                                 handleSubmit(values);
                                             }}
                                         >
-                                            Submit
+                                            {t('Submit')}
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
@@ -593,7 +596,11 @@ const SubmitForm = ({ ...others }) => {
                                     }}
                                     variant="outlined"
                                 >
-                                    <CardHeader sx={{ padding: '24px 24px 10px 24px' }} title="Leave Detail" subheader={inforLeaveUnUse} />
+                                    <CardHeader
+                                        sx={{ padding: '24px 24px 10px 24px' }}
+                                        title={t('Leave Detail')}
+                                        subheader={inforLeaveUnUse + t('day of Annual Leave')}
+                                    />
                                     <CardContent
                                         sx={{ padding: '0px 24px' }}
                                         style={{
@@ -616,7 +623,7 @@ const SubmitForm = ({ ...others }) => {
                                                         }}
                                                         fontSize="medium"
                                                     />
-                                                    <Typography sx={{ color: '#9E9E9E' }}>Empty Detail</Typography>
+                                                    <Typography sx={{ color: '#9E9E9E' }}>{t('Empty Detail')}</Typography>
                                                 </center>
                                             </Box>
                                         ) : (
@@ -626,8 +633,8 @@ const SubmitForm = ({ ...others }) => {
                                         {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
                                         {leaveType === 'MATERNITY' && (
                                             <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
-                                                Your leave type is Maternity. <br />
-                                                You don't need to select Leave Detail.
+                                                {t('Your leave type is Maternity.')} <br />
+                                                {t("You don't need to select Leave Detail.")}
                                             </Alert>
                                         )}
                                         <ul style={{ paddingLeft: 0 }}>
@@ -667,9 +674,9 @@ const SubmitForm = ({ ...others }) => {
                                                                             defaultValue="ALL_DAY"
                                                                             color="secondary"
                                                                         >
-                                                                            <MenuItem value={'ALL_DAY'}>All day</MenuItem>
-                                                                            <MenuItem value={'MORNING'}>Morning</MenuItem>
-                                                                            <MenuItem value={'AFTERNOON'}>Afternoon</MenuItem>
+                                                                            <MenuItem value={'ALL_DAY'}>{t('All day')}</MenuItem>
+                                                                            <MenuItem value={'MORNING'}>{t('Morning')}</MenuItem>
+                                                                            <MenuItem value={'AFTERNOON'}>{t('Afternoon')}</MenuItem>
                                                                         </Select>
                                                                         <Stack direction="row" spacing={1}>
                                                                             <IconButton
@@ -733,7 +740,7 @@ const SubmitForm = ({ ...others }) => {
                 {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm, setFieldValue }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
                         <Dialog open={open} onClose={handleClose} fullWidth>
-                            <DialogTitle sx={{ fontSize: '24px' }}>Note</DialogTitle>
+                            <DialogTitle sx={{ fontSize: '24px' }}>{t('Note')}</DialogTitle>
                             <DialogContent>
                                 <TextField
                                     id="outlined-multiline-static"
@@ -744,11 +751,11 @@ const SubmitForm = ({ ...others }) => {
                                     value={values.note}
                                     onChange={handleChange}
                                     rows={6}
-                                    placeholder="Note"
+                                    placeholder={t('Note')}
                                     inputProps={{ style: { fontSize: '16px' } }}
                                     color="secondary"
                                     error={touched.note && Boolean(errors.note)}
-                                    helperText={touched.note && errors.note}
+                                    helperText={t(touched.note) && t(errors.note)}
                                     style={{ marginTop: '5px' }}
                                 />
                             </DialogContent>
@@ -765,7 +772,7 @@ const SubmitForm = ({ ...others }) => {
                                     }}
                                     color="secondary"
                                 >
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                                 <Button
                                     disableElevation
@@ -779,7 +786,7 @@ const SubmitForm = ({ ...others }) => {
                                         handleSubmit(values);
                                     }}
                                 >
-                                    Add
+                                    {t('Add')}
                                 </Button>
                             </DialogActions>
                         </Dialog>

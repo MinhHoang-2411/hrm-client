@@ -15,6 +15,9 @@ import Transitions from 'ui-component/extended/Transitions';
 import { IconAdjustmentsHorizontal, IconSearch, IconX } from '@tabler/icons';
 import { shouldForwardProp } from '@mui/system';
 
+// i18n
+import { useTranslation } from 'react-i18next';
+
 // styles
 const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
     zIndex: 1100,
@@ -118,6 +121,7 @@ MobileSearch.propTypes = {
 const SearchSection = () => {
     const theme = useTheme();
     const [value, setValue] = useState('');
+    const { t, i18n } = useTranslation();
 
     return (
         <>
@@ -166,7 +170,7 @@ const SearchSection = () => {
                     id="input-search-header"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    placeholder="Search employee, asset, skill,…"
+                    placeholder={t('Search employee, asset, skill,…')}
                     startAdornment={
                         <InputAdornment position="start">
                             <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />

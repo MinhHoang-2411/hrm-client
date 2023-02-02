@@ -89,6 +89,9 @@ import ModelLeaveDetail from '../../leave/Modal/model-leave-detail';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
+// i18n
+import { useTranslation } from 'react-i18next';
+
 const MonitorLeave = () => {
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
@@ -133,6 +136,7 @@ const MonitorLeave = () => {
     const [toOtherError, setToOtherError] = useState(null);
     const [toWaitingError, setToWaitingError] = useState(null);
     const basicInfo = JSON.parse(localStorage.getItem('employee'));
+    const { t, i18n } = useTranslation();
 
     const handleClose = () => {
         setOpenModelConfirm(false);
@@ -156,7 +160,7 @@ const MonitorLeave = () => {
     };
 
     const handleUpdateStatus = (values) => {
-        const tmpData = { ...leaveSelected };
+        const tmpData = { ...leaveSelected, translation: t };
 
         if (action === 'CONFIRMED') {
             dispatch(leaveActions.confirmLeave({ ...tmpData }));
@@ -188,7 +192,7 @@ const MonitorLeave = () => {
         }
         return (
             <Chip
-                label={upperCaseFirstCharacter(status)}
+                label={t(upperCaseFirstCharacter(status))}
                 sx={{ fontWeight: 'bold', backgroundColor: color, color: '#ffff', borderRadius: '4px' }}
             />
         );
@@ -289,7 +293,7 @@ const MonitorLeave = () => {
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={12}>
-                                    <span style={{ fontWeight: 'bold' }}>Title:</span> {row?.title}
+                                    <span style={{ fontWeight: 'bold' }}>{t('Title')}:</span> {row?.title}
                                 </Grid>
                             </Grid>
                         </Box>
@@ -297,23 +301,24 @@ const MonitorLeave = () => {
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={6}>
-                                    <span style={{ fontWeight: 'bold' }}>Leave Type: </span>{' '}
+                                    <span style={{ fontWeight: 'bold' }}>{t('Leave Type')}:</span>{' '}
                                     <Chip
                                         sx={{ fontWeight: 'bold', borderRadius: '4px', marginLeft: '5px' }}
                                         variant="outlined"
-                                        label={upperCaseFirstCharacter(row?.type)}
+                                        label={t(upperCaseFirstCharacter(row?.type))}
                                         color="primary"
                                     />
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <span style={{ fontWeight: 'bold', marginRight: '5px' }}>Status: </span> {showStatusLeave(row?.status)}
+                                    <span style={{ fontWeight: 'bold', marginRight: '5px' }}>{t('Status')}: </span>{' '}
+                                    {showStatusLeave(row?.status)}
                                 </Grid>
                             </Grid>
                         </Box>
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={12}>
-                                    <span style={{ fontWeight: 'bold' }}>Date Submitted:</span>{' '}
+                                    <span style={{ fontWeight: 'bold' }}>{t('Date Submitted')}:</span>{' '}
                                     {formatTimeStampToDateTime(row?.createdDate)}
                                 </Grid>
                             </Grid>
@@ -321,15 +326,15 @@ const MonitorLeave = () => {
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                             <Grid container spacing={2} columns={12}>
                                 <Grid item xs={6}>
-                                    <span style={{ fontWeight: 'bold' }}>From:</span> {formatTimeStampToDate(row?.startDate)}
+                                    <span style={{ fontWeight: 'bold' }}>{t('From')}:</span> {formatTimeStampToDate(row?.startDate)}
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <span style={{ fontWeight: 'bold' }}>To:</span> {formatTimeStampToDate(row?.endDate)}
+                                    <span style={{ fontWeight: 'bold' }}>{t('To')}:</span> {formatTimeStampToDate(row?.endDate)}
                                 </Grid>
                             </Grid>
                         </Box>
                         <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <span style={{ fontWeight: 'bold' }}>Reason:</span>
+                            <span style={{ fontWeight: 'bold' }}>{t('Reason')}:</span>
                             <span style={{ marginLeft: '3px' }}>{row?.reason}</span>
                         </Box>
                         {isLeaveWaiting(row?.status) && (
@@ -343,7 +348,7 @@ const MonitorLeave = () => {
                                         handleClickModelConfirm(row, 'confirm', 'CONFIRMED');
                                     }}
                                 >
-                                    Confirm
+                                    {t('Confirm')}
                                 </Button>
                                 <Button
                                     sx={{ marginRight: '15px', float: 'right' }}
@@ -354,7 +359,7 @@ const MonitorLeave = () => {
                                         handleClickModelConfirm(row, 'reject', 'REJECTED');
                                     }}
                                 >
-                                    Reject
+                                    {t('Reject')}
                                 </Button>
                             </Box>
                         )}
@@ -430,7 +435,8 @@ const MonitorLeave = () => {
                                 <Box sx={{ padding: '10px 20px' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '5px' }}>
                                         <h3 style={styleLabel}>
-                                            Waiting leave requests <span style={styleCount}>{paginationWaiting?.totalCount || 0}</span>
+                                            {t('Waiting leave requests')}{' '}
+                                            <span style={styleCount}>{paginationWaiting?.totalCount || 0}</span>
                                         </h3>
                                         <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                                             <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px' }}>
@@ -438,13 +444,13 @@ const MonitorLeave = () => {
                                                     width={'520px'}
                                                     search={searchListWaiting}
                                                     handleSearch={(value) => handleSearch(value, 'waiting')}
-                                                    placeholder="Search..."
+                                                    placeholder={t('Search...')}
                                                 />
                                             </Stack>
                                             <Box>
                                                 <FormControl sx={{ minWidth: 150, marginTop: '10px' }}>
                                                     <InputLabel size="small" color="secondary" id="demo-simple-select-label">
-                                                        Leave type
+                                                        {t('Leave Type')}
                                                     </InputLabel>
                                                     <Select
                                                         size="small"
@@ -456,11 +462,11 @@ const MonitorLeave = () => {
                                                         color="secondary"
                                                     >
                                                         <MenuItem size="small" value={'all'}>
-                                                            All
+                                                            {t('All')}
                                                         </MenuItem>
                                                         {LEAVE_TYPE?.map((item, index) => (
                                                             <MenuItem key={index} value={item} size="small">
-                                                                {upperCaseFirstCharacter(item)}
+                                                                {t(upperCaseFirstCharacter(item))}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
@@ -471,7 +477,7 @@ const MonitorLeave = () => {
                                                 >
                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                         <DatePicker
-                                                            label="Start Date"
+                                                            label={t('Start Date')}
                                                             value={fromWaiting || null}
                                                             name="fromWaiting"
                                                             onChange={(e) => {
@@ -503,7 +509,7 @@ const MonitorLeave = () => {
                                                 >
                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                         <DatePicker
-                                                            label="End Date"
+                                                            label={t('End Date')}
                                                             value={toWaiting || null}
                                                             name="toWaiting"
                                                             minDate={fromWaiting}
@@ -559,7 +565,9 @@ const MonitorLeave = () => {
                                         ) : (
                                             <Empty
                                                 title={
-                                                    isShowFilterMessage('waiting') ? 'No results matched your search' : 'No data available'
+                                                    isShowFilterMessage('waiting')
+                                                        ? t('No results matched your search')
+                                                        : t('No data available')
                                                 }
                                             />
                                         )}
@@ -579,20 +587,20 @@ const MonitorLeave = () => {
                                         }}
                                     >
                                         <h3 style={styleLabel}>
-                                            Other leave requests <span style={styleCount}>{paginationManager?.totalCount || 0}</span>
+                                            {t('Other leave requests')} <span style={styleCount}>{paginationManager?.totalCount || 0}</span>
                                         </h3>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '12.5px' }}>
                                             <InputSearch
                                                 width={'595px'}
                                                 search={search}
                                                 handleSearch={handleSearch}
-                                                placeholder="Search ..."
+                                                placeholder={t('Search...')}
                                             />
                                         </Box>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                                             <FormControl sx={{ minWidth: 120 }}>
                                                 <InputLabel size="small" id="demo-simple-select-label" color="secondary">
-                                                    Leave Type
+                                                    {t('Leave Type')}
                                                 </InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-label"
@@ -613,7 +621,7 @@ const MonitorLeave = () => {
                                             </FormControl>
                                             <FormControl sx={{ minWidth: 120, marginLeft: '5px' }}>
                                                 <InputLabel size="small" id="demo-simple-select-label" color="secondary">
-                                                    Status
+                                                    {t('Status')}
                                                 </InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-label"
@@ -624,16 +632,16 @@ const MonitorLeave = () => {
                                                     color="secondary"
                                                     size="small"
                                                 >
-                                                    <MenuItem value={'all'}>All</MenuItem>
-                                                    <MenuItem value={'REJECTED'}>Rejected</MenuItem>
-                                                    <MenuItem value={'CONFIRMED'}>Confirmed</MenuItem>
-                                                    <MenuItem value={'APPROVED'}>Approved</MenuItem>
+                                                    <MenuItem value={'all'}>{t('All')}</MenuItem>
+                                                    <MenuItem value={'REJECTED'}>{t('Rejected')}</MenuItem>
+                                                    <MenuItem value={'CONFIRMED'}>{t('Confirmed')}</MenuItem>
+                                                    <MenuItem value={'APPROVED'}>{t('Approved')}</MenuItem>
                                                 </Select>
                                             </FormControl>
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="Start Date"
+                                                        label={t('Start Date')}
                                                         value={fromAll || null}
                                                         name="fromAll"
                                                         onChange={(e) => {
@@ -657,7 +665,7 @@ const MonitorLeave = () => {
                                             <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
-                                                        label="End Date"
+                                                        label={t('End Date')}
                                                         value={toAll || null}
                                                         name="toAll"
                                                         onChange={(e) => {
@@ -716,7 +724,9 @@ const MonitorLeave = () => {
                                         ) : listLeaveForManager?.length ? (
                                             renderList(listLeaveForManager)
                                         ) : (
-                                            <Empty title={isShowFilterMessage() ? 'No results matched your search' : 'No data available'} />
+                                            <Empty
+                                                title={isShowFilterMessage() ? t('No results matched your search') : t('No data available')}
+                                            />
                                         )}
                                     </InfiniteScroll>
                                 </Box>
@@ -744,10 +754,10 @@ const MonitorLeave = () => {
                                     {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm }) => (
                                         <form noValidate onSubmit={handleSubmit}>
                                             <Dialog open={openModelConfirm} onClose={handleClose} fullWidth>
-                                                <DialogTitle sx={{ fontSize: '24px' }}>{upperCaseFirstCharacter(title)}</DialogTitle>
+                                                <DialogTitle sx={{ fontSize: '24px' }}>{t(upperCaseFirstCharacter(title))}</DialogTitle>
                                                 <DialogContent>
                                                     <span style={{ fontSize: '15px' }}>
-                                                        Are you sure to <b>{title}</b> this leave?
+                                                        {t('Are you sure to')} <b>{t(title)}</b> {t('this leave?')}
                                                     </span>
                                                     {action === 'REJECTED' && (
                                                         <FormControl fullWidth sx={{ marginTop: '10px' }}>
@@ -760,7 +770,7 @@ const MonitorLeave = () => {
                                                                 value={values.rejectReason}
                                                                 onChange={handleChange}
                                                                 rows={5}
-                                                                placeholder="Rejection reason (Optional)"
+                                                                placeholder={t('Rejection reason (Optional)')}
                                                                 color="secondary"
                                                                 style={{ marginTop: '5px' }}
                                                                 error={touched.rejectReason && Boolean(errors.rejectReason)}
@@ -782,7 +792,7 @@ const MonitorLeave = () => {
                                                         }}
                                                         color="secondary"
                                                     >
-                                                        Cancel
+                                                        {t('Cancel')}
                                                     </Button>
                                                     <Button
                                                         style={{ width: '20%' }}
@@ -794,7 +804,7 @@ const MonitorLeave = () => {
                                                             handleSubmit(values);
                                                         }}
                                                     >
-                                                        Agree
+                                                        {t('Agree')}
                                                     </Button>
                                                 </DialogActions>
                                             </Dialog>
