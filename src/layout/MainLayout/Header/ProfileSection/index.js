@@ -170,7 +170,7 @@ const ProfileSection = () => {
                                                     {basicInfo.user.firstName} {basicInfo.user.lastName}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">{upperCaseFirstCharacter(basicInfo.position)}</Typography>
+                                            <Typography variant="subtitle2">{basicInfo.position}</Typography>
                                         </Stack>
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>

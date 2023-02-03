@@ -15,8 +15,11 @@ import { actionActions } from 'store/action/actionSlice';
 const MenuList = () => {
     const dispatch = useAppDispatch();
     const reloadListWaiting = useAppSelector((state) => state.leave.reloadListWaiting);
+    const basicInfo = JSON.parse(localStorage.getItem('employee'));
+
     useEffect(() => {
-        dispatch(actionActions.getCountMenu());
+        const role = basicInfo.position;
+        if (role === 'MANAGER') dispatch(actionActions.getCountMenu());
     }, [reloadListWaiting]);
     const navItems = menuItem.items.map((item) => {
         switch (item.type) {

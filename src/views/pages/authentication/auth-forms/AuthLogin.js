@@ -22,6 +22,8 @@ import {
     Typography,
     useMediaQuery
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import LoginIcon from '@mui/icons-material/Login';
 
 // third party
 import * as Yup from 'yup';
@@ -35,7 +37,7 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { useNavigate } from 'react-router-dom';
 import { authActions } from 'store/auth/authSlice';
 
@@ -48,6 +50,7 @@ const FirebaseLogin = ({ ...others }) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [checked, setChecked] = React.useState(false);
+    const logging = useAppSelector((state) => state.auth.logging);
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
@@ -175,19 +178,17 @@ const FirebaseLogin = ({ ...others }) => {
                         )}
 
                         <Box sx={{ mt: 2 }}>
-                            <AnimateButton>
-                                <Button
-                                    disableElevation
-                                    disabled={isSubmitting}
-                                    fullWidth
-                                    size="large"
-                                    type="submit"
-                                    variant="contained"
-                                    color="secondary"
-                                >
-                                    Login
-                                </Button>
-                            </AnimateButton>
+                            <LoadingButton
+                                endIcon={<LoginIcon />}
+                                loading={logging}
+                                loadingPosition="end"
+                                variant="contained"
+                                type="submit"
+                                color="secondary"
+                                fullWidth
+                            >
+                                <span>Login</span>
+                            </LoadingButton>
                         </Box>
                     </form>
                 )}
