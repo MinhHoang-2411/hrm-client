@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { actionActions } from 'store/action/actionSlice';
 
+// i18n
+import { useTranslation } from 'react-i18next';
 // ==============================|| SIDEBAR MENU LIST ITEMS ||============================== //
 
 const NavItem = ({ item, level }) => {
@@ -22,6 +24,7 @@ const NavItem = ({ item, level }) => {
     const matchesSM = useMediaQuery(theme.breakpoints.down('lg'));
     const { pathname } = useLocation();
     const { countMenu } = customization;
+    const { t, i18n } = useTranslation();
 
     const Icon = item.icon;
     const itemIcon = item?.icon ? (
@@ -99,7 +102,7 @@ const NavItem = ({ item, level }) => {
             <ListItemText
                 primary={
                     <Typography variant={isSelected ? 'h5' : 'body1'} color="inherit">
-                        {item.title}
+                        {t(item.title)}
                     </Typography>
                 }
                 secondary={

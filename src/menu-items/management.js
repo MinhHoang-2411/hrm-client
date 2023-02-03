@@ -33,7 +33,7 @@ const management = {
                 },
                 {
                     id: 'submit',
-                    title: 'Submit for employee',
+                    title: 'Support member',
                     type: 'item',
                     url: '/management/leave/submit',
                     breadcrumbs: false

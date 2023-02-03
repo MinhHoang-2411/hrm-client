@@ -48,7 +48,7 @@ function* handleCancelLeave(action) {
         yield put(actionActions.minusCountMenu('leave'));
         yield put(
             alertActions.showAlert({
-                text: 'Cancel leave successfully',
+                text: params.translation('Cancel leave successfully'),
                 type: 'success'
             })
         );
@@ -57,14 +57,14 @@ function* handleCancelLeave(action) {
         if (error.response.status === 400) {
             yield put(
                 alertActions.showAlert({
-                    text: 'You cannot cancel this leave because the manager has approved/ rejected it',
+                    text: params.translation('You cannot cancel this leave because the manager has approved/ rejected it'),
                     type: 'error'
                 })
             );
         } else {
             yield put(
                 alertActions.showAlert({
-                    text: 'An error occurred, please try again',
+                    text: params.translation('An error occurred, please try again'),
                     type: 'error'
                 })
             );
@@ -82,7 +82,7 @@ function* handleRejectLeave(action) {
 
         yield put(
             alertActions.showAlert({
-                text: 'Reject leave successfully',
+                text: params.translation('Reject leave successfully'),
                 type: 'success'
             })
         );
@@ -91,14 +91,14 @@ function* handleRejectLeave(action) {
         if (error.response.status === 400) {
             yield put(
                 alertActions.showAlert({
-                    text: 'You can not take this action because the creator canceled this leave',
+                    text: params.translation('You can not take this action because the creator canceled this leave'),
                     type: 'error'
                 })
             );
         } else {
             yield put(
                 alertActions.showAlert({
-                    text: 'An error occurred, please try again',
+                    text: params.translation('An error occurred, please try again'),
                     type: 'error'
                 })
             );
@@ -115,7 +115,7 @@ function* handleConfirmLeave(action) {
         yield put(actionActions.minusCountMenu('leave'));
         yield put(
             alertActions.showAlert({
-                text: 'Confirm leave successfully',
+                text: params.translation('Confirm leave successfully'),
                 type: 'success'
             })
         );
@@ -124,14 +124,14 @@ function* handleConfirmLeave(action) {
         if (error.response.status === 400) {
             yield put(
                 alertActions.showAlert({
-                    text: 'You can not take this action because the creator canceled this leave',
+                    text: params.translation('You can not take this action because the creator canceled this leave'),
                     type: 'error'
                 })
             );
         } else {
             yield put(
                 alertActions.showAlert({
-                    text: 'An error occurred, please try again',
+                    text: params.translation('An error occurred, please try again'),
                     type: 'error'
                 })
             );

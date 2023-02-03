@@ -25,6 +25,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project imports
 import User1 from 'assets/images/users/user-round.svg';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 
@@ -36,6 +37,9 @@ import { authActions } from 'store/auth/authSlice';
 // format
 import { upperCaseFirstCharacter } from 'utils/string';
 
+// i18n
+import { useTranslation } from 'react-i18next';
+
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
@@ -43,6 +47,7 @@ const ProfileSection = () => {
     const customization = useAppSelector((state) => state.action);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { t, i18n } = useTranslation();
 
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
@@ -114,7 +119,7 @@ const ProfileSection = () => {
                 }}
                 icon={
                     <Avatar
-                        src={User1}
+                        src={AccountCircleIcon}
                         sx={{
                             ...theme.typography.mediumAvatar,
                             margin: '8px 0 8px 8px !important',
@@ -160,7 +165,7 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography variant="h4">Welcome,</Typography>
+                                                <Typography variant="h4">{t('Welcome')},</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                                                     {basicInfo.user.firstName} {basicInfo.user.lastName}
                                                 </Typography>
@@ -194,7 +199,9 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconSettings stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                                                    <ListItemText
+                                                        primary={<Typography variant="body2">{t('Account Settings')}</Typography>}
+                                                    />
                                                 </ListItemButton>
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
@@ -208,7 +215,7 @@ const ProfileSection = () => {
                                                         primary={
                                                             <Grid container spacing={1} justifyContent="space-between">
                                                                 <Grid item>
-                                                                    <Typography variant="body2">My Profile</Typography>
+                                                                    <Typography variant="body2">{t('My Profile')}</Typography>
                                                                 </Grid>
                                                             </Grid>
                                                         }
@@ -224,7 +231,7 @@ const ProfileSection = () => {
                                                     </ListItemIcon>
                                                     <ListItemText
                                                         onClick={handleLogout}
-                                                        primary={<Typography variant="body2">Logout</Typography>}
+                                                        primary={<Typography variant="body2">{t('Logout')}</Typography>}
                                                     />
                                                 </ListItemButton>
                                             </List>

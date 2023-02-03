@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+// i18n
+import { useTranslation } from 'react-i18next';
 
 // material-ui
 import { Avatar, Box, ButtonBase, ClickAwayListener, Divider, Grid, Paper, Popper, useMediaQuery } from '@mui/material';
@@ -16,7 +18,11 @@ import { IconLanguage } from '@tabler/icons';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
+// svg-icon
+import VietNamFlagIcon from 'assets/images/vietnam-flag-icon.svg';
+import UKFlagIcon from 'assets/images/united-kingdom-flag-icon.svg';
 // ==============================|| LANGUAGE ||============================== //
 
 const Language = () => {
@@ -25,9 +31,12 @@ const Language = () => {
 
     const [open, setOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const { t, i18n } = useTranslation();
 
-    const handleListItemClick = (event, index) => {
+    const handleListItemClick = (event, index, lng) => {
         setSelectedIndex(index);
+        i18n.changeLanguage(lng);
+        localStorage.setItem('lang', JSON.stringify(lng));
     };
     /**
      * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -118,15 +127,21 @@ const Language = () => {
                                                 <List component="nav" aria-label="secondary mailbox folder">
                                                     <ListItemButton
                                                         selected={selectedIndex === 1}
-                                                        onClick={(event) => handleListItemClick(event, 1)}
+                                                        onClick={(event) => handleListItemClick(event, 1, 'en')}
                                                     >
-                                                        <ListItemText primary="English" />
+                                                        <ListItemIcon style={{ marginRight: '10px' }}>
+                                                            <img src={UKFlagIcon} alt="UKFlagIcon" width="30" />
+                                                        </ListItemIcon>
+                                                        <ListItemText primary={t('English')} />
                                                     </ListItemButton>
                                                     <ListItemButton
                                                         selected={selectedIndex === 2}
-                                                        onClick={(event) => handleListItemClick(event, 2)}
+                                                        onClick={(event) => handleListItemClick(event, 2, 'vi')}
                                                     >
-                                                        <ListItemText primary="Tiếng Việt" />
+                                                        <ListItemIcon style={{ marginRight: '10px' }}>
+                                                            <img src={VietNamFlagIcon} alt="VietNamFlagIcon" width="30" />
+                                                        </ListItemIcon>
+                                                        <ListItemText primary={t('Vietnamese')} />
                                                     </ListItemButton>
                                                 </List>
                                             </Box>

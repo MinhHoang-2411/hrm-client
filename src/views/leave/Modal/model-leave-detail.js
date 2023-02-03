@@ -29,33 +29,14 @@ import { useState } from 'react';
 // scss
 import '../../../assets/scss/leave.scss';
 
-const headCells = [
-    {
-        id: 'date',
-        align: 'left',
-        disablePadding: false,
-        label: 'Leave Date',
-        width: '4'
-    },
-    {
-        id: 'type',
-        align: 'left',
-        disablePadding: false,
-        label: 'Type',
-        width: '4'
-    },
-    {
-        id: 'note',
-        align: 'left',
-        disablePadding: false,
-        label: 'Note',
-        width: '4'
-    }
-];
+// i18n
+import { useTranslation } from 'react-i18next';
 
 export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
     const [order] = useState('asc');
     const [orderBy] = useState('id');
+
+    const { t, i18n } = useTranslation();
 
     const isRejectedByAdmin = (leaveDetailResponse) => {
         return leaveDetailResponse?.status === 'REJECTED' && leaveDetailResponse?.confirmerName !== undefined;
@@ -69,16 +50,40 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
         return leaveDetailResponse?.status !== 'REJECTED' && leaveDetailResponse?.status !== 'CANCELED';
     };
 
+    const headCells = [
+        {
+            id: 'date',
+            align: 'left',
+            disablePadding: false,
+            label: t('Leave Date'),
+            width: '4'
+        },
+        {
+            id: 'type',
+            align: 'left',
+            disablePadding: false,
+            label: t('Type'),
+            width: '4'
+        },
+        {
+            id: 'note',
+            align: 'left',
+            disablePadding: false,
+            label: t('Note'),
+            width: '4'
+        }
+    ];
+
     return (
         <Card>
-            <CardHeader title="Leave Detail"></CardHeader>
+            <CardHeader title={t('Leave Detail')}></CardHeader>
             <Divider light />
             <CardContent>
                 <Box sx={{ width: '100%' }}>
                     <Stack spacing={1}>
                         <Grid container>
                             <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>Title</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Title')}</span>
                             </Grid>
                             <Grid item xs={9}>
                                 {leaveDetail?.title}
@@ -86,13 +91,13 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         </Grid>
                         <Grid container>
                             <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>Creator</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Creator')}</span>
                             </Grid>
                             <Grid item xs={4}>
                                 {leaveDetail?.creatorName}
                             </Grid>
                             <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>Person on leave</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Person on leave')}</span>
                             </Grid>
                             <Grid item xs={3}>
                                 {leaveDetail?.personOnLeave}
@@ -100,13 +105,13 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         </Grid>
                         <Grid container>
                             <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>Submitted date</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Submitted date')}</span>
                             </Grid>
                             <Grid item xs={4}>
                                 {formatTimeStampToDateTime(leaveDetail?.createdDate)}
                             </Grid>
                             <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>Duration</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Duration')}</span>
                             </Grid>
                             <Grid item xs={3}>
                                 {formatTimeStampToDate(leaveDetail?.startDate)} - {formatTimeStampToDate(leaveDetail?.endDate)}
@@ -114,28 +119,28 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         </Grid>
                         <Grid container>
                             <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>Leave type</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Leave Type')}</span>
                             </Grid>
                             <Grid item xs={4}>
-                                {upperCaseFirstCharacter(leaveDetail?.type)}
+                                {t(upperCaseFirstCharacter(leaveDetail?.type))}
                             </Grid>
                             <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>Status</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Status')}</span>
                             </Grid>
                             <Grid item xs={3}>
-                                <span>{upperCaseFirstCharacter(leaveDetail?.status)}</span>
+                                <span>{t(upperCaseFirstCharacter(leaveDetail?.status))}</span>
                             </Grid>
                         </Grid>
                         {isRejectedByAdmin(leaveDetail) && (
                             <Grid container>
                                 <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>Confirmed by</span>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Confirmed by')}</span>
                                 </Grid>
                                 <Grid item xs={4}>
                                     {leaveDetail?.confirmerName}
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <span style={{ fontWeight: 'bold' }}>Rejected by</span>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Rejected by')}</span>
                                 </Grid>
                                 <Grid item xs={3}>
                                     {leaveDetail?.rejecterName}
@@ -145,7 +150,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         {isRejectedByManager(leaveDetail) && (
                             <Grid container>
                                 <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>Rejected by</span>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Rejected by')}</span>
                                 </Grid>
                                 <Grid item xs={9}>
                                     {leaveDetail?.rejecterName}
@@ -155,13 +160,13 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         {isNotRejectedAndCanceled(leaveDetail) && (
                             <Grid container>
                                 <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>Confirmed by</span>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Confirmed by')}</span>
                                 </Grid>
                                 <Grid item xs={4}>
                                     {leaveDetail?.confirmerName ? leaveDetail?.confirmerName : 'Unknown'}
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <span style={{ fontWeight: 'bold' }}>Approved by</span>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Approved by')}</span>
                                 </Grid>
                                 <Grid item xs={3}>
                                     {leaveDetail?.approverName ? leaveDetail?.approverName : 'Unknown'}
@@ -170,7 +175,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         )}
                         <Grid container>
                             <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>Reason</span>
+                                <span style={{ fontWeight: 'bold' }}>{t('Reason')}</span>
                             </Grid>
                             <Grid item xs={9}>
                                 {leaveDetail?.reason}
@@ -179,7 +184,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                         {leaveDetail?.rejectReason && (
                             <Grid container>
                                 <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>Rejection reason</span>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Rejection reason')}</span>
                                 </Grid>
                                 <Grid item xs={9}>
                                     {leaveDetail?.rejectReason}
@@ -221,7 +226,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                                                     width: 250
                                                                 }}
                                                             >
-                                                                {upperCaseFirstCharacter(item?.dateType)}
+                                                                {t(upperCaseFirstCharacter(item?.dateType))}
                                                             </TableCell>
                                                             <TableCell
                                                                 className="table-cell-modal"
@@ -239,7 +244,9 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                                             <TableBody>
                                                 <TableRow sx={{ backgroundColor: '#fafafa' }}>
                                                     <TableCell colSpan={12} scope="full" align="center">
-                                                        <span style={{ fontWeight: 'bold' }}>There is no detail for Maternity type</span>
+                                                        <span style={{ fontWeight: 'bold' }}>
+                                                            {t('There is no detail for Maternity type')}
+                                                        </span>
                                                     </TableCell>
                                                 </TableRow>
                                             </TableBody>
@@ -254,7 +261,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
             <Divider light />
             <CardActions sx={{ justifyContent: 'end' }}>
                 <Button variant="contained" size="error" color="secondary" className="button-submit-member" onClick={() => handleClose()}>
-                    Close
+                    {t('Close')}
                 </Button>
             </CardActions>
         </Card>

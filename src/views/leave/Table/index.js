@@ -43,106 +43,8 @@ import ModelCancelLeave from '../Modal/model-cancel-leave';
 // empty
 import Empty from 'ui-component/Empty';
 
-const headCells = [
-    {
-        id: 'dropdown',
-        align: 'left',
-        disablePadding: true,
-        label: '',
-        width: '10px'
-    },
-    {
-        id: 'createdDate',
-        align: 'left',
-        disablePadding: false,
-        label: 'Submitted Date',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'title',
-        align: 'left',
-        disablePadding: false,
-        label: 'Title',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'reason',
-        align: 'left',
-        disablePadding: false,
-        label: 'Reason',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'from',
-        align: 'left',
-        disablePadding: false,
-        label: 'From',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'to',
-        align: 'left',
-        disablePadding: false,
-        label: 'To',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'leaveType',
-        align: 'left',
-        disablePadding: false,
-        label: 'Type',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'status',
-        align: 'left',
-        disablePadding: false,
-        label: 'Status',
-        fontSize: '15px',
-        paddingLeft: '10px'
-    },
-    {
-        id: 'action',
-        align: 'left',
-        disablePadding: false,
-        label: 'Action',
-        fontSize: '15px',
-        paddingLeft: '25px'
-    }
-];
-
-const showStatusLeave = (status) => {
-    let color = '';
-    switch (status) {
-        case 'CONFIRMED':
-            color = '#1E88E5';
-            break;
-        case 'APPROVED':
-            color = '#00C853';
-            break;
-        case 'REJECTED':
-            color = '#D84315';
-            break;
-        case 'CANCELED':
-            color = '#9E9E9E';
-            break;
-        case 'WAITING':
-            color = '#FFC107';
-            break;
-    }
-    return (
-        <Chip
-            label={upperCaseFirstCharacter(status)}
-            sx={{ fontWeight: 'bold', backgroundColor: color, color: '#ffff', borderRadius: '4px', width: '86px' }}
-        />
-    );
-};
+// i18n
+import { useTranslation } from 'react-i18next';
 
 export default function TableLeaveHistory({ data, showFilterMessage }) {
     const [order] = useState('asc');
@@ -150,11 +52,113 @@ export default function TableLeaveHistory({ data, showFilterMessage }) {
     const [open, setOpen] = useState(false);
     const [typeOpenModal, setTypeOpenModal] = useState('');
     const [selectedLeave, setSelectedLeave] = useState({});
+    const { t, i18n } = useTranslation();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         setTypeOpenModal('');
+    };
+
+    const headCells = [
+        {
+            id: 'dropdown',
+            align: 'left',
+            disablePadding: true,
+            label: '',
+            width: '10px'
+        },
+        {
+            id: 'createdDate',
+            align: 'left',
+            disablePadding: false,
+            label: t('Submitted Date'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'title',
+            align: 'left',
+            disablePadding: false,
+            label: t('Title'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'reason',
+            align: 'left',
+            disablePadding: false,
+            label: t('Reason'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'from',
+            align: 'left',
+            disablePadding: false,
+            label: t('From'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'to',
+            align: 'left',
+            disablePadding: false,
+            label: t('To'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'leaveType',
+            align: 'left',
+            disablePadding: false,
+            label: t('Type'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'status',
+            align: 'left',
+            disablePadding: false,
+            label: t('Status'),
+            fontSize: '15px',
+            paddingLeft: '10px'
+        },
+        {
+            id: 'action',
+            align: 'left',
+            disablePadding: false,
+            label: t('Actions'),
+            fontSize: '15px',
+            paddingLeft: '25px'
+        }
+    ];
+
+    const showStatusLeave = (status) => {
+        let color = '';
+        switch (status) {
+            case 'CONFIRMED':
+                color = '#1E88E5';
+                break;
+            case 'APPROVED':
+                color = '#00C853';
+                break;
+            case 'REJECTED':
+                color = '#D84315';
+                break;
+            case 'CANCELED':
+                color = '#9E9E9E';
+                break;
+            case 'WAITING':
+                color = '#FFC107';
+                break;
+        }
+        return (
+            <Chip
+                label={t(upperCaseFirstCharacter(status))}
+                sx={{ fontWeight: 'bold', backgroundColor: color, color: '#ffff', borderRadius: '4px', width: '96px' }}
+            />
+        );
     };
 
     const switchModal = (type) => {
@@ -207,7 +211,7 @@ export default function TableLeaveHistory({ data, showFilterMessage }) {
                         {formatTimeStampToDate(row?.endDate)}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
-                        {upperCaseFirstCharacter(row?.type)}
+                        {t(upperCaseFirstCharacter(row?.type))}
                     </TableCell>
                     <TableCell align="left" className="table-cell">
                         {showStatusLeave(row?.status)}
@@ -273,7 +277,7 @@ export default function TableLeaveHistory({ data, showFilterMessage }) {
                             <TableRow>
                                 <TableCell colSpan={12} scope="full" align="center">
                                     <Empty
-                                        title={showFilterMessage ? 'No results matched your search' : 'No data available'}
+                                        title={showFilterMessage ? t('No results matched your search') : t('No data available')}
                                         height="400px"
                                     />
                                 </TableCell>

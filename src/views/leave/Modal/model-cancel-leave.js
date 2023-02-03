@@ -4,22 +4,25 @@ import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider } from
 import { useAppDispatch } from 'app/hooks';
 import { leaveActions } from 'store/leave/leaveSlice';
 
+// i18n
+import { useTranslation } from 'react-i18next';
+
 export default function ModelCancelLeave({ leaveCancel, handleClose }) {
     const dispatch = useAppDispatch();
-
+    const { t, i18n } = useTranslation();
     const handleUpdate = () => {
-        const tmpData = { ...leaveCancel };
+        const tmpData = { ...leaveCancel, translation: t };
         dispatch(leaveActions.cancelLeave({ ...tmpData }));
     };
 
     return (
         <>
             <Card>
-                <CardHeader title="Cancel Leave"></CardHeader>
+                <CardHeader title={t('Cancel Leave')}></CardHeader>
                 <Divider light />
                 <CardContent>
                     <Box style={{ fontSize: '15px' }}>
-                        Are you sure to <b>cancel</b> this leave?
+                        {t('Are you sure to')} <b>{t('cancel')}</b> {t('this leave?')}
                     </Box>
                 </CardContent>
                 <Divider light />
@@ -32,7 +35,7 @@ export default function ModelCancelLeave({ leaveCancel, handleClose }) {
                         onClick={handleClose}
                         color="secondary"
                     >
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                     <Button
                         disableElevation
@@ -46,7 +49,7 @@ export default function ModelCancelLeave({ leaveCancel, handleClose }) {
                             handleUpdate();
                         }}
                     >
-                        Agree
+                        {t('Agree')}
                     </Button>
                 </CardActions>
             </Card>
