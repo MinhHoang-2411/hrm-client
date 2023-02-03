@@ -14,6 +14,7 @@ import App from 'App';
 import 'assets/scss/style.scss';
 import { store } from 'app/store';
 import history from 'routes/history';
+import './i18n';
 
 // ==============================|| REACT DOM RENDER  ||============================== //
 

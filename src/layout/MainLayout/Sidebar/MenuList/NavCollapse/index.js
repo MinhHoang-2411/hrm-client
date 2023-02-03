@@ -14,6 +14,9 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons';
 import { useAppSelector } from 'app/hooks';
 
+// i18n
+import { useTranslation } from 'react-i18next';
+
 // ==============================|| SIDEBAR MENU LIST COLLAPSE ITEMS ||============================== //
 
 const NavCollapse = ({ menu, level }) => {
@@ -22,6 +25,7 @@ const NavCollapse = ({ menu, level }) => {
 
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(null);
+    const { t, i18n } = useTranslation();
 
     const handleClick = () => {
         setOpen(!open);
@@ -75,7 +79,7 @@ const NavCollapse = ({ menu, level }) => {
                 <ListItemText
                     primary={
                         <Typography variant={selected === menu.id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto' }}>
-                            {menu.title}
+                            {t(menu.title)}
                         </Typography>
                     }
                     secondary={

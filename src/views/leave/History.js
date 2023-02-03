@@ -45,6 +45,9 @@ import { upperCaseFirstCharacter } from 'utils/string';
 // constants
 import { LEAVE_STATUS, LEAVE_TYPE } from 'constants/index';
 
+// i18n
+import { useTranslation } from 'react-i18next';
+
 const BoxPagination = styled(Box)(({ theme }) => ({
     padding: '20px 0px',
     display: 'flex',
@@ -72,6 +75,7 @@ const LeaveHistory = () => {
 
     const [fromError, setFromError] = useState(null);
     const [toError, setToError] = useState(null);
+    const { t, i18n } = useTranslation();
 
     const handlePagination = (event, value) => {
         setParams((prevState) => {
@@ -150,7 +154,7 @@ const LeaveHistory = () => {
 
     return (
         <>
-            <MainCard sx={{ mt: 2 }} content={false} title="Leave History">
+            <MainCard sx={{ mt: 2 }} content={false} title={t('Leave History')}>
                 <Box
                     sx={{
                         padding: '20px 20px',
@@ -179,7 +183,7 @@ const LeaveHistory = () => {
                                 inputProps={{
                                     'aria-label': 'weight'
                                 }}
-                                placeholder="Title, reason"
+                                placeholder={t('Title, reason')}
                                 value={search}
                                 onChange={(e) => handleSearch(e.target.value)}
                             />
@@ -193,14 +197,14 @@ const LeaveHistory = () => {
                                 id="demo-simple-select"
                                 value={status}
                                 onChange={(e) => handleFilter('status.equals', e.target.value)}
-                                label="Status"
+                                label={t('Status')}
                                 defaultValue="ALL_STATUS"
                                 color="secondary"
                             >
-                                <MenuItem value="ALL_STATUS">All</MenuItem>
+                                <MenuItem value="ALL_STATUS">{t('All')}</MenuItem>
                                 {LEAVE_STATUS?.map((item, index) => (
                                     <MenuItem key={index} value={item}>
-                                        {upperCaseFirstCharacter(item)}
+                                        {t(upperCaseFirstCharacter(item))}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -214,14 +218,14 @@ const LeaveHistory = () => {
                                 id="demo-simple-select"
                                 value={type}
                                 onChange={(e) => handleFilter('type.in', e.target.value)}
-                                label="Leave Type"
+                                label={t('Leave Type')}
                                 defaultValue="ALL_TYPE"
                                 color="secondary"
                             >
-                                <MenuItem value={'ALL_TYPE'}>All</MenuItem>
+                                <MenuItem value={'ALL_TYPE'}>{t('All')}</MenuItem>
                                 {LEAVE_TYPE?.map((item, index) => (
                                     <MenuItem key={index} value={item}>
-                                        {upperCaseFirstCharacter(item)}
+                                        {t(upperCaseFirstCharacter(item))}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -229,7 +233,7 @@ const LeaveHistory = () => {
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
-                                    label="From"
+                                    label={t('From')}
                                     value={startDate || null}
                                     name="startDate"
                                     onChange={(e) => {
@@ -251,7 +255,7 @@ const LeaveHistory = () => {
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
-                                    label="To"
+                                    label={t('To')}
                                     value={endDate || null}
                                     name="endDate"
                                     onError={(newError) => setToError(newError)}
@@ -278,7 +282,7 @@ const LeaveHistory = () => {
                         </FormControl>
                         <Box>
                             <Button
-                                sx={{ width: { xs: '100%', md: 80 }, marginLeft: '15px', height: '100%' }}
+                                sx={{ width: { xs: '100%', md: 100 }, marginLeft: '15px', height: '50px' }}
                                 size="large"
                                 variant="contained"
                                 onClick={(e) => {
@@ -286,7 +290,7 @@ const LeaveHistory = () => {
                                 }}
                                 color="secondary"
                             >
-                                Clear
+                                {t('Clear')}
                             </Button>
                         </Box>
                     </Box>
