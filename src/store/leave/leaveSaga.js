@@ -20,7 +20,7 @@ function* handleSubmit(action) {
 function* handleFetchData(action) {
     try {
         const params = action.payload;
-        params['sort'] = 'lastModifiedDate,DESC';
+        params['sort'] = 'createdDate,DESC';
         const response = yield call(getAll, params);
         yield put(leaveActions.fetchDataSuccess(response.data));
     } catch (error) {
