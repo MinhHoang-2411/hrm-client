@@ -10,7 +10,7 @@ import ClearAllIcon from '@mui/icons-material/ClearAll';
 import Divider from '@mui/material/Divider';
 import CurrentOrderItem from './CurrentOrderItem';
 
-export default function CurrentOrder() {
+export default function CurrentOrder({ handleAddItem }) {
     return (
         <Card variant="outlined">
             <CardHeader
@@ -29,7 +29,14 @@ export default function CurrentOrder() {
                 <TextField sx={{ mt: 3 }} color="secondary" fullWidth label="Note" id="note" placeholder="Note for this order" />
             </CardContent>
             <CardActions sx={{ width: '100%' }}>
-                <Button variant="contained" color="secondary" startIcon={<AttachMoneyIcon />} sx={{ width: '100%' }} size="large">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<AttachMoneyIcon />}
+                    sx={{ width: '100%' }}
+                    size="large"
+                    onClick={() => handleAddItem()}
+                >
                     Continue to payment
                 </Button>
             </CardActions>

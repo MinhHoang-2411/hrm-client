@@ -35,6 +35,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { modalActions } from 'store/modal/modalSlice';
 
 export default class MeetingCalendar extends React.Component {
     state = {
@@ -118,7 +119,13 @@ export default class MeetingCalendar extends React.Component {
                             avatar={<EventIcon />}
                             title="All Events"
                             action={
-                                <Button variant="contained" startIcon={<AddIcon />} size="small" sx={{ mr: 1 }}>
+                                <Button
+                                    variant="contained"
+                                    startIcon={<AddIcon />}
+                                    size="small"
+                                    sx={{ mr: 1 }}
+                                    onClick={this.handleBookMeeting}
+                                >
                                     Book
                                 </Button>
                             }
@@ -150,6 +157,17 @@ export default class MeetingCalendar extends React.Component {
         //     </div>
         // );
     }
+
+    handleBookMeeting = () => {
+        const { dispatch } = this.props;
+        const params = {
+            type: 'modalConfirm',
+            title: 'Notification',
+            onCancel: 'hidden',
+            content: <span>This function is currently in completion. Please come back later.</span>
+        };
+        dispatch(modalActions.showModal(params));
+    };
 
     handleWeekendsToggle = () => {
         this.setState({

@@ -1,12 +1,13 @@
 // material-ui
+import { useAppDispatch } from 'app/hooks';
 import MainCard from 'ui-component/cards/MainCard';
-import { Box } from '@mui/material';
 import MeetingCalendar from './MeetingCalendar';
 
 const Booking = ({ ...others }) => {
+    const dispatch = useAppDispatch();
     return (
         <MainCard title="Meeting Events">
-            <MeetingCalendar></MeetingCalendar>
+            <MeetingCalendar dispatch={dispatch} />
         </MainCard>
     );
 };
