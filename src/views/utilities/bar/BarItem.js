@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-export default function BarItem() {
+export default function BarItem({ handleAddItem }) {
     return (
         <Card style={{ backgroundColor: '#F5F5F5' }} variant="outlined" sx={{ position: 'relative' }}>
             <CardMedia
@@ -42,7 +42,7 @@ export default function BarItem() {
                 <Typography component="div" variant="h4" sx={{ flexGrow: 1, color: '#4527A0' }}>
                     20.000
                 </Typography>
-                <Button variant="contained" color="secondary" startIcon={<AddShoppingCartIcon />}>
+                <Button variant="contained" color="secondary" startIcon={<AddShoppingCartIcon />} onClick={() => handleAddItem()}>
                     Add
                 </Button>
             </CardActions>

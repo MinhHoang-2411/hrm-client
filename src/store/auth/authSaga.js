@@ -52,7 +52,7 @@ function* handleLogout(action) {
 
 function* handleChangePassword(action) {
     try {
-        const response = yield call(changePassword, action.payload);
+        yield call(changePassword, action.payload);
         yield put(authActions.changePasswordSuccess({ ...action.payload }));
         yield put(
             alertActions.showAlert({

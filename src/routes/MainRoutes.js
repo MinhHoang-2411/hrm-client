@@ -55,8 +55,7 @@ const MainRoutes = {
         },
         {
             path: '/',
-            //element: <DashboardDefault />
-            element: <UnderConstruction />
+            element: <DashboardDefault />
         },
 
         {
@@ -64,8 +63,7 @@ const MainRoutes = {
             children: [
                 {
                     path: '',
-                    //element: <DashboardDefault />
-                    element: <UnderConstruction />
+                    element: <DashboardDefault />
                 }
             ]
         },
@@ -89,8 +87,7 @@ const MainRoutes = {
             children: [
                 {
                     path: 'booking',
-                    //element: <Booking />
-                    element: <UnderConstruction />
+                    element: <Booking />
                 }
             ]
         },
@@ -100,13 +97,11 @@ const MainRoutes = {
             children: [
                 {
                     path: 'request',
-                    //element: <RequestAsset />
-                    element: <UnderConstruction />
+                    element: <RequestAsset />
                 },
                 {
                     path: 'history',
-                    //element: <AssetHistory />
-                    element: <UnderConstruction />
+                    element: <AssetHistory />
                 }
             ]
         },
@@ -132,8 +127,7 @@ const MainRoutes = {
             children: [
                 {
                     path: 'bar',
-                    //element: <Bar />
-                    element: <UnderConstruction />
+                    element: <Bar />
                 },
                 {
                     path: 'charity',

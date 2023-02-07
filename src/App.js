@@ -1,7 +1,5 @@
-import { useSelector } from 'react-redux';
-
-import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 
 // routing
 import Routes from 'routes';
@@ -10,12 +8,13 @@ import Routes from 'routes';
 import themes from 'themes';
 
 // project imports
-import NavigationScroll from 'layout/NavigationScroll';
 import { useAppSelector } from 'app/hooks';
+import NavigationScroll from 'layout/NavigationScroll';
 
 // toast imports
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'ui-component/modal';
 
 // ==============================|| APP ||============================== //
 
@@ -30,6 +29,7 @@ const App = () => {
                     <Routes />
                 </NavigationScroll>
             </ThemeProvider>
+            <Modal />
             <ToastContainer />
         </StyledEngineProvider>
     );

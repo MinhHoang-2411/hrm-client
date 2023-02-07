@@ -4,8 +4,22 @@ import { Box, Grid, InputAdornment, FormControl, OutlinedInput, InputLabel, Sele
 import BarItem from './bar/BarItem';
 import CurrentOrder from './bar/CurrentOrder';
 import SearchIcon from '@mui/icons-material/Search';
+import { useAppDispatch } from 'app/hooks';
+import { modalActions } from 'store/modal/modalSlice';
 
 const Bar = ({ ...others }) => {
+    const dispatch = useAppDispatch();
+
+    const handleAddItem = () => {
+        const params = {
+            type: 'modalConfirm',
+            title: 'Notification',
+            onCancel: 'hidden',
+            content: <span>This function is currently in completion. Please come back later.</span>
+        };
+        dispatch(modalActions.showModal(params));
+    };
+
     return (
         <MainCard title="Chainhaus Bar">
             <Grid container spacing={3} justifyContent="center">
@@ -52,7 +66,7 @@ const Bar = ({ ...others }) => {
                         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2} item>
                             {Array.from(Array(6)).map((_, index) => (
                                 <Grid item xs={12} md={6} xl={4} key={index}>
-                                    <BarItem />
+                                    <BarItem handleAddItem={handleAddItem} />
                                 </Grid>
                             ))}
                         </Grid>
@@ -63,7 +77,7 @@ const Bar = ({ ...others }) => {
                 </Grid>
                 <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1} item xs={12} sm={2} md={4}>
                     <Grid item>
-                        <CurrentOrder />
+                        <CurrentOrder handleAddItem={handleAddItem} />
                     </Grid>
                 </Grid>
             </Grid>
