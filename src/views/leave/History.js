@@ -244,7 +244,7 @@ const LeaveHistory = () => {
                                         <TextField
                                             color="secondary"
                                             {...params}
-                                            helperText={fromError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                            helperText={fromError ? t('Please follow the format dd/mm/yyyy') : ''}
                                         />
                                     )}
                                     inputFormat="DD/MM/YYYY"
@@ -269,9 +269,9 @@ const LeaveHistory = () => {
                                             {...params}
                                             helperText={
                                                 toError === 'invalidDate'
-                                                    ? 'Please follow the format dd/mm/yyyy'
+                                                    ? t('Please follow the format dd/mm/yyyy')
                                                     : toError === 'minDate'
-                                                    ? 'Please choose valid time'
+                                                    ? t('Please choose valid time')
                                                     : ''
                                             }
                                         />

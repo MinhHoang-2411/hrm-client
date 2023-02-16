@@ -495,7 +495,7 @@ const MonitorLeave = () => {
                                                                     color="secondary"
                                                                     {...params}
                                                                     helperText={
-                                                                        fromWaitingError ? 'Please follow the format dd/mm/yyyy' : ''
+                                                                        fromWaitingError ? t('Please follow the format dd/mm/yyyy') : ''
                                                                     }
                                                                 />
                                                             )}
@@ -529,7 +529,7 @@ const MonitorLeave = () => {
                                                                     {...params}
                                                                     helperText={
                                                                         toWaitingError === 'invalidDate'
-                                                                            ? 'Please follow the format dd/mm/yyyy'
+                                                                            ? t('Please follow the format dd/mm/yyyy')
                                                                             : toWaitingError === 'minDate'
                                                                             ? 'Please choose valid time'
                                                                             : ''
@@ -654,7 +654,7 @@ const MonitorLeave = () => {
                                                                 color="secondary"
                                                                 {...params}
                                                                 className="input-date-picker"
-                                                                helperText={fromOtherError ? 'Please follow the format dd/mm/yyyy' : ''}
+                                                                helperText={fromOtherError ? t('Please follow the format dd/mm/yyyy') : ''}
                                                             />
                                                         )}
                                                         inputFormat="DD/MM/YYYY"
@@ -681,7 +681,7 @@ const MonitorLeave = () => {
                                                                 className="input-date-picker"
                                                                 helperText={
                                                                     toOtherError === 'invalidDate'
-                                                                        ? 'Please follow the format dd/mm/yyyy'
+                                                                        ? t('Please follow the format dd/mm/yyyy')
                                                                         : toOtherError === 'minDate'
                                                                         ? 'Please choose valid time'
                                                                         : ''
