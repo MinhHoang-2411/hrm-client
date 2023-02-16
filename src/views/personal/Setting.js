@@ -17,7 +17,11 @@ import '../../assets/scss/setting.scss';
 // validation
 import { ChangePasswordSchema } from 'utils/validate/change-password-schema';
 
+//i18n
+import { useTranslation } from 'react-i18next';
+
 const Setting = () => {
+    const { t, i18n } = useTranslation();
     const dispatch = useAppDispatch();
     const isPasswordChanging = useAppSelector((state) => state.auth.isPasswordChanging);
 
@@ -34,13 +38,14 @@ const Setting = () => {
             <Grid container>
                 <Grid item xs={12}>
                     <Alert variant="outlined" severity="warning" className="alert-password">
-                        <AlertTitle>Alert!</AlertTitle>
-                        Please enter password between 8 and 60 characters.<strong> Do not share your password</strong>
+                        <AlertTitle>{t('Alert!')}</AlertTitle>
+                        {t('Please enter password between 8 and 60 characters.')}
+                        <strong> {t('Do not share your password')}</strong>
                     </Alert>
                 </Grid>
                 <Grid item xs={12} sx={{ marginTop: '20px' }}>
                     <Card variant="outlined" className="card-password">
-                        <CardHeader title="Change Password" />
+                        <CardHeader title={t('Change Password')} />
                         <CardContent>
                             <Formik
                                 initialValues={{
@@ -71,13 +76,13 @@ const Setting = () => {
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
                                                                 id="outlined-adornment-title"
-                                                                label="Current Password"
+                                                                label={t('Current Password')}
                                                                 type="text"
                                                                 name="currentPassword"
                                                                 value={values.currentPassword}
                                                                 onChange={handleChange}
                                                                 error={touched.currentPassword && Boolean(errors.currentPassword)}
-                                                                helperText={touched.currentPassword && errors.currentPassword}
+                                                                helperText={touched.currentPassword && t(errors.currentPassword)}
                                                                 color="secondary"
                                                             />
                                                         </FormControl>
@@ -90,13 +95,13 @@ const Setting = () => {
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
                                                                 id="outlined-adornment-title"
-                                                                label="New Password"
+                                                                label={t('New Password')}
                                                                 type="text"
                                                                 name="newPassword"
                                                                 value={values.newPassword}
                                                                 onChange={handleChange}
                                                                 error={touched.newPassword && Boolean(errors.newPassword)}
-                                                                helperText={touched.newPassword && errors.newPassword}
+                                                                helperText={touched.newPassword && t(errors.newPassword)}
                                                                 color="secondary"
                                                             />
                                                         </FormControl>
@@ -105,13 +110,13 @@ const Setting = () => {
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
                                                                 id="outlined-adornment-title"
-                                                                label="Confirm Password"
+                                                                label={t('Confirm Password')}
                                                                 type="text"
                                                                 name="confirmPassword"
                                                                 value={values.confirmPassword}
                                                                 onChange={handleChange}
                                                                 error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-                                                                helperText={touched.confirmPassword && errors.confirmPassword}
+                                                                helperText={touched.confirmPassword && t(errors.confirmPassword)}
                                                                 color="secondary"
                                                             />
                                                         </FormControl>
@@ -130,7 +135,7 @@ const Setting = () => {
                                                         }}
                                                         color="secondary"
                                                     >
-                                                        Clear
+                                                        {t('Clear')}
                                                     </Button>
                                                     <LoadingButton
                                                         startIcon={<UpdateIcon />}
@@ -140,7 +145,7 @@ const Setting = () => {
                                                         type="submit"
                                                         color="secondary"
                                                     >
-                                                        <span>Change Password</span>
+                                                        <span>{t('Change Password')}</span>
                                                     </LoadingButton>
                                                 </Stack>
                                             </Grid>
