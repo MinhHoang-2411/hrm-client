@@ -174,7 +174,7 @@ const SubmitForm = ({ ...others }) => {
         if (weekendAndHolidayFilter(dateAndLeaveTimes).length === 0 && leaveType !== 'MATERNITY') {
             setErrorMessageDetail('Invalid leave date');
         } else if (weekendAndHolidayFilter(dateAndLeaveTimes).length > 5 && leaveType !== 'MATERNITY') {
-            setErrorMessageDetail('A leave cannot exceed 5 working days.');
+            setErrorMessageDetail(t('A leave cannot exceed 5 working days.'));
         } else if (openModelConfirm === false) {
             const assignTo = value.assignTo.id;
             value['assignTo'] = assignTo;
@@ -349,7 +349,7 @@ const SubmitForm = ({ ...others }) => {
                                                         ))}
                                                     </Select>
                                                     <FormHelperText sx={{ color: '#ff4d4f' }}>
-                                                        {touched?.type && errors?.type}
+                                                        {touched?.type && t(errors?.type)}
                                                     </FormHelperText>
                                                 </FormControl>
                                             </Grid>
@@ -385,7 +385,7 @@ const SubmitForm = ({ ...others }) => {
                                                                     error={touched.startDate && Boolean(errors.startDate)}
                                                                     helperText={
                                                                         fromError === 'invalidDate'
-                                                                            ? 'Please follow the format dd/mm/yyyy'
+                                                                            ? t('Please follow the format dd/mm/yyyy')
                                                                             : t(touched.startDate) && t(errors.startDate)
                                                                     }
                                                                     color="secondary"
@@ -426,7 +426,7 @@ const SubmitForm = ({ ...others }) => {
                                                                     error={touched.endDate && Boolean(errors.endDate)}
                                                                     helperText={
                                                                         toError === 'invalidDate'
-                                                                            ? 'Please follow the format dd/mm/yyyy'
+                                                                            ? t('Please follow the format dd/mm/yyyy')
                                                                             : t(touched.endDate) && t(errors.endDate)
                                                                     }
                                                                     color="secondary"
@@ -456,6 +456,7 @@ const SubmitForm = ({ ...others }) => {
                                                         name="assignTo"
                                                         value={values.assignTo}
                                                         onChange={(e, value) => setFieldValue('assignTo', value)}
+                                                        noOptionsText={t('No Options')}
                                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                                         options={listManagerSortByAlphabetically}
                                                         getOptionLabel={(option) => option.user?.firstName + ' ' + option.user?.lastName}
@@ -697,7 +698,7 @@ const SubmitForm = ({ ...others }) => {
                                                                 {(isHoliday(item) === true || isWeekend(item) === true) && (
                                                                     <Box sx={{ m: 1, width: '50%', marginLeft: '15px' }} size="small">
                                                                         <Typography className="non-working-day-title">
-                                                                            Non-working day
+                                                                            {t('Non-working day')}
                                                                         </Typography>
                                                                     </Box>
                                                                 )}
