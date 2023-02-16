@@ -26,6 +26,9 @@ import UKFlagIcon from 'assets/images/united-kingdom-flag-icon.svg';
 // ==============================|| LANGUAGE ||============================== //
 
 const Language = () => {
+    //get from localStorage
+    const language = JSON.parse(localStorage.getItem('lang'));
+
     const theme = useTheme();
     const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -126,7 +129,7 @@ const Language = () => {
                                             <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                                                 <List component="nav" aria-label="secondary mailbox folder">
                                                     <ListItemButton
-                                                        selected={selectedIndex === 1}
+                                                        selected={language == 'en' || selectedIndex === 1}
                                                         onClick={(event) => handleListItemClick(event, 1, 'en')}
                                                     >
                                                         <ListItemIcon style={{ marginRight: '10px' }}>
@@ -135,7 +138,7 @@ const Language = () => {
                                                         <ListItemText primary={t('English')} />
                                                     </ListItemButton>
                                                     <ListItemButton
-                                                        selected={selectedIndex === 2}
+                                                        selected={language == 'vi' || selectedIndex === 2}
                                                         onClick={(event) => handleListItemClick(event, 2, 'vi')}
                                                     >
                                                         <ListItemIcon style={{ marginRight: '10px' }}>
