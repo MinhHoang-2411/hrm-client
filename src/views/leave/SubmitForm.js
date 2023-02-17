@@ -222,8 +222,8 @@ const SubmitForm = ({ ...others }) => {
             toast.success(t('Submit leave successfully'), {
                 position: toast.POSITION.TOP_RIGHT
             });
-        } else if (param === 'failed') {
-            toast.error(t('Submit Leave fail'), {
+        } else if (param === 'The leave date has duplicated with that in the previously existing leave.') {
+            toast.error(t('The leave date has duplicated with that in the previously existing leave.'), {
                 position: toast.POSITION.TOP_RIGHT
             });
         }

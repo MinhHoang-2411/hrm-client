@@ -10,7 +10,7 @@ function* handleSubmit(action) {
         yield put(leaveActions.submitSuccess('success'));
         yield put(actionActions.plusCountMenu('leave'));
     } catch (error) {
-        yield put(leaveActions.submitFailed('failed'));
+        yield put(leaveActions.submitFailed(error?.response?.data?.title));
     } finally {
         yield delay(2000);
         yield put(leaveActions.cancelAlert(null));
