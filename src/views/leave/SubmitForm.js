@@ -3,7 +3,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, FormControl, Grid, MenuItem, TextField, Box, FormHelperText, Typography } from '@mui/material';
+import { Button, FormControl, Grid, MenuItem, TextField, Box, FormHelperText, Typography, ClickAwayListener } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import Card from '@mui/material/Card';
@@ -29,6 +29,8 @@ import * as Yup from 'yup';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+
 import dateFormat from 'dateformat';
 
 // utils
@@ -72,6 +74,9 @@ import { LEAVE_TYPE } from 'constants/index';
 import { useTranslation } from 'react-i18next';
 
 const SubmitForm = ({ ...others }) => {
+    const [openStartDate, setOpenStartDate] = useState(false);
+    const [openEndDate, setOpenEndDate] = useState(false);
+
     const dispatch = useAppDispatch();
     const alert = useAppSelector((state) => state.leave.alert);
     const loading = useAppSelector((state) => state.leave.loading);
@@ -95,7 +100,9 @@ const SubmitForm = ({ ...others }) => {
     // get data
     const listHolidays = useAppSelector((state) => state.leave.listHoliday);
     const listManager = useAppSelector((state) => state.employee.listData);
-
+    const onKeyDown = (e) => {
+        e.preventDefault();
+    };
     const sortListManagerByAlphabetically = (listManager) => {
         listManager = listManager.sort(function (a, b) {
             let fullNameA = a.user.firstName.toLowerCase() + ' ' + a.user.lastName.toLowerCase();
@@ -227,7 +234,13 @@ const SubmitForm = ({ ...others }) => {
     };
 
     const checkValidLeave = () => {
-        if (formikRef.current?.isValid && formikRef.current?.dirty) setOpenModelConfirm(true);
+        if (
+            formikRef.current?.isValid &&
+            formikRef.current?.dirty &&
+            !(weekendAndHolidayFilter(dateAndLeaveTimes).length === 0 && leaveType !== 'MATERNITY') &&
+            !(weekendAndHolidayFilter(dateAndLeaveTimes).length > 5 && leaveType !== 'MATERNITY')
+        )
+            setOpenModelConfirm(true);
     };
 
     useEffect(() => {
@@ -248,6 +261,10 @@ const SubmitForm = ({ ...others }) => {
         dispatch(leaveActions.getHolidays({}));
         dispatch(employeeActions.fetchData({ 'position.in': 'MANAGER' }));
     }, []);
+
+    useEffect(() => {
+        console.log('re-render');
+    });
 
     return (
         <MainCard title={t('Leave Request')}>
@@ -372,24 +389,33 @@ const SubmitForm = ({ ...others }) => {
                                                         <DatePicker
                                                             value={values.startDate}
                                                             name="startDate"
+                                                            closeOnSelect={true}
                                                             onChange={(value) => {
                                                                 setFieldValue('startDate', value);
                                                                 handleGetArrayDate(value, values.endDate);
                                                                 setErrorMessageDetail('');
+                                                                setOpenStartDate(false);
                                                             }}
+                                                            open={openStartDate}
                                                             onError={(newError) => setFromError(newError)}
                                                             onChangeRaw={(e) => e.preventDefault()}
                                                             renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    error={touched.startDate && Boolean(errors.startDate)}
-                                                                    helperText={
-                                                                        fromError === 'invalidDate'
-                                                                            ? t('Please follow the format dd/mm/yyyy')
-                                                                            : t(touched.startDate) && t(errors.startDate)
-                                                                    }
-                                                                    color="secondary"
-                                                                />
+                                                                <ClickAwayListener onClickAway={() => setOpenStartDate(false)}>
+                                                                    <TextField
+                                                                        {...params}
+                                                                        // onKeyDown={onKeyDown}
+                                                                        onClick={() => setOpenStartDate(true)}
+                                                                        inputProps={{ ...params.inputProps, readOnly: true }}
+                                                                        error={touched.startDate && Boolean(errors.startDate)}
+                                                                        helperText={
+                                                                            fromError === 'invalidDate'
+                                                                                ? touched.startDate &&
+                                                                                  t('Please follow the format dd/mm/yyyy')
+                                                                                : touched.startDate && t(errors.startDate)
+                                                                        }
+                                                                        color="secondary"
+                                                                    />
+                                                                </ClickAwayListener>
                                                             )}
                                                             disablePast={true}
                                                             inputFormat="DD/MM/YYYY"
@@ -419,18 +445,31 @@ const SubmitForm = ({ ...others }) => {
                                                                 handleGetArrayDate(values.startDate, value);
                                                                 setErrorMessageDetail('');
                                                             }}
+                                                            open={openEndDate}
+                                                            closeOnSelect={true}
                                                             onError={(newError) => setToError(newError)}
                                                             renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    error={touched.endDate && Boolean(errors.endDate)}
-                                                                    helperText={
-                                                                        toError === 'invalidDate'
-                                                                            ? t('Please follow the format dd/mm/yyyy')
-                                                                            : t(touched.endDate) && t(errors.endDate)
-                                                                    }
-                                                                    color="secondary"
-                                                                />
+                                                                <ClickAwayListener
+                                                                    onClickAway={() => {
+                                                                        setOpenEndDate(false);
+                                                                    }}
+                                                                >
+                                                                    <TextField
+                                                                        onClick={() => {
+                                                                            setOpenEndDate(true);
+                                                                        }}
+                                                                        {...params}
+                                                                        inputProps={{ ...params.inputProps, readOnly: true }}
+                                                                        error={touched.endDate && Boolean(errors.endDate)}
+                                                                        helperText={
+                                                                            toError === 'invalidDate'
+                                                                                ? touched.endDate &&
+                                                                                  t('Please follow the format dd/mm/yyyy')
+                                                                                : touched.endDate && t(errors.endDate)
+                                                                        }
+                                                                        color="secondary"
+                                                                    />
+                                                                </ClickAwayListener>
                                                             )}
                                                             disablePast={true}
                                                             inputFormat="DD/MM/YYYY"
