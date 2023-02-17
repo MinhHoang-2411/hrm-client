@@ -18,8 +18,8 @@ i18n
     // for all options read: https://www.i18next.com/overview/configuration-options
     .init({
         fallbackLng: 'en',
-        lng: 'en', // default language
-        debug: true,
+        lng: JSON.parse(localStorage.getItem('lang')) || 'en', // default language
+        debug: false,
         whitelist: Languages,
         // backend: {
         //     loadPath: 'locales/{{lng}}/translations.json'

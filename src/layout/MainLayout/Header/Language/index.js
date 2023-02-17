@@ -27,13 +27,13 @@ import UKFlagIcon from 'assets/images/united-kingdom-flag-icon.svg';
 
 const Language = () => {
     //get from localStorage
-    const language = JSON.parse(localStorage.getItem('lang'));
+    const language = JSON.parse(localStorage.getItem('lang')) || 'en';
 
     const theme = useTheme();
     const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 
     const [open, setOpen] = useState(false);
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [selectedIndex, setSelectedIndex] = React.useState(null);
     const { t, i18n } = useTranslation();
 
     const handleListItemClick = (event, index, lng) => {

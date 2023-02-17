@@ -17,7 +17,7 @@ import '../../assets/scss/setting.scss';
 // validation
 import { ChangePasswordSchema } from 'utils/validate/change-password-schema';
 
-//i18n
+//// i18n
 import { useTranslation } from 'react-i18next';
 
 const Setting = () => {
@@ -34,7 +34,7 @@ const Setting = () => {
     };
 
     return (
-        <MainCard title="Setting">
+        <MainCard title={t('Setting')}>
             <Grid container>
                 <Grid item xs={12}>
                     <Alert variant="outlined" severity="warning" className="alert-password">
@@ -53,7 +53,7 @@ const Setting = () => {
                                     newPassword: '',
                                     confirmPassword: ''
                                 }}
-                                validationSchema={ChangePasswordSchema()}
+                                validationSchema={ChangePasswordSchema(t)}
                                 onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
                                     try {
                                         setStatus({ success: false });
