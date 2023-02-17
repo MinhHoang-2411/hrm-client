@@ -37,6 +37,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // format
@@ -47,6 +48,7 @@ import { LEAVE_STATUS, LEAVE_TYPE } from 'constants/index';
 
 // i18n
 import { useTranslation } from 'react-i18next';
+import { ClickAwayListener } from '@mui/material';
 
 const BoxPagination = styled(Box)(({ theme }) => ({
     padding: '20px 0px',
@@ -55,6 +57,10 @@ const BoxPagination = styled(Box)(({ theme }) => ({
 }));
 
 const LeaveHistory = () => {
+    //toggle calendar
+    const [openFrom, setOpenFrom] = useState(false);
+    const [openTo, setOpenTo] = useState(false);
+
     const dispatch = useAppDispatch();
     const [search, setSearch] = useState('');
     const [params, setParams] = useState({
@@ -233,6 +239,8 @@ const LeaveHistory = () => {
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
+                                    open={openFrom}
+                                    closeOnSelect={true}
                                     label={t('From')}
                                     value={startDate || null}
                                     name="startDate"
@@ -241,11 +249,21 @@ const LeaveHistory = () => {
                                     }}
                                     onError={(newError) => setFromError(newError)}
                                     renderInput={(params) => (
-                                        <TextField
-                                            color="secondary"
-                                            {...params}
-                                            helperText={fromError ? t('Please follow the format dd/mm/yyyy') : ''}
-                                        />
+                                        <ClickAwayListener
+                                            onClickAway={() => {
+                                                setOpenFrom(false);
+                                            }}
+                                        >
+                                            <TextField
+                                                onClick={() => {
+                                                    setOpenFrom(true);
+                                                }}
+                                                color="secondary"
+                                                {...params}
+                                                inputProps={{ ...params.inputProps, readOnly: true }}
+                                                helperText={fromError ? t('Please follow the format dd/mm/yyyy') : ''}
+                                            />
+                                        </ClickAwayListener>
                                     )}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
@@ -255,6 +273,8 @@ const LeaveHistory = () => {
                         <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px' }} size="small">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
+                                    open={openTo}
+                                    closeOnSelect={true}
                                     label={t('To')}
                                     value={endDate || null}
                                     name="endDate"
@@ -264,17 +284,21 @@ const LeaveHistory = () => {
                                     }}
                                     minDate={startDate}
                                     renderInput={(params) => (
-                                        <TextField
-                                            color="secondary"
-                                            {...params}
-                                            helperText={
-                                                toError === 'invalidDate'
-                                                    ? t('Please follow the format dd/mm/yyyy')
-                                                    : toError === 'minDate'
-                                                    ? t('Please choose valid time')
-                                                    : ''
-                                            }
-                                        />
+                                        <ClickAwayListener onClickAway={() => setOpenTo(false)}>
+                                            <TextField
+                                                onClick={() => setOpenTo(true)}
+                                                color="secondary"
+                                                {...params}
+                                                inputProps={{ ...params.inputProps, readOnly: true }}
+                                                helperText={
+                                                    toError === 'invalidDate'
+                                                        ? t('Please follow the format dd/mm/yyyy')
+                                                        : toError === 'minDate'
+                                                        ? t('Please choose valid time')
+                                                        : ''
+                                                }
+                                            />
+                                        </ClickAwayListener>
                                     )}
                                     inputFormat="DD/MM/YYYY"
                                 />
