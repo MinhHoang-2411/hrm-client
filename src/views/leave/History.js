@@ -196,7 +196,7 @@ const LeaveHistory = () => {
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
                             <InputLabel color="secondary" id="demo-simple-select-label">
-                                Status
+                                {t('Status')}
                             </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
@@ -217,7 +217,7 @@ const LeaveHistory = () => {
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: 150 }, marginLeft: '15px' }}>
                             <InputLabel size="normal" color="secondary" id="demo-simple-select-label">
-                                Leave Type
+                                {t('Leave Type')}
                             </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
