@@ -160,7 +160,16 @@ const LeaveHistory = () => {
 
     return (
         <>
-            <MainCard sx={{ mt: 2 }} content={false} title={t('Leave History')}>
+            <MainCard
+                sx={{ mt: 2 }}
+                content={false}
+                title={t('Leave History')}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenTo(false);
+                    setOpenFrom(false);
+                }}
+            >
                 <Box
                     sx={{
                         padding: '20px 20px',
@@ -249,21 +258,17 @@ const LeaveHistory = () => {
                                     }}
                                     onError={(newError) => setFromError(newError)}
                                     renderInput={(params) => (
-                                        <ClickAwayListener
-                                            onClickAway={() => {
-                                                setOpenFrom(false);
+                                        <TextField
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setOpenTo(false);
+                                                setOpenFrom(true);
                                             }}
-                                        >
-                                            <TextField
-                                                onClick={() => {
-                                                    setOpenFrom(true);
-                                                }}
-                                                color="secondary"
-                                                {...params}
-                                                inputProps={{ ...params.inputProps, readOnly: true }}
-                                                helperText={fromError ? t('Please follow the format dd/mm/yyyy') : ''}
-                                            />
-                                        </ClickAwayListener>
+                                            color="secondary"
+                                            {...params}
+                                            inputProps={{ ...params.inputProps, readOnly: true, sx: { cursor: 'pointer' } }}
+                                            helperText={fromError ? t('Please follow the format dd/mm/yyyy') : ''}
+                                        />
                                     )}
                                     inputFormat="DD/MM/YYYY"
                                     style={{ maxHeight: '70%' }}
@@ -281,24 +286,27 @@ const LeaveHistory = () => {
                                     onError={(newError) => setToError(newError)}
                                     onChange={(e) => {
                                         handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e));
+                                        setOpenTo(false);
                                     }}
                                     minDate={startDate}
                                     renderInput={(params) => (
-                                        <ClickAwayListener onClickAway={() => setOpenTo(false)}>
-                                            <TextField
-                                                onClick={() => setOpenTo(true)}
-                                                color="secondary"
-                                                {...params}
-                                                inputProps={{ ...params.inputProps, readOnly: true }}
-                                                helperText={
-                                                    toError === 'invalidDate'
-                                                        ? t('Please follow the format dd/mm/yyyy')
-                                                        : toError === 'minDate'
-                                                        ? t('Please choose valid time')
-                                                        : ''
-                                                }
-                                            />
-                                        </ClickAwayListener>
+                                        <TextField
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setOpenTo(true);
+                                                setOpenFrom(false);
+                                            }}
+                                            color="secondary"
+                                            {...params}
+                                            inputProps={{ ...params.inputProps, readOnly: true, sx: { cursor: 'pointer' } }}
+                                            helperText={
+                                                toError === 'invalidDate'
+                                                    ? t('Please follow the format dd/mm/yyyy')
+                                                    : toError === 'minDate'
+                                                    ? t('Please choose valid time')
+                                                    : ''
+                                            }
+                                        />
                                     )}
                                     inputFormat="DD/MM/YYYY"
                                 />

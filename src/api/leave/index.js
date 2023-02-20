@@ -2,11 +2,11 @@ import { func } from 'prop-types';
 import axiosClient from '../axiosClient';
 import { formatDateMaterialToTimeStamp } from 'utils/format/date';
 
-const LEAVE_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api/leaves`;
+const LEAVE_API_URL = process.env.REACT_APP_API_URL_USER + `/leaves`;
 
 const GET_LEAVE_COUNT_URL = `${LEAVE_API_URL}/count`;
 
-const HOLIDAY_API_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api/holidays`;
+const HOLIDAY_API_URL = process.env.REACT_APP_API_URL_USER + `/holidays`;
 
 const CANCEL_LEAVE_URL = LEAVE_API_URL + '/cancel';
 

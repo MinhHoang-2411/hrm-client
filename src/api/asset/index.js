@@ -1,13 +1,11 @@
 import axiosClient from '../axiosClient';
 import { formatDateMaterialToTimeStamp } from 'utils/format/date';
 
-const BASE_URL = process.env.REACT_APP_API_URL + `/services/hrmuserservice/api`;
+const ASSET_CATEGORY_API_URL = process.env.REACT_APP_API_URL_USER + `/asset-categories`;
 
-const ASSET_CATEGORY_API_URL = BASE_URL + `/asset-categories`;
+const ASSET_MODEL_API_URL = process.env.REACT_APP_API_URL_USER + `/asset-models`;
 
-const ASSET_MODEL_API_URL = BASE_URL + `/asset-models`;
-
-const ASSET_REQUEST_API_URL = BASE_URL + `/asset-requests`;
+const ASSET_REQUEST_API_URL = process.env.REACT_APP_API_URL_USER + `/asset-requests`;
 
 const assetApi = {
     getAllCategory(params) {

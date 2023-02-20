@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getAuth, handleLogout } from 'utils/auth';
 import history from 'routes/history';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL_USER;
 
 const axiosClient = axios.create({
     baseURL: API_URL,
