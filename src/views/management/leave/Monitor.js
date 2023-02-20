@@ -531,7 +531,7 @@ const MonitorLeave = () => {
                                                                         toWaitingError === 'invalidDate'
                                                                             ? t('Please follow the format dd/mm/yyyy')
                                                                             : toWaitingError === 'minDate'
-                                                                            ? 'Please choose valid time'
+                                                                            ? t('Please choose valid time')
                                                                             : ''
                                                                     }
                                                                 />
@@ -683,7 +683,7 @@ const MonitorLeave = () => {
                                                                     toOtherError === 'invalidDate'
                                                                         ? t('Please follow the format dd/mm/yyyy')
                                                                         : toOtherError === 'minDate'
-                                                                        ? 'Please choose valid time'
+                                                                        ? t('Please choose valid time')
                                                                         : ''
                                                                 }
                                                             />
@@ -774,7 +774,7 @@ const MonitorLeave = () => {
                                                                 color="secondary"
                                                                 style={{ marginTop: '5px' }}
                                                                 error={touched.rejectReason && Boolean(errors.rejectReason)}
-                                                                helperText={touched.rejectReason && errors.rejectReason}
+                                                                helperText={touched.rejectReason && t(errors.rejectReason)}
                                                             />
                                                         </FormControl>
                                                     )}
