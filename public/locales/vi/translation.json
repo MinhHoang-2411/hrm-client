@@ -135,5 +135,13 @@
     "Please enter no more than 60 characters": "Vui lòng nhập tối đa 60 ký tự",
     "New password is the same with current password": "Mật khẩu mới trùng với mật khẩu hiện tại",
     "Passwords must match": "Mật khẩu xác minh cần khớp với mật khẩu mới",
-    "The leave date has duplicated with that in the previously existing leave.": "Ngày nghỉ trùng với ngày nghỉ phép hiện có."
+    "The leave date has duplicated with that in the previously existing leave.": "Ngày nghỉ trùng với ngày nghỉ phép hiện có.",
+    "Enter your credentials to continue": "Nhập thông tin đăng nhập của bạn để tiếp tục",
+    "Username": "Tên tài khoản",
+    "Password": "Mật khẩu",
+    "Remember me": "Lưu thông tin",
+    "Forgot Password?": "Quên mật khẩu?",
+    "Login": "Đăng nhập",
+    "Please enter Username": "Vui lòng nhập Tên tài khoản",
+    "Please enter Password": "Vui lòng nhập Mật khẩu"
 }

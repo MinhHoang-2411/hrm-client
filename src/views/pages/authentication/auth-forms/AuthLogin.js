@@ -43,9 +43,12 @@ import { authActions } from 'store/auth/authSlice';
 
 // validation
 import { LoginSchema } from 'utils/validate/login_schema';
+import { useTranslation } from 'react-i18next';
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
+    const { t, i18n } = useTranslation();
+
     const theme = useTheme();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -97,7 +100,7 @@ const FirebaseLogin = ({ ...others }) => {
                             sx={{ ...theme.typography.customInput }}
                         >
                             <InputLabel color="secondary" htmlFor="outlined-adornment-email-login">
-                                Username
+                                {t('Username')}
                             </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
@@ -112,7 +115,7 @@ const FirebaseLogin = ({ ...others }) => {
                             />
                             {touched.username && errors.username && (
                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {errors.username}
+                                    {t(errors.username)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -123,7 +126,7 @@ const FirebaseLogin = ({ ...others }) => {
                             sx={{ ...theme.typography.customInput }}
                         >
                             <InputLabel color="secondary" htmlFor="outlined-adornment-password-login">
-                                Password
+                                {t('Password')}
                             </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password-login"
@@ -151,7 +154,7 @@ const FirebaseLogin = ({ ...others }) => {
                             />
                             {touched.password && errors.password && (
                                 <FormHelperText error id="standard-weight-helper-text-password-login">
-                                    {errors.password}
+                                    {t(errors.password)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -165,10 +168,10 @@ const FirebaseLogin = ({ ...others }) => {
                                         color="primary"
                                     />
                                 }
-                                label="Remember me"
+                                label={t('Remember me')}
                             />
                             <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                                Forgot Password?
+                                {t('Forgot Password?')}
                             </Typography>
                         </Stack>
                         {errors.submit && (
@@ -187,7 +190,7 @@ const FirebaseLogin = ({ ...others }) => {
                                 color="secondary"
                                 fullWidth
                             >
-                                <span>Login</span>
+                                <span>{t('Login')}</span>
                             </LoadingButton>
                         </Box>
                     </form>

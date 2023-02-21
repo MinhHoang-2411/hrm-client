@@ -135,5 +135,13 @@
     "Please enter no more than 60 characters": "Please enter no more than 60 characters",
     "New password is the same with current password": "New password is the same with current password",
     "Passwords must match": "Passwords must match",
-    "The leave date has duplicated with that in the previously existing leave.": "The leave date has duplicated with that in the previously existing leave."
+    "The leave date has duplicated with that in the previously existing leave.": "The leave date has duplicated with that in the previously existing leave.",
+    "Enter your credentials to continue": "Enter your credentials to continue",
+    "Username": "Username",
+    "Password": "Password",
+    "Remember me": "Remember me",
+    "Forgot Password?": "Forgot Password?",
+    "Login": "Login",
+    "Please enter Username": "Please enter Username",
+    "Please enter Password": "Please enter Password"
 }
