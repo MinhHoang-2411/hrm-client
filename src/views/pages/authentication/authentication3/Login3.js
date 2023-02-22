@@ -12,12 +12,15 @@ import Logo from 'ui-component/Logo';
 import AuthFooter from 'ui-component/cards/AuthFooter';
 
 // assets
+import { useTranslation } from 'react-i18next';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 const Login = () => {
     const theme = useTheme();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+
+    const { t, i18n } = useTranslation();
 
     return (
         <AuthWrapper1>
@@ -44,7 +47,7 @@ const Login = () => {
                                                         fontSize="16px"
                                                         textAlign={matchDownSM ? 'center' : 'inherit'}
                                                     >
-                                                        Enter your credentials to continue
+                                                        {t('Enter your credentials to continue')}
                                                     </Typography>
                                                 </Stack>
                                             </Grid>
