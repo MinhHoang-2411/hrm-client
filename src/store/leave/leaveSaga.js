@@ -1,4 +1,13 @@
-import { submitLeave, getAll, getAllHoliday, cancelLeave, rejectLeave, confirmLeave, getAllLeaveForManager } from 'api/leave';
+import {
+    submitLeave,
+    supportSubmitLeave,
+    getAll,
+    getAllHoliday,
+    cancelLeave,
+    rejectLeave,
+    confirmLeave,
+    getAllLeaveForManager
+} from 'api/leave';
 import { all, call, fork, put, takeEvery, takeLatest, take, delay } from 'redux-saga/effects';
 import { leaveActions } from './leaveSlice';
 import { alertActions } from '../alert/alertSlice';
@@ -11,6 +20,18 @@ function* handleSubmit(action) {
         yield put(actionActions.plusCountMenu('leave'));
     } catch (error) {
         yield put(leaveActions.submitFailed(error?.response?.data?.title));
+    } finally {
+        yield delay(2000);
+        yield put(leaveActions.cancelAlert(null));
+    }
+}
+
+function* handleSupportSubmit(action) {
+    try {
+        yield call(supportSubmitLeave, action.payload);
+        yield put(leaveActions.supportSubmitSuccess('success'));
+    } catch (error) {
+        yield put(leaveActions.supportSubmitFailed(error?.response?.data?.title));
     } finally {
         yield delay(2000);
         yield put(leaveActions.cancelAlert(null));
@@ -199,6 +220,7 @@ function* watchFlow() {
     yield all([
         takeLatest(leaveActions.fetchData.type, handleFetchData),
         takeLatest(leaveActions.submit.type, handleSubmit),
+        takeLatest(leaveActions.supportSubmit.type, handleSupportSubmit),
         takeLatest(leaveActions.getHolidays.type, handleGetAllHoliday),
         takeLatest(leaveActions.cancelLeave.type, handleCancelLeave),
         takeLatest(leaveActions.getListWaiting.type, handleGetListWaiting),

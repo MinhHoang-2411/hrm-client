@@ -5,6 +5,7 @@ import { formatDateMaterialToTimeStamp } from 'utils/format/date';
 const LEAVE_API_URL = process.env.REACT_APP_API_URL_USER + `/leaves`;
 
 const GET_LEAVE_COUNT_URL = `${LEAVE_API_URL}/count`;
+const GET_EMPLOYEE_LEAVE_COUNT_URL = `${LEAVE_API_URL}/management`;
 
 const HOLIDAY_API_URL = process.env.REACT_APP_API_URL_USER + `/holidays`;
 
@@ -27,9 +28,28 @@ export function submitLeave(params) {
     const response = axiosClient.post(LEAVE_API_URL, params);
     return response;
 }
+export function supportSubmitLeave(params) {
+    params.startDate = formatDateMaterialToTimeStamp(params.startDate);
+    params.endDate = formatDateMaterialToTimeStamp(params.endDate);
+    params.leaveDetailsDTOS = params.leaveDetailsDTOS.map((ite) => ({
+        leaveDate: formatDateMaterialToTimeStamp(ite.leaveDate),
+        dateType: ite.dateType,
+        note: ite.note
+    }));
+    // const response = axiosClient.post(MANAGEMENT_LEAVE_API_URL, params);
+    const { id, ...restParams } = params;
+    const response = axiosClient.post(`${MANAGEMENT_LEAVE_API_URL}/${params.id}`, restParams);
+
+    return response;
+}
 
 export function getLeaveCount() {
     const response = axiosClient.get(GET_LEAVE_COUNT_URL);
+    return response;
+}
+
+export function getEmployeeLeaveCount(id) {
+    const response = axiosClient.get(`${GET_EMPLOYEE_LEAVE_COUNT_URL}/${id}/count`);
     return response;
 }
 

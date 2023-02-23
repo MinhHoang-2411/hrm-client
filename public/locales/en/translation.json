@@ -72,6 +72,7 @@
     "Manager confirms the leave": "Manager confirms the leave",
     "Admin approves the leave": "Admin approves the leave",
     "Assign To": "Assign To",
+    "days of Annual Leave": "days of Annual Leave",
     "day of Annual Leave": "day of Annual Leave",
     "Your leave type is Maternity.": "Your leave type is Maternity.",
     "You don't need to select Leave Detail.": "You don't need to select Leave Detail.",
@@ -143,5 +144,7 @@
     "Forgot Password?": "Forgot Password?",
     "Login": "Login",
     "Please enter Username": "Please enter Username",
-    "Please enter Password": "Please enter Password"
+    "Please enter Password": "Please enter Password",
+    "Person On Leave": "Person On Leave",
+    "Please enter Person On Leave": "Please enter Person On Leave"
 }
