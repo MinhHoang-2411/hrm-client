@@ -20,14 +20,14 @@ function* handleLogin(action) {
         if (error.response.status === 401) {
             yield put(
                 alertActions.showAlert({
-                    text: 'The username or password you entered did not match our records. Please try again',
+                    text: action.payload?.translation('The username or password you entered did not match our records. Please try again'),
                     type: 'error'
                 })
             );
         } else if (error.response.status === 400) {
             yield put(
                 alertActions.showAlert({
-                    text: error.response.data.title,
+                    text: action.payload?.translation(error.response.data.title),
                     type: 'error'
                 })
             );
@@ -56,7 +56,7 @@ function* handleChangePassword(action) {
         yield put(authActions.changePasswordSuccess({ ...action.payload }));
         yield put(
             alertActions.showAlert({
-                text: 'Change Password successfully',
+                text: action.payload?.translation('Change Password successfully'),
                 type: 'success'
             })
         );
@@ -65,7 +65,7 @@ function* handleChangePassword(action) {
         if (error.response.status === 400) {
             yield put(
                 alertActions.showAlert({
-                    text: error.response.data.title,
+                    text: action.payload?.translation(error.response.data.title),
                     type: 'error'
                 })
             );

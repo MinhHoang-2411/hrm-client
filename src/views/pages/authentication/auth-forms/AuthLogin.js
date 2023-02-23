@@ -82,6 +82,7 @@ const FirebaseLogin = ({ ...others }) => {
                                 username: values.username,
                                 password: values.password,
                                 rememberMe: checked,
+                                translation: t,
                                 onNavigate: () => navigate('/')
                             })
                         );

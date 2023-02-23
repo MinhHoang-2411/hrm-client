@@ -146,5 +146,9 @@
     "Please enter Username": "Please enter Username",
     "Please enter Password": "Please enter Password",
     "Person On Leave": "Person On Leave",
-    "Please enter Person On Leave": "Please enter Person On Leave"
+    "Please enter Person On Leave": "Please enter Person On Leave",
+    "Please no more than 50 characters": "Please no more than 50 characters",
+    "The username or password you entered did not match our records. Please try again": "The username or password you entered did not match our records. Please try again",
+    "Change Password successfully": "Change Password successfully",
+    "Incorrect password": "Incorrect password"
 }
