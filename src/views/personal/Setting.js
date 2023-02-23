@@ -1,7 +1,23 @@
+import { useState } from 'react';
 // material-ui
 import UpdateIcon from '@mui/icons-material/Update';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, AlertTitle, Button, Card, CardContent, CardHeader, FormControl, Grid, Stack, TextField } from '@mui/material';
+import {
+    Alert,
+    AlertTitle,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    FormControl,
+    Grid,
+    Stack,
+    TextField,
+    InputAdornment,
+    IconButton
+} from '@mui/material';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+
 import MainCard from 'ui-component/cards/MainCard';
 
 // third party
@@ -21,6 +37,8 @@ import { ChangePasswordSchema } from 'utils/validate/change-password-schema';
 import { useTranslation } from 'react-i18next';
 
 const Setting = () => {
+    const [pwds, setPwds] = useState([]);
+
     const { t, i18n } = useTranslation();
     const dispatch = useAppDispatch();
     const isPasswordChanging = useAppSelector((state) => state.auth.isPasswordChanging);
@@ -28,9 +46,17 @@ const Setting = () => {
     const handleChangePassword = (values) => {
         dispatch(
             authActions.changePassword({
-                ...values
+                ...values,
+                translation: t
             })
         );
+    };
+    const toggleShowPwds = (field) => {
+        if (pwds.includes(field)) {
+            setPwds((prev) => prev.filter((item) => item != field));
+        } else {
+            setPwds([...pwds, field]);
+        }
     };
 
     return (
@@ -75,15 +101,32 @@ const Setting = () => {
                                                     <Grid item lg={6} md={6} sm={6} xs={6}>
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
+                                                                type={pwds.includes('currentPwd') ? 'text' : 'password'}
                                                                 id="outlined-adornment-title"
                                                                 label={t('Current Password')}
-                                                                type="text"
                                                                 name="currentPassword"
                                                                 value={values.currentPassword}
                                                                 onChange={handleChange}
                                                                 error={touched.currentPassword && Boolean(errors.currentPassword)}
                                                                 helperText={touched.currentPassword && t(errors.currentPassword)}
                                                                 color="secondary"
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                onClick={() => {
+                                                                                    toggleShowPwds('currentPwd');
+                                                                                }}
+                                                                            >
+                                                                                {!pwds.includes('currentPwd') ? (
+                                                                                    <EyeInvisibleOutlined />
+                                                                                ) : (
+                                                                                    <EyeOutlined />
+                                                                                )}
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    )
+                                                                }}
                                                             />
                                                         </FormControl>
                                                     </Grid>
@@ -94,30 +137,64 @@ const Setting = () => {
                                                     <Grid item lg={6} md={6} sm={6} xs={6}>
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
+                                                                type={pwds.includes('newPwd') ? 'text' : 'password'}
                                                                 id="outlined-adornment-title"
                                                                 label={t('New Password')}
-                                                                type="text"
                                                                 name="newPassword"
                                                                 value={values.newPassword}
                                                                 onChange={handleChange}
                                                                 error={touched.newPassword && Boolean(errors.newPassword)}
                                                                 helperText={touched.newPassword && t(errors.newPassword)}
                                                                 color="secondary"
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                onClick={() => {
+                                                                                    toggleShowPwds('newPwd');
+                                                                                }}
+                                                                            >
+                                                                                {!pwds.includes('newPwd') ? (
+                                                                                    <EyeInvisibleOutlined />
+                                                                                ) : (
+                                                                                    <EyeOutlined />
+                                                                                )}
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    )
+                                                                }}
                                                             />
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item lg={6} md={6} sm={6} xs={6}>
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
+                                                                type={pwds.includes('confirmNewPwd') ? 'text' : 'password'}
                                                                 id="outlined-adornment-title"
                                                                 label={t('Confirm Password')}
-                                                                type="text"
                                                                 name="confirmPassword"
                                                                 value={values.confirmPassword}
                                                                 onChange={handleChange}
                                                                 error={touched.confirmPassword && Boolean(errors.confirmPassword)}
                                                                 helperText={touched.confirmPassword && t(errors.confirmPassword)}
                                                                 color="secondary"
+                                                                InputProps={{
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                onClick={() => {
+                                                                                    toggleShowPwds('confirmNewPwd');
+                                                                                }}
+                                                                            >
+                                                                                {!pwds.includes('confirmNewPwd') ? (
+                                                                                    <EyeInvisibleOutlined />
+                                                                                ) : (
+                                                                                    <EyeOutlined />
+                                                                                )}
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    )
+                                                                }}
                                                             />
                                                         </FormControl>
                                                     </Grid>

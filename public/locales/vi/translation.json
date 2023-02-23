@@ -146,5 +146,9 @@
     "Please enter Username": "Vui lòng nhập Tên tài khoản",
     "Please enter Password": "Vui lòng nhập Mật khẩu",
     "Person On Leave": "Người nghỉ phép",
-    "Please enter Person On Leave": "Vui lòng nhập Người nghỉ phép"
+    "Please enter Person On Leave": "Vui lòng nhập Người nghỉ phép",
+    "Please no more than 50 characters": "Vui lòng nhập tối đa 50 ký tự",
+    "The username or password you entered did not match our records. Please try again": "Tên người dùng hoặc mật khẩu bạn đã nhập không khớp với hồ sơ của chúng tôi. Vui lòng thử lại",
+    "Change Password successfully": "Đổi mật khẩu thành công",
+    "Incorrect password": "Mật khẩu hiện tại không đúng"
 }
