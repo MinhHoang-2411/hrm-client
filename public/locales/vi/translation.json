@@ -72,6 +72,7 @@
     "Manager confirms the leave": "Quản lý xác nhận đơn",
     "Admin approves the leave": "Quản trị viên phê duyệt đơn",
     "Assign To": "Gửi đến",
+    "days of Annual Leave": "ngày nghỉ phép năm",
     "day of Annual Leave": "ngày nghỉ phép năm",
     "Your leave type is Maternity.": "Loại nghỉ phép của bạn là Thai sản.",
     "You don't need to select Leave Detail.": "Bạn không cần chọn Chi tiết Nghỉ phép.",
@@ -143,5 +144,7 @@
     "Forgot Password?": "Quên mật khẩu?",
     "Login": "Đăng nhập",
     "Please enter Username": "Vui lòng nhập Tên tài khoản",
-    "Please enter Password": "Vui lòng nhập Mật khẩu"
+    "Please enter Password": "Vui lòng nhập Mật khẩu",
+    "Person On Leave": "Người nghỉ phép",
+    "Please enter Person On Leave": "Vui lòng nhập Người nghỉ phép"
 }

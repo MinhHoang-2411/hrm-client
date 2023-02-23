@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     alert: false,
     loading: false,
+    supportLoading: false,
     loadingWaiting: false,
     reloadList: false,
     listData: [],
@@ -38,6 +39,18 @@ const leaveSlice = createSlice({
         submitFailed(state, action) {
             state.alert = action.payload;
             state.loading = false;
+        },
+        supportSubmit(state, action) {
+            state.alert = false;
+            state.supportLoading = true;
+        },
+        supportSubmitSuccess(state, action) {
+            state.alert = action.payload;
+            state.supportLoading = false;
+        },
+        supportSubmitFailed(state, action) {
+            state.alert = action.payload;
+            state.supportLoading = false;
         },
         cancelAlert(state, action) {
             state.alert = null;
