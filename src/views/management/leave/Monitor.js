@@ -441,14 +441,13 @@ const MonitorLeave = () => {
                                         <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                                             <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px' }}>
                                                 <InputSearch
-                                                    width={'520px'}
+                                                    width={'100%'}
                                                     search={searchListWaiting}
                                                     handleSearch={(value) => handleSearch(value, 'waiting')}
                                                     placeholder={t('Search...')}
                                                 />
-                                            </Stack>
-                                            <Box>
-                                                <FormControl sx={{ minWidth: 150, marginTop: '10px' }}>
+
+                                                <FormControl sx={{ minWidth: 150, marginLeft: '15px' }}>
                                                     <InputLabel size="small" color="secondary" id="demo-simple-select-label">
                                                         {t('Leave Type')}
                                                     </InputLabel>
@@ -471,75 +470,79 @@ const MonitorLeave = () => {
                                                         ))}
                                                     </Select>
                                                 </FormControl>
-                                                <FormControl
-                                                    sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', marginTop: '10px' }}
-                                                    size="small"
-                                                >
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                        <DatePicker
-                                                            label={t('Start Date')}
-                                                            value={fromWaiting || null}
-                                                            name="fromWaiting"
-                                                            onChange={(e) => {
-                                                                handleFilter(
-                                                                    'startDate.greaterThanOrEqual',
-                                                                    formatDateMaterialForFilter(e),
-                                                                    'waiting'
-                                                                );
-                                                            }}
-                                                            inputFormat="DD/MM/YYYY"
-                                                            onError={(newError) => setFromWaitingError(newError)}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    size="small"
-                                                                    color="secondary"
-                                                                    {...params}
-                                                                    helperText={
-                                                                        fromWaitingError ? t('Please follow the format dd/mm/yyyy') : ''
-                                                                    }
-                                                                />
-                                                            )}
-                                                            style={{ maxHeight: '70%' }}
-                                                        />
-                                                    </LocalizationProvider>
-                                                </FormControl>
-                                                <FormControl
-                                                    sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', marginTop: '10px' }}
-                                                    size="small"
-                                                >
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                        <DatePicker
-                                                            label={t('End Date')}
-                                                            value={toWaiting || null}
-                                                            name="toWaiting"
-                                                            minDate={fromWaiting}
-                                                            onChange={(e) => {
-                                                                handleFilter(
-                                                                    'endDate.lessThanOrEqual',
-                                                                    formatDateMaterialForFilter(e),
-                                                                    'waiting'
-                                                                );
-                                                            }}
-                                                            inputFormat="DD/MM/YYYY"
-                                                            onError={(newError) => setToWaitingError(newError)}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    size="small"
-                                                                    color="secondary"
-                                                                    {...params}
-                                                                    helperText={
-                                                                        toWaitingError === 'invalidDate'
-                                                                            ? t('Please follow the format dd/mm/yyyy')
-                                                                            : toWaitingError === 'minDate'
-                                                                            ? t('Please choose valid time')
-                                                                            : ''
-                                                                    }
-                                                                />
-                                                            )}
-                                                            style={{ maxHeight: '70%' }}
-                                                        />
-                                                    </LocalizationProvider>
-                                                </FormControl>
+                                            </Stack>
+                                            <Box>
+                                                <Stack direction="row" alignItems="center">
+                                                    <FormControl
+                                                        sx={{ width: { xs: '100%', md: '100%' }, marginLeft: '0px', marginTop: '10px' }}
+                                                        size="small"
+                                                    >
+                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DatePicker
+                                                                label={t('Start Date')}
+                                                                value={fromWaiting || null}
+                                                                name="fromWaiting"
+                                                                onChange={(e) => {
+                                                                    handleFilter(
+                                                                        'startDate.greaterThanOrEqual',
+                                                                        formatDateMaterialForFilter(e),
+                                                                        'waiting'
+                                                                    );
+                                                                }}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                onError={(newError) => setFromWaitingError(newError)}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        {...params}
+                                                                        helperText={
+                                                                            fromWaitingError ? t('Please follow the format dd/mm/yyyy') : ''
+                                                                        }
+                                                                    />
+                                                                )}
+                                                                style={{ maxHeight: '70%' }}
+                                                            />
+                                                        </LocalizationProvider>
+                                                    </FormControl>
+                                                    <FormControl
+                                                        sx={{ width: { xs: '100%', md: '100%' }, marginLeft: '15px', marginTop: '10px' }}
+                                                        size="small"
+                                                    >
+                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DatePicker
+                                                                label={t('End Date')}
+                                                                value={toWaiting || null}
+                                                                name="toWaiting"
+                                                                minDate={fromWaiting}
+                                                                onChange={(e) => {
+                                                                    handleFilter(
+                                                                        'endDate.lessThanOrEqual',
+                                                                        formatDateMaterialForFilter(e),
+                                                                        'waiting'
+                                                                    );
+                                                                }}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                onError={(newError) => setToWaitingError(newError)}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        {...params}
+                                                                        helperText={
+                                                                            toWaitingError === 'invalidDate'
+                                                                                ? t('Please follow the format dd/mm/yyyy')
+                                                                                : toWaitingError === 'minDate'
+                                                                                ? t('Please choose valid time')
+                                                                                : ''
+                                                                        }
+                                                                    />
+                                                                )}
+                                                                style={{ maxHeight: '70%' }}
+                                                            />
+                                                        </LocalizationProvider>
+                                                    </FormControl>
+                                                </Stack>
                                             </Box>
                                         </Box>
                                     </Box>
@@ -590,36 +593,38 @@ const MonitorLeave = () => {
                                             {t('Other leave requests')} <span style={styleCount}>{paginationManager?.totalCount || 0}</span>
                                         </h3>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '12.5px' }}>
-                                            <InputSearch
-                                                width={'595px'}
-                                                search={search}
-                                                handleSearch={handleSearch}
-                                                placeholder={t('Search...')}
-                                            />
+                                            <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px', width: '100%' }}>
+                                                <InputSearch
+                                                    width={'100%'}
+                                                    search={search}
+                                                    handleSearch={handleSearch}
+                                                    placeholder={t('Search...')}
+                                                />
+                                                <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
+                                                    <InputLabel size="small" id="demo-simple-select-label" color="secondary">
+                                                        {t('Leave Type')}
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={paramsAll?.['type.equals']}
+                                                        onChange={(e) => handleFilter('type.equals', e.target.value)}
+                                                        label="Type"
+                                                        color="secondary"
+                                                        size="small"
+                                                    >
+                                                        <MenuItem value={'all'}>All</MenuItem>
+                                                        {LEAVE_TYPE?.map((item, index) => (
+                                                            <MenuItem key={index} value={item}>
+                                                                {upperCaseFirstCharacter(item)}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Stack>
                                         </Box>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                                            <FormControl sx={{ minWidth: 120 }}>
-                                                <InputLabel size="small" id="demo-simple-select-label" color="secondary">
-                                                    {t('Leave Type')}
-                                                </InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={paramsAll?.['type.equals']}
-                                                    onChange={(e) => handleFilter('type.equals', e.target.value)}
-                                                    label="Type"
-                                                    color="secondary"
-                                                    size="small"
-                                                >
-                                                    <MenuItem value={'all'}>All</MenuItem>
-                                                    {LEAVE_TYPE?.map((item, index) => (
-                                                        <MenuItem key={index} value={item}>
-                                                            {upperCaseFirstCharacter(item)}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                            <FormControl sx={{ minWidth: 120, marginLeft: '5px' }}>
+                                            <FormControl sx={{ minWidth: 120, marginLeft: '0px' }}>
                                                 <InputLabel size="small" id="demo-simple-select-label" color="secondary">
                                                     {t('Status')}
                                                 </InputLabel>
@@ -638,7 +643,10 @@ const MonitorLeave = () => {
                                                     <MenuItem value={'APPROVED'}>{t('Approved')}</MenuItem>
                                                 </Select>
                                             </FormControl>
-                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
+                                            <FormControl
+                                                sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', minWidth: 120 }}
+                                                size="small"
+                                            >
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
                                                         label={t('Start Date')}
@@ -662,7 +670,10 @@ const MonitorLeave = () => {
                                                     />
                                                 </LocalizationProvider>
                                             </FormControl>
-                                            <FormControl sx={{ width: { xs: '100%', md: 170 }, marginLeft: '5px' }} size="small">
+                                            <FormControl
+                                                sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', minWidth: 120 }}
+                                                size="small"
+                                            >
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
                                                         label={t('End Date')}
