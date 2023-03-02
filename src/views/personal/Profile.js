@@ -1,6 +1,6 @@
 /// material-ui
 import MainCard from 'ui-component/cards/MainCard';
-import { CardContent, Grid, Paper, Typography, Avatar, Box, Stack, IconButton } from '@mui/material';
+import { CardContent, Grid, Paper, Typography, Avatar, Box, Stack, IconButton, Devider } from '@mui/material';
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import CakeIcon from '@mui/icons-material/Cake';
@@ -124,7 +124,7 @@ const Profile = ({ ...others }) => {
                                             <DataField
                                                 Icon={PlaceOutlinedIcon}
                                                 label={t('Address')}
-                                                data={`${dataProfile?.data?.address?.streetAddress}, ${dataProfile?.data?.address?.city}`}
+                                                data={`${dataProfile?.data?.address?.streetAddress}`}
                                             />
                                         </Box>
                                     </Grid>
@@ -138,27 +138,21 @@ const Profile = ({ ...others }) => {
                                             <Divider />
                                             <Grid container>
                                                 <Grid item xs={6}>
-                                                    <DataField
-                                                        Icon={WorkIcon}
-                                                        divider={true}
-                                                        label={t('Position')}
-                                                        data={dataProfile?.data?.position}
-                                                    />
+                                                    <DataField Icon={WorkIcon} label={t('Position')} data={dataProfile?.data?.position} />
                                                 </Grid>
                                                 <Grid item xs={6}>
                                                     <DataField
                                                         Icon={WorkspacesIcon}
-                                                        divider
                                                         label={t('Branch')}
                                                         data={dataProfile?.data?.branch?.name}
                                                     />
                                                 </Grid>
                                             </Grid>
+                                            <Divider />
                                             <Grid container>
                                                 <Grid item xs={6}>
                                                     <DataField
                                                         Icon={NearMeIcon}
-                                                        divider={true}
                                                         label={t('Nation')}
                                                         data={dataProfile?.data?.nationality}
                                                     />
@@ -166,17 +160,16 @@ const Profile = ({ ...others }) => {
                                                 <Grid item xs={6}>
                                                     <DataField
                                                         Icon={CalendarMonthIcon}
-                                                        divider
                                                         label={t('Joining Date')}
                                                         data={formatTimeStampToDate(dataProfile?.data?.joinedDate)}
                                                     />
                                                 </Grid>
                                             </Grid>
+                                            <Divider />
                                             <Grid container>
                                                 <Grid item xs={6}>
                                                     <DataField
                                                         Icon={ShareOutlinedIcon}
-                                                        divider={true}
                                                         label={t('CV URL')}
                                                         data={
                                                             <a href={dataProfile?.data?.resumeUrl} target="_blank">
