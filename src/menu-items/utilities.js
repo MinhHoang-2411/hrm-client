@@ -13,7 +13,7 @@ const utilities = {
     children: [
         {
             id: 'bar',
-            title: 'Chainhaus Bar',
+            title: 'Stdio Bar',
             type: 'item',
             url: '/utilities/bar',
             icon: icons.IconBottle,

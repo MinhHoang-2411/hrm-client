@@ -6,7 +6,8 @@ import { assetSaga } from 'store/asset/assetSaga';
 import { alertSaga } from 'store/alert/alertSaga';
 import { assetRequestSaga } from 'store/asset-request/assetRequestSaga';
 import { employeeSaga } from 'store/employee/employeeSaga';
+import { profileSaga } from 'store/personal/profileSaga';
 
 export default function* rootSaga() {
-    yield all([authSaga(), actionSaga(), leaveSaga(), assetSaga(), alertSaga(), assetRequestSaga(), employeeSaga()]);
+    yield all([authSaga(), actionSaga(), leaveSaga(), assetSaga(), alertSaga(), assetRequestSaga(), employeeSaga(), profileSaga()]);
 }

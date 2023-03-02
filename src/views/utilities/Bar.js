@@ -21,7 +21,7 @@ const Bar = ({ ...others }) => {
     };
 
     return (
-        <MainCard title="Chainhaus Bar">
+        <MainCard title="Stdio Bar">
             <Grid container spacing={3} justifyContent="center">
                 <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} item xs={12} sm={10} md={8}>
                     <Grid container direction="column" spacing={3}>
