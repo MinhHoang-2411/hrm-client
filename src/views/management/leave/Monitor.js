@@ -262,7 +262,7 @@ const MonitorLeave = () => {
 
     const showDetail = (leaveDetail) => {
         return (
-            <Box sx={{ ...STYLE_MODAL, width: 900 }}>
+            <Box sx={{ ...STYLE_MODAL, width: isMobile ? '90%' : 900 }}>
                 <ModelLeaveDetail leaveDetail={leaveSelected} handleClose={handleCloseModalDetail} />
             </Box>
         );
