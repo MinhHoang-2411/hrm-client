@@ -55,7 +55,8 @@ const MainRoutes = {
         },
         {
             path: '/',
-            element: <DashboardDefault />
+            // element: <DashboardDefault />
+            element: <Profile />
         },
 
         {

@@ -18,7 +18,7 @@ const MenuList = () => {
     const basicInfo = JSON.parse(localStorage.getItem('employee'));
 
     useEffect(() => {
-        const role = basicInfo.position;
+        const role = basicInfo?.position;
         if (role === 'MANAGER') dispatch(actionActions.getCountMenu());
     }, [reloadListWaiting]);
     const navItems = menuItem.items.map((item) => {

@@ -10,7 +10,8 @@ import management from './management';
 
 // ==============================|| MENU ITEMS ||============================== //
 const menuItems = {
-    items: [dashboard, management, leave, meeting, asset, project, utilities, others]
+    // items: [dashboard, management, leave, meeting, asset, project, utilities, others]
+    items: [management, leave]
 };
 
 export default menuItems;

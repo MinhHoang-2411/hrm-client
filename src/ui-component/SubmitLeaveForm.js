@@ -1,4 +1,5 @@
 // material-ui
+import useMediaQuery from '@mui/material/useMediaQuery';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SendIcon from '@mui/icons-material/Send';
@@ -73,6 +74,7 @@ import { LEAVE_TYPE } from 'constants/index';
 
 // i18n
 import { useTranslation } from 'react-i18next';
+import useResponsive from '../hooks/useResponsive';
 
 const SubmitLeaveForm = ({ type, ...others }) => {
     const [openStartDate, setOpenStartDate] = useState(false);
@@ -97,6 +99,10 @@ const SubmitLeaveForm = ({ type, ...others }) => {
     const [toError, setToError] = useState(null);
     const { t, i18n } = useTranslation();
     const [openLoadingSubmit, setOpenLoadingSubmit] = React.useState(false);
+
+    //Responsive hook
+    const isMobile = useResponsive('mobile');
+    const isMobileAndTablet = useResponsive('mobileAndTablet');
 
     const steps =
         type == 'normal'
@@ -291,6 +297,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
 
     return (
         <MainCard
+            contentSX={{ px: { xs: 2, md: 3 }, py: { xs: 0, md: 3 } }}
             title={t('Leave Request')}
             onClick={(e) => {
                 e.stopPropagation();
@@ -336,23 +343,25 @@ const SubmitLeaveForm = ({ type, ...others }) => {
             >
                 {({ errors, handleChange, handleSubmit, isSubmitting, touched, values, resetForm, setFieldValue }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
-                        <Grid container spacing={gridSpacing}>
-                            <Grid item lg={8} md={8} sm={8} xs={8}>
-                                <Grid container spacing={gridSpacing} sx={{ mt: 1 }}>
+                        <Grid container spacing={{ md: gridSpacing, sm: 0 }}>
+                            <Grid item lg={8} md={8} sm={12}>
+                                <Grid container spacing={{ md: gridSpacing, sm: 0 }} sx={{ mt: 1 }}>
+                                    {!isMobile && (
+                                        <Grid item lg={12} md={12} sm={12} xs={12}>
+                                            <Box sx={{ width: '100%' }}>
+                                                <Stepper sx={{ width: '100%' }}>
+                                                    {steps.map((label) => (
+                                                        <Step key={label}>
+                                                            <StepLabel className="MuiStepIcon-root">{label}</StepLabel>
+                                                        </Step>
+                                                    ))}
+                                                </Stepper>
+                                            </Box>
+                                        </Grid>
+                                    )}
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <Box sx={{ width: '100%' }}>
-                                            <Stepper sx={{ width: '100%' }}>
-                                                {steps.map((label) => (
-                                                    <Step key={label}>
-                                                        <StepLabel className="MuiStepIcon-root">{label}</StepLabel>
-                                                    </Step>
-                                                ))}
-                                            </Stepper>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <Grid container spacing={gridSpacing}>
-                                            <Grid item lg={8} md={8} sm={12} xs={12}>
+                                        <Grid container spacing={{ md: gridSpacing, sm: 1, xs: 0 }}>
+                                            <Grid item sm={8} xs={12}>
                                                 <FormControl
                                                     fullWidth
                                                     error={Boolean(touched.title && errors.title)}
@@ -364,6 +373,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                     </Box>
 
                                                     <TextField
+                                                        // size="small"
                                                         id="outlined-adornment-title"
                                                         type="text"
                                                         name="title"
@@ -378,7 +388,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                     />
                                                 </FormControl>
                                             </Grid>
-                                            <Grid item lg={4} md={4} sm={12} xs={12}>
+                                            <Grid item sm={4} xs={12}>
                                                 <FormControl
                                                     fullWidth
                                                     error={Boolean(touched.type && errors.type)}
@@ -389,6 +399,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <Select
+                                                        // sx={{ height: isMobile ? '43px' : '54px' }}
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
                                                         name="type"
@@ -407,7 +418,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
-                                                    <FormHelperText sx={{ color: '#ff4d4f' }}>
+                                                    <FormHelperText sx={{ color: '#ff4d4f', position: 'absolute', bottom: '-22px' }}>
                                                         {touched?.type && t(errors?.type)}
                                                     </FormHelperText>
                                                 </FormControl>
@@ -416,7 +427,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                     </Grid>
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
-                                        <Grid container spacing={gridSpacing}>
+                                        <Grid container spacing={{ md: gridSpacing, sm: 1 }}>
                                             <Grid item lg={4} md={4} sm={4} xs={12}>
                                                 <FormControl
                                                     fullWidth
@@ -428,49 +439,82 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                        <DatePicker
-                                                            value={values.startDate}
-                                                            name="startDate"
-                                                            closeOnSelect={true}
-                                                            onChange={(value) => {
-                                                                setFieldValue('startDate', value);
-                                                                handleGetArrayDate(value, values.endDate);
-                                                                setErrorMessageDetail('');
-                                                                setOpenStartDate(false);
-                                                            }}
-                                                            PopperProps={{
-                                                                onClick: (e) => e.stopPropagation()
-                                                            }}
-                                                            open={openStartDate}
-                                                            onError={(newError) => setFromError(newError)}
-                                                            onChangeRaw={(e) => e.preventDefault()}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    // onKeyDown={onKeyDown}
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setOpenStartDate(true);
-                                                                        setOpenEndDate(false);
-                                                                    }}
-                                                                    inputProps={{
-                                                                        ...params.inputProps,
-                                                                        readOnly: true,
-                                                                        sx: { cursor: 'pointer' }
-                                                                    }}
-                                                                    error={touched.startDate && Boolean(errors.startDate)}
-                                                                    helperText={
-                                                                        fromError === 'invalidDate'
-                                                                            ? touched.startDate && t('Please follow the format dd/mm/yyyy')
-                                                                            : touched.startDate && t(errors.startDate)
-                                                                    }
-                                                                    color="secondary"
-                                                                />
-                                                            )}
-                                                            disablePast={true}
-                                                            inputFormat="DD/MM/YYYY"
-                                                            className="form-input"
-                                                        />
+                                                        {!isMobile ? (
+                                                            <DatePicker
+                                                                value={values.startDate}
+                                                                name="startDate"
+                                                                closeOnSelect={true}
+                                                                onChange={(value) => {
+                                                                    setFieldValue('startDate', value);
+                                                                    handleGetArrayDate(value, values.endDate);
+                                                                    setErrorMessageDetail('');
+                                                                    setOpenStartDate(false);
+                                                                }}
+                                                                PopperProps={{
+                                                                    onClick: (e) => e.stopPropagation()
+                                                                }}
+                                                                open={openStartDate}
+                                                                onError={(newError) => setFromError(newError)}
+                                                                onChangeRaw={(e) => e.preventDefault()}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        // onKeyDown={onKeyDown}
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setOpenStartDate(true);
+                                                                            setOpenEndDate(false);
+                                                                        }}
+                                                                        inputProps={{
+                                                                            ...params.inputProps,
+                                                                            readOnly: true,
+                                                                            sx: { cursor: 'pointer' }
+                                                                        }}
+                                                                        error={touched.startDate && Boolean(errors.startDate)}
+                                                                        helperText={
+                                                                            fromError === 'invalidDate'
+                                                                                ? touched.startDate &&
+                                                                                  t('Please follow the format dd/mm/yyyy')
+                                                                                : touched.startDate && t(errors.startDate)
+                                                                        }
+                                                                        color="secondary"
+                                                                    />
+                                                                )}
+                                                                disablePast={true}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                className="form-input"
+                                                            />
+                                                        ) : (
+                                                            <MobileDatePicker
+                                                                value={values.startDate}
+                                                                name="startDate"
+                                                                closeOnSelect={true}
+                                                                onChange={(value) => {
+                                                                    setFieldValue('startDate', value);
+                                                                    handleGetArrayDate(value, values.endDate);
+                                                                    setErrorMessageDetail('');
+                                                                    setOpenStartDate(false);
+                                                                }}
+                                                                onError={(newError) => setFromError(newError)}
+                                                                onChangeRaw={(e) => e.preventDefault()}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        error={touched.startDate && Boolean(errors.startDate)}
+                                                                        helperText={
+                                                                            fromError === 'invalidDate'
+                                                                                ? touched.startDate &&
+                                                                                  t('Please follow the format dd/mm/yyyy')
+                                                                                : touched.startDate && t(errors.startDate)
+                                                                        }
+                                                                        color="secondary"
+                                                                    />
+                                                                )}
+                                                                disablePast={true}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                className="form-input"
+                                                            />
+                                                        )}
                                                     </LocalizationProvider>
                                                 </FormControl>
                                             </Grid>
@@ -485,49 +529,83 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                         <span className="require">(*)</span>
                                                     </Box>
                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                        <DatePicker
-                                                            id="outlined-adornment-leave-to"
-                                                            type="date"
-                                                            name="endDate"
-                                                            value={values.endDate}
-                                                            onChange={(value) => {
-                                                                setFieldValue('endDate', value);
-                                                                handleGetArrayDate(values.startDate, value);
-                                                                setErrorMessageDetail('');
-                                                                setOpenEndDate(false);
-                                                            }}
-                                                            PopperProps={{
-                                                                onClick: (e) => e.stopPropagation()
-                                                            }}
-                                                            open={openEndDate}
-                                                            closeOnSelect={true}
-                                                            onError={(newError) => setToError(newError)}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setOpenEndDate(true);
-                                                                        setOpenStartDate(false);
-                                                                    }}
-                                                                    {...params}
-                                                                    inputProps={{
-                                                                        ...params.inputProps,
-                                                                        readOnly: true,
-                                                                        sx: { cursor: 'pointer' }
-                                                                    }}
-                                                                    error={touched.endDate && Boolean(errors.endDate)}
-                                                                    helperText={
-                                                                        toError === 'invalidDate'
-                                                                            ? touched.endDate && t('Please follow the format dd/mm/yyyy')
-                                                                            : touched.endDate && t(errors.endDate)
-                                                                    }
-                                                                    color="secondary"
-                                                                />
-                                                            )}
-                                                            disablePast={true}
-                                                            inputFormat="DD/MM/YYYY"
-                                                            className="form-input"
-                                                        />
+                                                        {!isMobile ? (
+                                                            <DatePicker
+                                                                id="outlined-adornment-leave-to"
+                                                                type="date"
+                                                                name="endDate"
+                                                                value={values.endDate}
+                                                                onChange={(value) => {
+                                                                    setFieldValue('endDate', value);
+                                                                    handleGetArrayDate(values.startDate, value);
+                                                                    setErrorMessageDetail('');
+                                                                    setOpenEndDate(false);
+                                                                }}
+                                                                PopperProps={{
+                                                                    onClick: (e) => e.stopPropagation()
+                                                                }}
+                                                                open={openEndDate}
+                                                                closeOnSelect={true}
+                                                                onError={(newError) => setToError(newError)}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setOpenEndDate(true);
+                                                                            setOpenStartDate(false);
+                                                                        }}
+                                                                        inputProps={{
+                                                                            ...params.inputProps,
+                                                                            readOnly: true,
+                                                                            sx: { cursor: 'pointer' }
+                                                                        }}
+                                                                        error={touched.endDate && Boolean(errors.endDate)}
+                                                                        helperText={
+                                                                            toError === 'invalidDate'
+                                                                                ? touched.endDate &&
+                                                                                  t('Please follow the format dd/mm/yyyy')
+                                                                                : touched.endDate && t(errors.endDate)
+                                                                        }
+                                                                        color="secondary"
+                                                                    />
+                                                                )}
+                                                                disablePast={true}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                className="form-input"
+                                                            />
+                                                        ) : (
+                                                            <MobileDatePicker
+                                                                id="outlined-adornment-leave-to"
+                                                                type="date"
+                                                                name="endDate"
+                                                                value={values.endDate}
+                                                                onChange={(value) => {
+                                                                    setFieldValue('endDate', value);
+                                                                    handleGetArrayDate(values.startDate, value);
+                                                                    setErrorMessageDetail('');
+                                                                    setOpenEndDate(false);
+                                                                }}
+                                                                closeOnSelect={true}
+                                                                onError={(newError) => setToError(newError)}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        error={touched.endDate && Boolean(errors.endDate)}
+                                                                        helperText={
+                                                                            toError === 'invalidDate'
+                                                                                ? touched.endDate &&
+                                                                                  t('Please follow the format dd/mm/yyyy')
+                                                                                : touched.endDate && t(errors.endDate)
+                                                                        }
+                                                                        color="secondary"
+                                                                    />
+                                                                )}
+                                                                disablePast={true}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                className="form-input"
+                                                            />
+                                                        )}
                                                     </LocalizationProvider>
                                                 </FormControl>
                                             </Grid>
@@ -540,7 +618,6 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                             : Boolean(touched.personOnLeave && errors.personOnLeave)
                                                     }
                                                     sx={{ ...theme.typography.customInput }}
-                                                    className="title-form"
                                                 >
                                                     <Box className="title-form">
                                                         <span>{type == 'normal' ? t('Assign To') : t('Person On Leave')}</span>
@@ -610,7 +687,6 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                             fullWidth
                                             error={Boolean(touched.password && errors.password)}
                                             sx={{ ...theme.typography.customInput }}
-                                            className="title-form"
                                         >
                                             <Box className="title-form">
                                                 <span>{t('Reason')}</span>
@@ -632,13 +708,150 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                             />
                                         </FormControl>
                                     </Grid>
+                                    {/* Mobile Leave Detail */}
+                                    {isMobileAndTablet && (
+                                        <Grid xs={12} sx={{ my: 1 }}>
+                                            <Card
+                                                sx={{
+                                                    backgroundColor: '#FAFAFA'
+                                                }}
+                                                variant="outlined"
+                                            >
+                                                <CardHeader
+                                                    sx={{ padding: '24px 24px 10px 24px' }}
+                                                    title={t('Leave Detail')}
+                                                    subheader={
+                                                        leaveUnUser
+                                                            ? inforLeaveUnUse + t('days of Annual Leave')
+                                                            : leaveUnUser !== null
+                                                            ? '0 ' + t('day of Annual Leave')
+                                                            : ''
+                                                    }
+                                                />
+                                                <CardContent
+                                                    sx={{ p: '4px' }}
+                                                    style={{
+                                                        overflowY: 'auto',
+                                                        maxHeight: '450px',
+                                                        display: 'flex',
+                                                        flexGrow: 1,
+                                                        flexDirection: 'column'
+                                                    }}
+                                                >
+                                                    {dateAndLeaveTimes?.length === 0 && leaveType !== 'MATERNITY' ? (
+                                                        <Box>
+                                                            <center>
+                                                                <ErrorOutlineIcon
+                                                                    sx={{
+                                                                        width: 100,
+                                                                        height: 100,
+                                                                        marginBottom: '4px',
+                                                                        color: '#E0E0E0'
+                                                                    }}
+                                                                    fontSize="medium"
+                                                                />
+                                                                <Typography sx={{ color: '#9E9E9E' }}>{t('Empty Detail')}</Typography>
+                                                            </center>
+                                                        </Box>
+                                                    ) : (
+                                                        <div></div>
+                                                    )}
+
+                                                    {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
+                                                    {leaveType === 'MATERNITY' && (
+                                                        <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
+                                                            {t('Your leave type is Maternity.')} <br />
+                                                            {t("You don't need to select Leave Detail.")}
+                                                        </Alert>
+                                                    )}
+                                                    <ul style={{ paddingLeft: 0 }}>
+                                                        {values.type !== 'MATERNITY' &&
+                                                            dateAndLeaveTimes?.length > 0 &&
+                                                            checkValidDate(dateAndLeaveTimes) &&
+                                                            dateAndLeaveTimes?.map((item, index) => {
+                                                                return (
+                                                                    <div key={index}>
+                                                                        <li
+                                                                            style={{
+                                                                                color: 'black',
+                                                                                listStyleType: 'none',
+                                                                                display: 'flex',
+                                                                                alignItems: 'center'
+                                                                            }}
+                                                                        >
+                                                                            <CalendarMonthIcon
+                                                                                sx={{
+                                                                                    width: 25,
+                                                                                    height: 25,
+                                                                                    marginBottom: '4px'
+                                                                                }}
+                                                                                fontSize="medium"
+                                                                            />
+                                                                            <span style={{ marginLeft: '10px', fontSize: '16px' }}>
+                                                                                {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
+                                                                            </span>
+                                                                            {isHoliday(item) === false && isWeekend(item) === false && (
+                                                                                <>
+                                                                                    <Select
+                                                                                        sx={{ m: 1, width: '40%', marginLeft: '15px' }}
+                                                                                        size="small"
+                                                                                        labelId="demo-simple-select-label"
+                                                                                        value={item.dateType}
+                                                                                        onChange={(e) =>
+                                                                                            handleSelectLeaveTime(e.target.value, index)
+                                                                                        }
+                                                                                        defaultValue="ALL_DAY"
+                                                                                        color="secondary"
+                                                                                    >
+                                                                                        <MenuItem value={'ALL_DAY'}>
+                                                                                            {t('All day')}
+                                                                                        </MenuItem>
+                                                                                        <MenuItem value={'MORNING'}>
+                                                                                            {t('Morning')}
+                                                                                        </MenuItem>
+                                                                                        <MenuItem value={'AFTERNOON'}>
+                                                                                            {t('Afternoon')}
+                                                                                        </MenuItem>
+                                                                                    </Select>
+                                                                                    <Stack direction="row" spacing={1}>
+                                                                                        <IconButton
+                                                                                            aria-label="delete"
+                                                                                            onClick={(e) => handleClickOpen(index)}
+                                                                                        >
+                                                                                            <SpeakerNotesIcon
+                                                                                                fontSize="medium"
+                                                                                                color={item.note === '' ? '' : 'secondary'}
+                                                                                            />
+                                                                                        </IconButton>
+                                                                                    </Stack>
+                                                                                </>
+                                                                            )}
+                                                                            {(isHoliday(item) === true || isWeekend(item) === true) && (
+                                                                                <Box
+                                                                                    sx={{ m: 1, width: '50%', marginLeft: '15px' }}
+                                                                                    size="small"
+                                                                                >
+                                                                                    <Typography className="non-working-day-title">
+                                                                                        {t('Non-working day')}
+                                                                                    </Typography>
+                                                                                </Box>
+                                                                            )}
+                                                                        </li>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                    </ul>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    )}
+                                    {/* end Mobile Leave Detail */}
 
                                     <Grid item lg={12} md={12} sm={12} xs={12}>
                                         <Stack direction="row" spacing={2} style={{ justifyContent: 'center' }}>
                                             <Button
                                                 disableElevation
-                                                style={{ width: '20%' }}
-                                                size="large"
+                                                size={isMobile ? 'medium' : 'large'}
                                                 type="reset"
                                                 variant="outlined"
                                                 onClick={(e) => {
@@ -658,8 +871,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                             <Button
                                                 disableElevation
                                                 disabled={isSubmitting}
-                                                style={{ width: '20%' }}
-                                                size="large"
+                                                size={isMobile ? 'medium' : 'large'}
                                                 type="submit"
                                                 variant="contained"
                                                 color="secondary"
@@ -717,130 +929,135 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                     </DialogActions>
                                 </Dialog>
                             </Grid>
-                            <Grid item lg={4} md={4} sm={4} xs={4}>
-                                <Card
-                                    sx={{
-                                        height: '88%',
-                                        backgroundColor: '#FAFAFA'
-                                    }}
-                                    variant="outlined"
-                                >
-                                    <CardHeader
-                                        sx={{ padding: '24px 24px 10px 24px' }}
-                                        title={t('Leave Detail')}
-                                        subheader={
-                                            leaveUnUser
-                                                ? inforLeaveUnUse + t('days of Annual Leave')
-                                                : leaveUnUser !== null
-                                                ? '0 ' + t('day of Annual Leave')
-                                                : ''
-                                        }
-                                    />
-                                    <CardContent
-                                        sx={{ padding: '0px 24px' }}
-                                        style={{
-                                            overflowY: 'auto',
-                                            maxHeight: '450px',
-                                            display: 'flex',
-                                            flexGrow: 1,
-                                            flexDirection: 'column'
-                                        }}
-                                    >
-                                        {dateAndLeaveTimes?.length === 0 && leaveType !== 'MATERNITY' ? (
-                                            <Box style={{ marginTop: '150px' }}>
-                                                <center>
-                                                    <ErrorOutlineIcon
-                                                        sx={{
-                                                            width: 100,
-                                                            height: 100,
-                                                            marginBottom: '4px',
-                                                            color: '#E0E0E0'
-                                                        }}
-                                                        fontSize="medium"
-                                                    />
-                                                    <Typography sx={{ color: '#9E9E9E' }}>{t('Empty Detail')}</Typography>
-                                                </center>
-                                            </Box>
-                                        ) : (
-                                            <div></div>
-                                        )}
 
-                                        {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
-                                        {leaveType === 'MATERNITY' && (
-                                            <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
-                                                {t('Your leave type is Maternity.')} <br />
-                                                {t("You don't need to select Leave Detail.")}
-                                            </Alert>
-                                        )}
-                                        <ul style={{ paddingLeft: 0 }}>
-                                            {values.type !== 'MATERNITY' &&
-                                                dateAndLeaveTimes?.length > 0 &&
-                                                checkValidDate(dateAndLeaveTimes) &&
-                                                dateAndLeaveTimes?.map((item, index) => {
-                                                    return (
-                                                        <div key={index}>
-                                                            <li
-                                                                style={{
-                                                                    color: 'black',
-                                                                    listStyleType: 'none',
-                                                                    display: 'flex',
-                                                                    alignItems: 'center'
-                                                                }}
-                                                            >
-                                                                <CalendarMonthIcon
-                                                                    sx={{
-                                                                        width: 25,
-                                                                        height: 25,
-                                                                        marginBottom: '4px'
+                            {!isMobileAndTablet && (
+                                <Grid item lg={4} md={4} sm={12}>
+                                    <Card
+                                        sx={{
+                                            height: '88%',
+                                            backgroundColor: '#FAFAFA'
+                                        }}
+                                        variant="outlined"
+                                    >
+                                        <CardHeader
+                                            sx={{ padding: '24px 24px 10px 24px' }}
+                                            title={t('Leave Detail')}
+                                            subheader={
+                                                leaveUnUser
+                                                    ? inforLeaveUnUse + t('days of Annual Leave')
+                                                    : leaveUnUser !== null
+                                                    ? '0 ' + t('day of Annual Leave')
+                                                    : ''
+                                            }
+                                        />
+                                        <CardContent
+                                            sx={{ padding: '0px 24px' }}
+                                            style={{
+                                                overflowY: 'auto',
+                                                maxHeight: '450px',
+                                                display: 'flex',
+                                                flexGrow: 1,
+                                                flexDirection: 'column'
+                                            }}
+                                        >
+                                            {dateAndLeaveTimes?.length === 0 && leaveType !== 'MATERNITY' ? (
+                                                <Box style={{ marginTop: '150px' }}>
+                                                    <center>
+                                                        <ErrorOutlineIcon
+                                                            sx={{
+                                                                width: 100,
+                                                                height: 100,
+                                                                marginBottom: '4px',
+                                                                color: '#E0E0E0'
+                                                            }}
+                                                            fontSize="medium"
+                                                        />
+                                                        <Typography sx={{ color: '#9E9E9E' }}>{t('Empty Detail')}</Typography>
+                                                    </center>
+                                                </Box>
+                                            ) : (
+                                                <div></div>
+                                            )}
+
+                                            {errorMessageDetail !== '' && <Alert severity="error">{errorMessageDetail}</Alert>}
+                                            {leaveType === 'MATERNITY' && (
+                                                <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    {t('Your leave type is Maternity.')} <br />
+                                                    {t("You don't need to select Leave Detail.")}
+                                                </Alert>
+                                            )}
+                                            <ul style={{ paddingLeft: 0 }}>
+                                                {values.type !== 'MATERNITY' &&
+                                                    dateAndLeaveTimes?.length > 0 &&
+                                                    checkValidDate(dateAndLeaveTimes) &&
+                                                    dateAndLeaveTimes?.map((item, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                <li
+                                                                    style={{
+                                                                        color: 'black',
+                                                                        listStyleType: 'none',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center'
                                                                     }}
-                                                                    fontSize="medium"
-                                                                />
-                                                                <span style={{ marginLeft: '10px', fontSize: '16px' }}>
-                                                                    {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
-                                                                </span>
-                                                                {isHoliday(item) === false && isWeekend(item) === false && (
-                                                                    <>
-                                                                        <Select
-                                                                            sx={{ m: 1, width: '40%', marginLeft: '15px' }}
-                                                                            size="small"
-                                                                            labelId="demo-simple-select-label"
-                                                                            value={item.dateType}
-                                                                            onChange={(e) => handleSelectLeaveTime(e.target.value, index)}
-                                                                            defaultValue="ALL_DAY"
-                                                                            color="secondary"
-                                                                        >
-                                                                            <MenuItem value={'ALL_DAY'}>{t('All day')}</MenuItem>
-                                                                            <MenuItem value={'MORNING'}>{t('Morning')}</MenuItem>
-                                                                            <MenuItem value={'AFTERNOON'}>{t('Afternoon')}</MenuItem>
-                                                                        </Select>
-                                                                        <Stack direction="row" spacing={1}>
-                                                                            <IconButton
-                                                                                aria-label="delete"
-                                                                                onClick={(e) => handleClickOpen(index)}
+                                                                >
+                                                                    <CalendarMonthIcon
+                                                                        sx={{
+                                                                            width: 25,
+                                                                            height: 25,
+                                                                            marginBottom: '4px'
+                                                                        }}
+                                                                        fontSize="medium"
+                                                                    />
+                                                                    <span style={{ marginLeft: '10px', fontSize: '16px' }}>
+                                                                        {dateFormat(item?.leaveDate, 'dd/mm/yyyy')}
+                                                                    </span>
+                                                                    {isHoliday(item) === false && isWeekend(item) === false && (
+                                                                        <>
+                                                                            <Select
+                                                                                sx={{ m: 1, width: '40%', marginLeft: '15px' }}
+                                                                                size="small"
+                                                                                labelId="demo-simple-select-label"
+                                                                                value={item.dateType}
+                                                                                onChange={(e) =>
+                                                                                    handleSelectLeaveTime(e.target.value, index)
+                                                                                }
+                                                                                defaultValue="ALL_DAY"
+                                                                                color="secondary"
                                                                             >
-                                                                                <SpeakerNotesIcon
-                                                                                    fontSize="medium"
-                                                                                    color={item.note === '' ? '' : 'secondary'}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </Stack>
-                                                                    </>
-                                                                )}
-                                                                {(isHoliday(item) === true || isWeekend(item) === true) && (
-                                                                    <Box sx={{ m: 1, width: '50%', marginLeft: '15px' }} size="small">
-                                                                        <Typography className="non-working-day-title">
-                                                                            {t('Non-working day')}
-                                                                        </Typography>
-                                                                    </Box>
-                                                                )}
-                                                            </li>
-                                                        </div>
-                                                    );
-                                                })}
-                                        </ul>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
+                                                                                <MenuItem value={'ALL_DAY'}>{t('All day')}</MenuItem>
+                                                                                <MenuItem value={'MORNING'}>{t('Morning')}</MenuItem>
+                                                                                <MenuItem value={'AFTERNOON'}>{t('Afternoon')}</MenuItem>
+                                                                            </Select>
+                                                                            <Stack direction="row" spacing={1}>
+                                                                                <IconButton
+                                                                                    aria-label="delete"
+                                                                                    onClick={(e) => handleClickOpen(index)}
+                                                                                >
+                                                                                    <SpeakerNotesIcon
+                                                                                        fontSize="medium"
+                                                                                        color={item.note === '' ? '' : 'secondary'}
+                                                                                    />
+                                                                                </IconButton>
+                                                                            </Stack>
+                                                                        </>
+                                                                    )}
+                                                                    {(isHoliday(item) === true || isWeekend(item) === true) && (
+                                                                        <Box sx={{ m: 1, width: '50%', marginLeft: '15px' }} size="small">
+                                                                            <Typography className="non-working-day-title">
+                                                                                {t('Non-working day')}
+                                                                            </Typography>
+                                                                        </Box>
+                                                                    )}
+                                                                </li>
+                                                            </div>
+                                                        );
+                                                    })}
+                                            </ul>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            )}
                             <Grid>
                                 {loading ? setOpenLoadingSubmit(true) : setOpenLoadingSubmit(false)}
                                 <div>
@@ -903,8 +1120,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                             <DialogActions>
                                 <Button
                                     disableElevation
-                                    style={{ width: '20%' }}
-                                    size="large"
+                                    size={isMobile ? 'medium' : 'large'}
                                     type="reset"
                                     variant="outlined"
                                     onClick={(e) => {
@@ -917,8 +1133,7 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                 </Button>
                                 <Button
                                     disableElevation
-                                    style={{ width: '20%' }}
-                                    size="large"
+                                    size={isMobile ? 'medium' : 'large'}
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
