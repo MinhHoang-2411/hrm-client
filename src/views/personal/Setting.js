@@ -223,7 +223,6 @@ const Setting = () => {
                                                     </Button>
                                                     <LoadingButton
                                                         size={isMobile ? 'medium' : 'large'}
-                                                        startIcon={<UpdateIcon />}
                                                         loading={isPasswordChanging}
                                                         loadingPosition="start"
                                                         variant="contained"
