@@ -74,7 +74,7 @@ import { LEAVE_TYPE } from 'constants/index';
 
 // i18n
 import { useTranslation } from 'react-i18next';
-import useResponsive from '../hooks/useResponsive';
+import useResponsive from 'hooks/useResponsive';
 
 const SubmitLeaveForm = ({ type, ...others }) => {
     const [openStartDate, setOpenStartDate] = useState(false);

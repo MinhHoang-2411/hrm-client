@@ -35,8 +35,11 @@ import { ChangePasswordSchema } from 'utils/validate/change-password-schema';
 
 //// i18n
 import { useTranslation } from 'react-i18next';
+import useResponsive from '../../hooks/useResponsive';
 
 const Setting = () => {
+    const isMobile = useResponsive('mobile');
+
     const [pwds, setPwds] = useState([]);
 
     const { t, i18n } = useTranslation();
@@ -72,7 +75,7 @@ const Setting = () => {
                 <Grid item xs={12} sx={{ marginTop: '20px' }}>
                     <Card variant="outlined" className="card-password">
                         <CardHeader title={t('Change Password')} />
-                        <CardContent>
+                        <CardContent sx={isMobile ? { p: 2 } : {}}>
                             <Formik
                                 initialValues={{
                                     currentPassword: '',
@@ -98,7 +101,7 @@ const Setting = () => {
                                         <Grid container>
                                             <Grid item lg={12} md={12} sm={12} xs={12}>
                                                 <Grid container spacing={2}>
-                                                    <Grid item lg={6} md={6} sm={6} xs={6}>
+                                                    <Grid item lg={6} md={6} sm={6} xs={12}>
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
                                                                 type={pwds.includes('currentPwd') ? 'text' : 'password'}
@@ -134,7 +137,7 @@ const Setting = () => {
                                             </Grid>
                                             <Grid item lg={12} md={12} sm={12} xs={12} sx={{ marginTop: '15px' }}>
                                                 <Grid container spacing={2}>
-                                                    <Grid item lg={6} md={6} sm={6} xs={6}>
+                                                    <Grid item lg={6} md={6} sm={6} xs={12}>
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
                                                                 type={pwds.includes('newPwd') ? 'text' : 'password'}
@@ -166,7 +169,7 @@ const Setting = () => {
                                                             />
                                                         </FormControl>
                                                     </Grid>
-                                                    <Grid item lg={6} md={6} sm={6} xs={6}>
+                                                    <Grid item lg={6} md={6} sm={6} xs={12}>
                                                         <FormControl fullWidth error={Boolean(touched.title && errors.title)}>
                                                             <TextField
                                                                 type={pwds.includes('confirmNewPwd') ? 'text' : 'password'}
@@ -201,10 +204,14 @@ const Setting = () => {
                                                 </Grid>
                                             </Grid>
                                             <Grid item lg={12} md={12} sm={12} xs={12} sx={{ marginTop: '15px' }}>
-                                                <Stack direction="row" spacing={2} style={{ justifyContent: 'flex-end' }}>
+                                                <Stack
+                                                    direction="row"
+                                                    spacing={2}
+                                                    style={{ justifyContent: isMobile ? 'center' : 'flex-end' }}
+                                                >
                                                     <Button
                                                         disableElevation
-                                                        size="large"
+                                                        size={isMobile ? 'medium' : 'large'}
                                                         type="reset"
                                                         variant="outlined"
                                                         onClick={(e) => {
@@ -215,6 +222,7 @@ const Setting = () => {
                                                         {t('Clear')}
                                                     </Button>
                                                     <LoadingButton
+                                                        size={isMobile ? 'medium' : 'large'}
                                                         startIcon={<UpdateIcon />}
                                                         loading={isPasswordChanging}
                                                         loadingPosition="start"

@@ -92,7 +92,11 @@ import * as Yup from 'yup';
 // i18n
 import { useTranslation } from 'react-i18next';
 
+//responsive hook
+import useResponsive from '../../../hooks/useResponsive';
+
 const MonitorLeave = () => {
+    const isMobile = useResponsive('mobile');
     const dispatch = useAppDispatch();
     const [paramsAll, setParamsAll] = useState({
         size: 10,
@@ -269,13 +273,13 @@ const MonitorLeave = () => {
             Array.isArray(data) &&
             data?.map((row, index) => (
                 <Card className="card" key={index} sx={{ fontSize: '15px', marginBottom: '15px', marginTop: '5px' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', padding: '10px 30px' }}>
-                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <Grid container spacing={2} columns={12}>
-                                <Grid item xs={7}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', padding: isMobile ? 2 : '10px 30px' }}>
+                        <Grid container spacing={isMobile ? 1 : 2} columns={12}>
+                            <Grid item container>
+                                <Grid item xs={9}>
                                     <Box sx={styleTitle}>{row?.personOnLeave}</Box>
                                 </Grid>
-                                <Grid item xs={5}>
+                                <Grid item xs={3}>
                                     <IconButton
                                         style={{ float: 'right' }}
                                         onClick={(e) => {
@@ -289,57 +293,47 @@ const MonitorLeave = () => {
                                     </IconButton>
                                 </Grid>
                             </Grid>
-                        </Box>
-                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <Grid container spacing={2} columns={12}>
-                                <Grid item xs={12}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Title')}:</span> {row?.title}
-                                </Grid>
-                            </Grid>
-                        </Box>
 
-                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <Grid container spacing={2} columns={12}>
-                                <Grid item xs={6}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Leave Type')}:</span>{' '}
-                                    <Chip
-                                        sx={{ fontWeight: 'bold', borderRadius: '4px', marginLeft: '5px' }}
-                                        variant="outlined"
-                                        label={t(upperCaseFirstCharacter(row?.type))}
-                                        color="primary"
-                                    />
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <span style={{ fontWeight: 'bold', marginRight: '5px' }}>{t('Status')}: </span>{' '}
-                                    {showStatusLeave(row?.status)}
-                                </Grid>
+                            <Grid item xs={12}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Title')}:</span> {row?.title}
                             </Grid>
-                        </Box>
-                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <Grid container spacing={2} columns={12}>
-                                <Grid item xs={12}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Date Submitted')}:</span>{' '}
-                                    {formatTimeStampToDateTime(row?.createdDate)}
-                                </Grid>
+                            <Grid item xs={12} md={6}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Leave Type')}:</span>{' '}
+                                <Chip
+                                    sx={{ fontWeight: 'bold', borderRadius: '4px', marginLeft: '5px' }}
+                                    variant="outlined"
+                                    label={t(upperCaseFirstCharacter(row?.type))}
+                                    color="primary"
+                                />
                             </Grid>
-                        </Box>
-                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <Grid container spacing={2} columns={12}>
-                                <Grid item xs={6}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('From')}:</span> {formatTimeStampToDate(row?.startDate)}
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('To')}:</span> {formatTimeStampToDate(row?.endDate)}
-                                </Grid>
+                            <Grid item xs={12} md={6}>
+                                <span style={{ fontWeight: 'bold', marginRight: '5px' }}>{t('Status')}: </span>{' '}
+                                {showStatusLeave(row?.status)}
                             </Grid>
-                        </Box>
-                        <Box sx={{ display: 'flex', marginBottom: '20px' }}>
-                            <span style={{ fontWeight: 'bold' }}>{t('Reason')}:</span>
-                            <span style={{ marginLeft: '3px' }}>{row?.reason}</span>
-                        </Box>
+                            <Grid item xs={12}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Date Submitted')}:</span>{' '}
+                                {formatTimeStampToDateTime(row?.createdDate)}
+                            </Grid>
+                            <Grid item xs={6}>
+                                <span style={{ fontWeight: 'bold' }}>{t('From')}:</span> {formatTimeStampToDate(row?.startDate)}
+                            </Grid>
+                            <Grid item xs={6}>
+                                <span style={{ fontWeight: 'bold' }}>{t('To')}:</span> {formatTimeStampToDate(row?.endDate)}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Reason')}:</span>
+                                <span style={{ marginLeft: '3px' }}>{row?.reason}</span>
+                            </Grid>
+                        </Grid>
                         {isLeaveWaiting(row?.status) && (
-                            <Box sx={{ margin: '10px 10px 12px 0px' }}>
+                            <Stack
+                                direction="row"
+                                spacing={isMobile ? 1 : 2}
+                                justifyContent={isMobile ? 'center' : 'end'}
+                                sx={{ margin: '15px 10px 12px 0px' }}
+                            >
                                 <Button
+                                    size={isMobile ? 'small' : 'medium'}
                                     sx={{ float: 'right' }}
                                     variant="contained"
                                     color="secondary"
@@ -351,6 +345,7 @@ const MonitorLeave = () => {
                                     {t('Confirm')}
                                 </Button>
                                 <Button
+                                    size={isMobile ? 'small' : 'medium'}
                                     sx={{ marginRight: '15px', float: 'right' }}
                                     variant="outlined"
                                     color="secondary"
@@ -361,7 +356,7 @@ const MonitorLeave = () => {
                                 >
                                     {t('Reject')}
                                 </Button>
-                            </Box>
+                            </Stack>
                         )}
                     </Box>
                 </Card>
@@ -415,7 +410,7 @@ const MonitorLeave = () => {
     }, [reloadListWaiting, paramsWaiting]);
 
     useEffect(() => {
-        const role = basicInfo.position;
+        const role = basicInfo?.position;
         if (role === 'MANAGER') setHavePermission(true);
         else setHavePermission(false);
     }, []);
@@ -426,60 +421,64 @@ const MonitorLeave = () => {
                 <MainCard sx={{ mt: 2 }} content={false}>
                     <Box
                         sx={{
-                            padding: '20px 20px',
+                            padding: isMobile ? 0 : '20px 20px',
                             display: 'flex-column'
                         }}
                     >
-                        <Grid container spacing={2} columns={16}>
-                            <Grid item xs={8}>
-                                <Box sx={{ padding: '10px 20px' }}>
+                        <Grid container spacing={2} columns={12}>
+                            <Grid item xs={12} md={6}>
+                                <Box sx={{ padding: isMobile ? '10px' : '10px 20px' }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '5px' }}>
                                         <h3 style={styleLabel}>
                                             {t('Waiting leave requests')}{' '}
                                             <span style={styleCount}>{paginationWaiting?.totalCount || 0}</span>
                                         </h3>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                                            <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px' }}>
-                                                <InputSearch
-                                                    width={'100%'}
-                                                    search={searchListWaiting}
-                                                    handleSearch={(value) => handleSearch(value, 'waiting')}
-                                                    placeholder={t('Search...')}
-                                                />
-
-                                                <FormControl sx={{ minWidth: 150, marginLeft: '15px' }}>
-                                                    <InputLabel size="small" color="secondary" id="demo-simple-select-label">
-                                                        {t('Leave Type')}
-                                                    </InputLabel>
-                                                    <Select
-                                                        size="small"
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={paramsAll?.['type.equals']}
-                                                        onChange={(e) => handleFilter('type.equals', e.target.value, 'waiting')}
-                                                        label="Type"
-                                                        color="secondary"
-                                                    >
-                                                        <MenuItem size="small" value={'all'}>
-                                                            {t('All')}
-                                                        </MenuItem>
-                                                        {LEAVE_TYPE?.map((item, index) => (
-                                                            <MenuItem key={index} value={item} size="small">
-                                                                {t(upperCaseFirstCharacter(item))}
+                                        <Box sx={{ marginBottom: '10px' }}>
+                                            <Grid container spacing={isMobile ? 1 : 2}>
+                                                <Grid item xs={12} md={9} alignItems="center">
+                                                    <InputSearch
+                                                        width={'100%'}
+                                                        search={searchListWaiting}
+                                                        handleSearch={(value) => handleSearch(value, 'waiting')}
+                                                        placeholder={t('Search...')}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={4} md={3}>
+                                                    <FormControl sx={{ width: { xs: '100%', md: '100%' } }}>
+                                                        <InputLabel size="small" color="secondary" id="demo-simple-select-label">
+                                                            {isMobile ? t('Type') : t('Leave Type')}
+                                                        </InputLabel>
+                                                        <Select
+                                                            size="small"
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={paramsAll?.['type.equals']}
+                                                            onChange={(e) => handleFilter('type.equals', e.target.value, 'waiting')}
+                                                            label="Type"
+                                                            color="secondary"
+                                                        >
+                                                            <MenuItem size="small" value={'all'}>
+                                                                {t('All')}
                                                             </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Stack>
-                                            <Box>
-                                                <Stack direction="row" alignItems="center">
+                                                            {LEAVE_TYPE?.map((item, index) => (
+                                                                <MenuItem key={index} value={item} size="small">
+                                                                    {t(upperCaseFirstCharacter(item))}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+
+                                                <Grid item xs={4} md={6}>
                                                     <FormControl
-                                                        sx={{ width: { xs: '100%', md: '100%' }, marginLeft: '0px', marginTop: '10px' }}
+                                                        sx={{
+                                                            width: { xs: '100%', md: '100%' }
+                                                        }}
                                                         size="small"
                                                     >
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DatePicker
-                                                                label={t('Start Date')}
+                                                                label={isMobile ? t('From') : t('Start Date')}
                                                                 value={fromWaiting || null}
                                                                 name="fromWaiting"
                                                                 onChange={(e) => {
@@ -505,13 +504,18 @@ const MonitorLeave = () => {
                                                             />
                                                         </LocalizationProvider>
                                                     </FormControl>
+                                                </Grid>
+
+                                                <Grid item xs={4} md={6}>
                                                     <FormControl
-                                                        sx={{ width: { xs: '100%', md: '100%' }, marginLeft: '15px', marginTop: '10px' }}
+                                                        sx={{
+                                                            width: { xs: '100%', md: '100%' }
+                                                        }}
                                                         size="small"
                                                     >
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DatePicker
-                                                                label={t('End Date')}
+                                                                label={isMobile ? t('To') : t('End Date')}
                                                                 value={toWaiting || null}
                                                                 name="toWaiting"
                                                                 minDate={fromWaiting}
@@ -542,15 +546,15 @@ const MonitorLeave = () => {
                                                             />
                                                         </LocalizationProvider>
                                                     </FormControl>
-                                                </Stack>
-                                            </Box>
+                                                </Grid>
+                                            </Grid>
                                         </Box>
                                     </Box>
                                     <InfiniteScroll
                                         loader={
                                             loadMoreWaiting ? <SkeletonLoading sx={{ marginBottom: '15px', minHeight: '270px' }} /> : null
                                         }
-                                        height="75vh"
+                                        height={isMobile ? '50vh' : '75vh'}
                                         hasMore={fetchMoreCondition(pageWaiting, paginationWaiting, paramsWaiting)}
                                         dataLength={listLeaveWaiting.length}
                                         next={handleFetchMoreWaitingLeave}
@@ -577,8 +581,9 @@ const MonitorLeave = () => {
                                     </InfiniteScroll>
                                 </Box>
                             </Grid>
-                            <Grid item xs={8}>
-                                <Box sx={{ padding: '10px 20px' }}>
+
+                            <Grid item xs={12} md={6}>
+                                <Box sx={{ padding: isMobile ? '10px' : '10px 20px' }}>
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -592,119 +597,128 @@ const MonitorLeave = () => {
                                         <h3 style={styleLabel}>
                                             {t('Other leave requests')} <span style={styleCount}>{paginationManager?.totalCount || 0}</span>
                                         </h3>
-                                        <Box sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '12.5px' }}>
-                                            <Stack direction="row" alignItems="center" sx={{ marginBottom: '2.5px', width: '100%' }}>
-                                                <InputSearch
-                                                    width={'100%'}
-                                                    search={search}
-                                                    handleSearch={handleSearch}
-                                                    placeholder={t('Search...')}
-                                                />
-                                                <FormControl sx={{ minWidth: 120, marginLeft: '15px' }}>
-                                                    <InputLabel size="small" id="demo-simple-select-label" color="secondary">
-                                                        {t('Leave Type')}
-                                                    </InputLabel>
-                                                    <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={paramsAll?.['type.equals']}
-                                                        onChange={(e) => handleFilter('type.equals', e.target.value)}
-                                                        label="Type"
-                                                        color="secondary"
-                                                        size="small"
-                                                    >
-                                                        <MenuItem value={'all'}>All</MenuItem>
-                                                        {LEAVE_TYPE?.map((item, index) => (
-                                                            <MenuItem key={index} value={item}>
-                                                                {upperCaseFirstCharacter(item)}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Stack>
+                                        <Box sx={{ marginBottom: '12.5px' }}>
+                                            <Grid container spacing={isMobile ? 1 : 2}>
+                                                <Grid item xs={9} alignItems="center">
+                                                    <InputSearch
+                                                        width={'100%'}
+                                                        search={search}
+                                                        handleSearch={handleSearch}
+                                                        placeholder={t('Search...')}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <FormControl sx={{ width: '100%' }}>
+                                                        <InputLabel size="small" id="demo-simple-select-label" color="secondary">
+                                                            {isMobile ? t('Type') : t('Leave Type')}
+                                                        </InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={paramsAll?.['type.equals']}
+                                                            onChange={(e) => handleFilter('type.equals', e.target.value)}
+                                                            label="Type"
+                                                            color="secondary"
+                                                            size="small"
+                                                        >
+                                                            <MenuItem value={'all'}>All</MenuItem>
+                                                            {LEAVE_TYPE?.map((item, index) => (
+                                                                <MenuItem key={index} value={item}>
+                                                                    {upperCaseFirstCharacter(item)}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <FormControl sx={{ width: '100%', marginLeft: '0px' }}>
+                                                        <InputLabel size="small" id="demo-simple-select-label" color="secondary">
+                                                            {t('Status')}
+                                                        </InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={paramsAll?.['status.equals']}
+                                                            onChange={(e) => handleFilter('status.equals', e.target.value)}
+                                                            label="Status"
+                                                            color="secondary"
+                                                            size="small"
+                                                        >
+                                                            <MenuItem value={'all'}>{t('All')}</MenuItem>
+                                                            <MenuItem value={'REJECTED'}>{t('Rejected')}</MenuItem>
+                                                            <MenuItem value={'CONFIRMED'}>{t('Confirmed')}</MenuItem>
+                                                            <MenuItem value={'APPROVED'}>{t('Approved')}</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <FormControl sx={{ width: '100%' }} size="small">
+                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DatePicker
+                                                                label={isMobile ? t('From') : t('Start Date')}
+                                                                value={fromAll || null}
+                                                                name="fromAll"
+                                                                onChange={(e) => {
+                                                                    handleFilter(
+                                                                        'startDate.greaterThanOrEqual',
+                                                                        formatDateMaterialForFilter(e)
+                                                                    );
+                                                                }}
+                                                                onError={(newError) => setFromOtherError(newError)}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        {...params}
+                                                                        className="input-date-picker"
+                                                                        helperText={
+                                                                            fromOtherError ? t('Please follow the format dd/mm/yyyy') : ''
+                                                                        }
+                                                                    />
+                                                                )}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                style={{ maxHeight: '70%' }}
+                                                            />
+                                                        </LocalizationProvider>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <FormControl sx={{ width: '100%' }} size="small">
+                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <DatePicker
+                                                                label={isMobile ? t('To') : t('End Date')}
+                                                                value={toAll || null}
+                                                                name="toAll"
+                                                                onChange={(e) => {
+                                                                    handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e));
+                                                                }}
+                                                                minDate={fromAll}
+                                                                onError={(newError) => setToOtherError(newError)}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        {...params}
+                                                                        className="input-date-picker"
+                                                                        helperText={
+                                                                            toOtherError === 'invalidDate'
+                                                                                ? t('Please follow the format dd/mm/yyyy')
+                                                                                : toOtherError === 'minDate'
+                                                                                ? t('Please choose valid time')
+                                                                                : ''
+                                                                        }
+                                                                    />
+                                                                )}
+                                                                inputFormat="DD/MM/YYYY"
+                                                                style={{ maxHeight: '70%' }}
+                                                            />
+                                                        </LocalizationProvider>
+                                                    </FormControl>
+                                                </Grid>
+                                            </Grid>
                                         </Box>
-                                        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                                            <FormControl sx={{ minWidth: 120, marginLeft: '0px' }}>
-                                                <InputLabel size="small" id="demo-simple-select-label" color="secondary">
-                                                    {t('Status')}
-                                                </InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={paramsAll?.['status.equals']}
-                                                    onChange={(e) => handleFilter('status.equals', e.target.value)}
-                                                    label="Status"
-                                                    color="secondary"
-                                                    size="small"
-                                                >
-                                                    <MenuItem value={'all'}>{t('All')}</MenuItem>
-                                                    <MenuItem value={'REJECTED'}>{t('Rejected')}</MenuItem>
-                                                    <MenuItem value={'CONFIRMED'}>{t('Confirmed')}</MenuItem>
-                                                    <MenuItem value={'APPROVED'}>{t('Approved')}</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                            <FormControl
-                                                sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', minWidth: 120 }}
-                                                size="small"
-                                            >
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DatePicker
-                                                        label={t('Start Date')}
-                                                        value={fromAll || null}
-                                                        name="fromAll"
-                                                        onChange={(e) => {
-                                                            handleFilter('startDate.greaterThanOrEqual', formatDateMaterialForFilter(e));
-                                                        }}
-                                                        onError={(newError) => setFromOtherError(newError)}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                size="small"
-                                                                color="secondary"
-                                                                {...params}
-                                                                className="input-date-picker"
-                                                                helperText={fromOtherError ? t('Please follow the format dd/mm/yyyy') : ''}
-                                                            />
-                                                        )}
-                                                        inputFormat="DD/MM/YYYY"
-                                                        style={{ maxHeight: '70%' }}
-                                                    />
-                                                </LocalizationProvider>
-                                            </FormControl>
-                                            <FormControl
-                                                sx={{ width: { xs: '100%', md: 170 }, marginLeft: '15px', minWidth: 120 }}
-                                                size="small"
-                                            >
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DatePicker
-                                                        label={t('End Date')}
-                                                        value={toAll || null}
-                                                        name="toAll"
-                                                        onChange={(e) => {
-                                                            handleFilter('endDate.lessThanOrEqual', formatDateMaterialForFilter(e));
-                                                        }}
-                                                        minDate={fromAll}
-                                                        onError={(newError) => setToOtherError(newError)}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                size="small"
-                                                                color="secondary"
-                                                                {...params}
-                                                                className="input-date-picker"
-                                                                helperText={
-                                                                    toOtherError === 'invalidDate'
-                                                                        ? t('Please follow the format dd/mm/yyyy')
-                                                                        : toOtherError === 'minDate'
-                                                                        ? t('Please choose valid time')
-                                                                        : ''
-                                                                }
-                                                            />
-                                                        )}
-                                                        inputFormat="DD/MM/YYYY"
-                                                        style={{ maxHeight: '70%' }}
-                                                    />
-                                                </LocalizationProvider>
-                                            </FormControl>
-                                            {/* <Button
+
+                                        {/* <Button
                                                 sx={{ width: { xs: '100%', md: 90 }, marginLeft: '5px', height: '100%' }}
                                                 size="medium"
                                                 variant="contained"
@@ -715,11 +729,10 @@ const MonitorLeave = () => {
                                             >
                                                 Clear
                                             </Button> */}
-                                        </Box>
                                     </Box>
                                     <InfiniteScroll
                                         loader={loadMore ? <SkeletonLoading sx={{ marginBottom: '15px', minHeight: '270px' }} /> : null}
-                                        height="75vh"
+                                        height={isMobile ? '50vh' : '75vh'}
                                         hasMore={fetchMoreCondition(page, paginationManager, paramsAll)}
                                         dataLength={listLeaveForManager.length}
                                         next={handleFetchMoreLeave}
