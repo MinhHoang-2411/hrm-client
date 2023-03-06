@@ -18,6 +18,7 @@ import { OrderTableHead } from 'ui-component/table/table-head';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import useResponsive from 'hooks/useResponsive';
 
 // format
 import { formatTimeStampToDate, formatTimeStampToDateTime } from 'utils/format/date';
@@ -33,6 +34,8 @@ import '../../../assets/scss/leave.scss';
 import { useTranslation } from 'react-i18next';
 
 export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
+    const isMobile = useResponsive('mobile');
+
     const [order] = useState('asc');
     const [orderBy] = useState('id');
 
@@ -76,121 +79,115 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
 
     return (
         <Card>
-            <CardHeader title={t('Leave Detail')}></CardHeader>
+            <CardHeader sx={isMobile ? { p: 2 } : {}} title={t('Leave Detail')}></CardHeader>
             <Divider light />
-            <CardContent>
+            <CardContent sx={isMobile ? { p: 2 } : {}}>
                 <Box sx={{ width: '100%' }}>
                     <Stack spacing={1}>
-                        <Grid container>
-                            <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Title')}</span>
+                        <Grid container spacing={1}>
+                            <Grid item md={3} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Title')}:</span>
                             </Grid>
-                            <Grid item xs={9}>
+                            <Grid item md={9} xs={7}>
                                 {leaveDetail?.title}
                             </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Creator')}</span>
+                            <Grid item md={3} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Creator')}:</span>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item md={4} xs={7}>
                                 {leaveDetail?.creatorName}
                             </Grid>
-                            <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Person on leave')}</span>
+                            <Grid item md={2} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Person on leave')}:</span>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item md={3} xs={7}>
                                 {leaveDetail?.personOnLeave}
                             </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Submitted date')}</span>
+                            <Grid item md={3} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Submitted date')}:</span>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item md={4} xs={7}>
                                 {formatTimeStampToDateTime(leaveDetail?.createdDate)}
                             </Grid>
-                            <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Duration')}</span>
+                            <Grid item md={2} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Duration')}:</span>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item md={3} xs={7}>
                                 {formatTimeStampToDate(leaveDetail?.startDate)} - {formatTimeStampToDate(leaveDetail?.endDate)}
                             </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Leave Type')}</span>
+
+                            <Grid item md={3} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Leave Type')}:</span>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item md={4} xs={7}>
                                 {t(upperCaseFirstCharacter(leaveDetail?.type))}
                             </Grid>
-                            <Grid item xs={2}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Status')}</span>
+                            <Grid item md={2} xs={5}>
+                                <span style={{ fontWeight: 'bold' }}>{t('Status')}:</span>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item md={3} xs={7}>
                                 <span>{t(upperCaseFirstCharacter(leaveDetail?.status))}</span>
                             </Grid>
+                            {isRejectedByAdmin(leaveDetail) && (
+                                <>
+                                    <Grid item md={3} xs={5}>
+                                        <span style={{ fontWeight: 'bold' }}>{t('Confirmed by')}:</span>
+                                    </Grid>
+                                    <Grid item md={4} xs={7}>
+                                        {leaveDetail?.confirmerName}
+                                    </Grid>
+                                    <Grid item md={2} xs={5}>
+                                        <span style={{ fontWeight: 'bold' }}>{t('Rejected by')}:</span>
+                                    </Grid>
+                                    <Grid item md={3} xs={7}>
+                                        {leaveDetail?.rejecterName}
+                                    </Grid>
+                                </>
+                            )}
+                            {isRejectedByManager(leaveDetail) && (
+                                <>
+                                    <Grid item md={3} xs={5}>
+                                        <span style={{ fontWeight: 'bold' }}>{t('Rejected by')}:</span>
+                                    </Grid>
+                                    <Grid item md={9} xs={7}>
+                                        {leaveDetail?.rejecterName}
+                                    </Grid>
+                                </>
+                            )}
+                            {isNotRejectedAndCanceled(leaveDetail) && (
+                                <>
+                                    <Grid item md={3} xs={5}>
+                                        <span style={{ fontWeight: 'bold' }}>{t('Confirmed by')}:</span>
+                                    </Grid>
+                                    <Grid item md={4} xs={7}>
+                                        {leaveDetail?.confirmerName ? leaveDetail?.confirmerName : 'Unknown'}
+                                    </Grid>
+                                    <Grid item md={2} xs={5}>
+                                        <span style={{ fontWeight: 'bold' }}>{t('Approved by')}:</span>
+                                    </Grid>
+                                    <Grid item md={3} xs={7}>
+                                        {leaveDetail?.approverName ? leaveDetail?.approverName : 'Unknown'}
+                                    </Grid>
+                                </>
+                            )}
+                            <>
+                                <Grid item xs={12}>
+                                    <span style={{ fontWeight: 'bold' }}>{t('Reason')}: </span>
+                                    {leaveDetail?.reason}
+                                </Grid>
+                            </>
+                            {leaveDetail?.rejectReason && (
+                                <>
+                                    <Grid item md={3} xs={5}>
+                                        <span style={{ fontWeight: 'bold' }}>{t('Rejection reason')}:</span>
+                                    </Grid>
+                                    <Grid item md={9} xs={7}>
+                                        {leaveDetail?.rejectReason}
+                                    </Grid>
+                                </>
+                            )}
                         </Grid>
-                        {isRejectedByAdmin(leaveDetail) && (
-                            <Grid container>
-                                <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Confirmed by')}</span>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    {leaveDetail?.confirmerName}
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Rejected by')}</span>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    {leaveDetail?.rejecterName}
-                                </Grid>
-                            </Grid>
-                        )}
-                        {isRejectedByManager(leaveDetail) && (
-                            <Grid container>
-                                <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Rejected by')}</span>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    {leaveDetail?.rejecterName}
-                                </Grid>
-                            </Grid>
-                        )}
-                        {isNotRejectedAndCanceled(leaveDetail) && (
-                            <Grid container>
-                                <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Confirmed by')}</span>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    {leaveDetail?.confirmerName ? leaveDetail?.confirmerName : 'Unknown'}
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Approved by')}</span>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    {leaveDetail?.approverName ? leaveDetail?.approverName : 'Unknown'}
-                                </Grid>
-                            </Grid>
-                        )}
-                        <Grid container>
-                            <Grid item xs={3}>
-                                <span style={{ fontWeight: 'bold' }}>{t('Reason')}</span>
-                            </Grid>
-                            <Grid item xs={9}>
-                                {leaveDetail?.reason}
-                            </Grid>
-                        </Grid>
-                        {leaveDetail?.rejectReason && (
-                            <Grid container>
-                                <Grid item xs={3}>
-                                    <span style={{ fontWeight: 'bold' }}>{t('Rejection reason')}</span>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    {leaveDetail?.rejectReason}
-                                </Grid>
-                            </Grid>
-                        )}
+
                         <Grid container>
                             <Grid item xs={12}>
                                 <TableContainer sx={{ backgroundColor: '#EEEEEE', border: '1px #EEEEEE solid', mt: 1 }}>
@@ -259,7 +256,7 @@ export default function ModelLeaveDetail({ leaveDetail, handleClose }) {
                 </Box>
             </CardContent>
             <Divider light />
-            <CardActions sx={{ justifyContent: 'end' }}>
+            <CardActions sx={{ justifyContent: 'end', p: isMobile ? 2 : 3 }}>
                 <Button variant="contained" size="error" color="secondary" className="button-submit-member" onClick={() => handleClose()}>
                     {t('Close')}
                 </Button>
