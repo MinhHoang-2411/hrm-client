@@ -71,13 +71,10 @@ const ProfileSection = () => {
         setOpen(false);
     };
 
-    const handleListItemClick = (event, index, route = '') => {
+    const handleListItemClick = (event, index, route = '/') => {
         setSelectedIndex(index);
-        handleClose(event);
-
-        if (route && route !== '') {
-            navigate(route);
-        }
+        setOpen(false);
+        navigate(route);
     };
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -195,6 +192,7 @@ const ProfileSection = () => {
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 0}
                                                     onClick={(event) => handleListItemClick(event, 0, '/user/setting')}
+                                                    onTouchStart={(event) => handleListItemClick(event, 0, '/user/setting')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconSettings stroke={1.5} size="1.3rem" />
@@ -207,6 +205,7 @@ const ProfileSection = () => {
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 1}
                                                     onClick={(event) => handleListItemClick(event, 1, '/user/profile')}
+                                                    onTouchStart={(event) => handleListItemClick(event, 1, '/user/profile')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconUser stroke={1.5} size="1.3rem" />
@@ -225,14 +224,12 @@ const ProfileSection = () => {
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 4}
                                                     onClick={handleLogout}
+                                                    onTouchStart={handleLogout}
                                                 >
                                                     <ListItemIcon>
                                                         <IconLogout stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText
-                                                        onClick={handleLogout}
-                                                        primary={<Typography variant="body2">{t('Logout')}</Typography>}
-                                                    />
+                                                    <ListItemText primary={<Typography variant="body2">{t('Logout')}</Typography>} />
                                                 </ListItemButton>
                                             </List>
                                         </Box>
