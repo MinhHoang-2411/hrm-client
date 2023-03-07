@@ -645,7 +645,6 @@ const SubmitLeaveForm = ({ type, ...others }) => {
                                                                     setInforLeaveUnUse(leaveUnUse + ' ');
                                                                 }
                                                             });
-                                                            console.log({ value });
                                                         }}
                                                         noOptionsText={t('No Options')}
                                                         isOptionEqualToValue={(option, value) => option.id === value.id}
